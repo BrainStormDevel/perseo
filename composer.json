@@ -2,8 +2,7 @@
     "require": {
 	    "slim/slim": "3.*",
 		"ext-openssl": "*",
-		"catfan/Medoo": "1.4.*",
-		"smarty/smarty": "~3.1",
+		"catfan/medoo": "1.4.*",
 		"jbbcode/jbbcode": "1.3.*",
         "composer/ca-bundle": "^1.1",
         "slim/twig-view": "^2.4",

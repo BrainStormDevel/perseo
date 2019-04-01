@@ -50,6 +50,11 @@ class Path
 	public static function ViewsPath() {
 		return realpath(self::MOD_PATH . DIRECTORY_SEPARATOR . self::$ModuleName . DIRECTORY_SEPARATOR .'Views');
 	}	
+
+	public static function SiteName($request)
+	{
+		return '//'. $_SERVER['HTTP_HOST'] . $request->getUri()->getBasePath();
+	}
 	
 	public static function MY($arg)
 	{

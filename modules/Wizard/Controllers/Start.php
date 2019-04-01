@@ -4,9 +4,8 @@ namespace Wizard\Controllers;
 
 class Start
 {
-	public function main($request, $response, $args, $app)
+	public function main($request, $response, $args, $csrfarray)
     {	
-			//$app->add(new \Slim\Csrf\Guard);
 			$write = (is_writable(\PerSeo\Path::CONF_PATH) ? "ok" : "no");
 			$css = \PerSeo\Library::css('twitter-bootstrap', 'css/bootstrap.min', '3.3.7');
 			$css .= \PerSeo\Library::css('prettify', 'prettify.min', 'r298');
@@ -23,11 +22,6 @@ class Start
 			
 			$G_SECRET = 'G_SECRET_'. \PerSeo\Path::MY('DOMAIN');
 			$F_SECRET = 'F_SECRET_'. \PerSeo\Path::MY('DOMAIN');
-			//$CSRFToken = \PerSeo\Secure::generate_token('Wizard');
-			$nameKey = $app->csrf->getTokenNameKey();
-			$valueKey = $app->csrf->getTokenValueKey();
-			$name = $request->getAttribute($nameKey);
-			$value = $request->getAttribute($valueKey);
 			$vars1 = array(
 				'title' => 'Welcome to',
 				'folder' => \PerSeo\Path::CONF_PATH,
@@ -44,6 +38,6 @@ class Start
 			$lang->module('title');
 			$lang->module('body');
 			$vars = array_merge($vars1, $lang->vars());
-			\PerSeo\Template::show(\PerSeo\Path::ViewsPath(), 'default.tpl', $vars, false);
+			//\PerSeo\Template::show(\PerSeo\Path::ViewsPath(), 'default.tpl', $vars, false);
     }
 }
