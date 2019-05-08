@@ -18,18 +18,19 @@ $container['csrf'] = function ($container) {
     $guard->setPersistentTokenMode(true);
     return $guard;
 };
-$container['view'] = function ($container) {
-    $view = new \Slim\Views\Twig('modules', [
-        'cache' => 'cache'
-    ]);
-    $router = $container->get('router');
-    $uri = Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-    $view->addExtension(new Slim\Views\TwigExtension($router, $uri));
 
-    return $view;
-};
 $container['notFoundHandler'] = function ($container) {
 	return function (Request $request, Response $response) use ($container) {
+	$container['view'] = function ($container) {
+		$view = new \Slim\Views\Twig('modules', [
+			'cache' => 'cache'
+		]);
+		$router = $container->get('router');
+		$uri = Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
+		$view->addExtension(new Slim\Views\TwigExtension($router, $uri));
+
+		return $view;
+	};		
 		\PerSeo\Path::$ModuleName = '404';
 		$container['view']['host'] = \PerSeo\Path::SiteName($request);
 		$container['view']['vars'] = \PerSeo\Template::vars();
