@@ -13,6 +13,6 @@ Write your own module is really simple. Just see the "modules" folder content, c
 
 ## Develop with Docker Compose
 
-1) Download or clone this project to your local folder or host.
-2) Run `docker-compose run --rm composer install` into project.
+1) Download or clone this project to your local folder or host
+2) Run `docker-compose run --rm composer install` into project
 3) Run `docker-compose up -d perseo` and visit http://localhost:13080
