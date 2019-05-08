@@ -10,3 +10,9 @@ Install and use is really simple.
 3) Go to http://yourhost/ and follow the wizard.
 
 Write your own module is really simple. Just see the "modules" folder content, create a new module, create routes.php file in module folder and start write your own code. To test your code, browse to http://yourhost/yourRouteName and see the result.
+
+## Develop with Docker Compose
+
+1) Download or clone this project to your local folder or host
+2) Run `docker-compose run --rm composer install` into project
+3) Run `docker-compose up -d perseo` and visit http://localhost:13080
