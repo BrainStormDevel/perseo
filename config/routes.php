@@ -79,7 +79,7 @@ $app->add($wizardMiddleware);
 $app->add($adminMiddleware);
 $app->add($container->get('csrf'));
 $directory = \PerSeo\Path::MOD_PATH;
-$dirobj = new DirectoryIterator($directory);
+$dirobj = new \DirectoryIterator($directory);
 foreach ($dirobj as $fileinfo) {
     if (!$fileinfo->isDot()) {
         $routes = $fileinfo->getPathname() . DIRECTORY_SEPARATOR . 'routes.php';
