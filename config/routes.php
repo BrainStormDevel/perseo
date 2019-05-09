@@ -79,12 +79,11 @@ $app->add($wizardMiddleware);
 $app->add($adminMiddleware);
 $app->add($container->get('csrf'));
 $directory = \PerSeo\Path::MOD_PATH;
-if (is_dir($directory)) {
-    $scan = scandir($directory);
-    unset($scan[0], $scan[1]); //unset . and ..
-    foreach ($scan as $dir) {
-        $routes = $directory . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . 'routes.php';
-        if (is_dir($directory . DIRECTORY_SEPARATOR . $dir) && file_exists($routes)) {
+$dirobj = new DirectoryIterator(dirname(__FILE__));
+foreach ($dirobj as $fileinfo) {
+    if (!$fileinfo->isDot()) {
+        $routes = $fileinfo->getPathname() . DIRECTORY_SEPARATOR . 'routes.php';
+        if (file_exists($routes)) {
             @include_once($routes);
         }
     }
