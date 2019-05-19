@@ -7,15 +7,8 @@ use Slim\Http\Uri;
 
 //$settings = require \PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'settings.php';
 $sanitize = new \PerSeo\Sanitizer();
-//$app = new \DI\Bridge\Slim\App($settings);
-/*$app = new class() extends \DI\Bridge\Slim\App {
-    protected function configureContainer(\ContainerBuilder $builder)
-    {
-        $builder->addDefinitions(\PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'settings.php');
-    }
-};*/
 $app = new \PerSeo\NewApp;
-var_dump($app);
+//var_dump($app);
 $app->add($sanitize);
 $container = $app->getContainer();
 $container->set('Sanitizer', function($container) use ($sanitize) {

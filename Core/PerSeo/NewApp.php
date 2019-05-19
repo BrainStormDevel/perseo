@@ -2,10 +2,10 @@
 
 namespace PerSeo;
 
-class NewApp extends \DI\Bridge\Slim\App implements \DI\Bridge\Slim\ContainerBuilder
+class NewApp extends \DI\Bridge\Slim\App
 {
-    protected function configureContainer(ContainerBuilder $builder)
+    protected function configureContainer(\DI\ContainerBuilder $builder)
     {
-        $builder->addDefinitions(Path::CONF_PATH . Path::DS . 'settings.php');
+        $builder->addDefinitions(\PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'settings.php');
     }
 }
