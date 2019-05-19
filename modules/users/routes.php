@@ -27,15 +27,15 @@ $app->get('/users/admin[/]', function (Request $request, Response $response) use
         $lang->module('body');
         return $this->get('view')->render($response, '/users/views/admin/index.tpl', [
             'titlesite' => constant("SITENAME"),
-			'username' => \PerSeo\Login::username(),
-			'menuarray' => \admin\Controllers\Menu::listall(),
-			'bodytpl' => '/users/views/admin/dashboard.tpl',
+            'username' => \PerSeo\Login::username(),
+            'menuarray' => \admin\Controllers\Menu::listall(),
+            'bodytpl' => '/users/views/admin/dashboard.tpl',
             'host' => \PerSeo\Path::SiteName($request),
-			'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
+            'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
             'csrf' => $csrfarray,
             'lang' => $lang->vars(),
             'vars' => \PerSeo\Template::vars(),
-			'cookiepath' => \PerSeo\Path::cookiepath($request)
+            'cookiepath' => \PerSeo\Path::cookiepath($request)
         ]);
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());

@@ -26,16 +26,16 @@ $app->get('/admin[/]', function (Request $request, Response $response) use ($con
         $lang->module('title');
         $lang->module('body');
         return $this->get('view')->render($response, '/admin/views/admin/index.tpl', [
-			'csrf' => $csrfarray,
-			'lang' => $lang->vars(),
-			'titlesite' => constant("SITENAME"),
-			'username' => \PerSeo\Login::username(),
-			'bodytpl' => '/admin/views/admin/dashboard.tpl',
-			'menuarray' => \admin\Controllers\Menu::listall(),
-			'host' => \PerSeo\Path::SiteName($request),
-			'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
-			'vars' => \PerSeo\Template::vars(),
-			'cookiepath' => \PerSeo\Path::cookiepath($request)
+            'csrf' => $csrfarray,
+            'lang' => $lang->vars(),
+            'titlesite' => constant("SITENAME"),
+            'username' => \PerSeo\Login::username(),
+            'bodytpl' => '/admin/views/admin/dashboard.tpl',
+            'menuarray' => \admin\Controllers\Menu::listall(),
+            'host' => \PerSeo\Path::SiteName($request),
+            'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
+            'vars' => \PerSeo\Template::vars(),
+            'cookiepath' => \PerSeo\Path::cookiepath($request)
         ]);
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());

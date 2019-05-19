@@ -27,10 +27,10 @@ $app->get('/', function (Request $request, Response $response) use ($container) 
         $lang->module('body');
         //$container['view']['cookiepath'] = \PerSeo\Path::cookiepath($request);
         return $this->get('view')->render($response, '/index/views/index.tpl', [
-			'csrf' => $csrfarray,
-			'lang' => $lang->vars(),
-			'host' => \PerSeo\Path::SiteName($request),
-			'vars' => \PerSeo\Template::vars()
+            'csrf' => $csrfarray,
+            'lang' => $lang->vars(),
+            'host' => \PerSeo\Path::SiteName($request),
+            'vars' => \PerSeo\Template::vars()
         ]);
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());

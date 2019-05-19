@@ -35,10 +35,10 @@ if (!\PerSeo\CheckConfig::verify()) {
             $lang->module('title');
             $lang->module('body');
             return $this->get('view')->render($response, '/wizard/views/index.tpl', [
-				'csrf' => $csrfarray,
-				'lang' => $lang->vars(),
-				'host' => \PerSeo\Path::SiteName($request),
-				'vars' => \PerSeo\Template::vars(),
+                'csrf' => $csrfarray,
+                'lang' => $lang->vars(),
+                'host' => \PerSeo\Path::SiteName($request),
+                'vars' => \PerSeo\Template::vars(),
                 'cookiepath' => \PerSeo\Path::cookiepath($request),
                 'writeperm' => (is_writable(\PerSeo\Path::CONF_PATH) ? "ok" : "no"),
                 'openssl' => (extension_loaded('openssl') ? "ok" : "no")

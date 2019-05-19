@@ -43,7 +43,8 @@ class Install
             $content .= "define('CRYPT_SALT', '" . $container->get('Sanitizer')->POST('salt', 'alpha') . "');\n";
             $content .= "define('TBL_', '" . $container->get('Sanitizer')->POST('prefix', 'user') . "');\n";
             $content .= "define('COOKIE_EXPIRE', '" . $container->get('Sanitizer')->POST('cookexp', 'alpha') . "');\n";
-            $content .= "define('COOKIE_MAX_EXPIRE', '" . $container->get('Sanitizer')->POST('cookmaxexp', 'alpha') . "');\n";
+            $content .= "define('COOKIE_MAX_EXPIRE', '" . $container->get('Sanitizer')->POST('cookmaxexp',
+                    'alpha') . "');\n";
             $content .= "define('COOKIE_PATH', '" . $container->get('Sanitizer')->POST('cookpath') . "');\n";
             $content .= "define('COOKIE_SECURE', false);\n";
             $content .= "define('COOKIE_HTTP', true);\n";
@@ -60,7 +61,7 @@ class Install
                 $content .= "define('" . $googlesecret . "', '" . $container->get('Sanitizer')->POST('google_secret') . "');\n";
             }
             fwrite($myfile, $content);
-			fclose($myfile);
+            fclose($myfile);
             self::$host = $container->get('Sanitizer')->POST('dbhost', 'user');
             self::$name = $container->get('Sanitizer')->POST('dbname', 'pass');
             self::$user = $container->get('Sanitizer')->POST('dbuser', 'user');
@@ -70,8 +71,9 @@ class Install
             self::$tbprefix = $container->get('Sanitizer')->POST('prefix', 'user');
             self::$salt = $container->get('Sanitizer')->POST('salt', 'alpha');
             $result = self::createdb($container->get('Sanitizer')->POST('admin', 'user'),
-            $container->get('Sanitizer')->POST('email', 'email'), $container->get('Sanitizer')->POST('password', 'pass'),
-            $container->get('Sanitizer')->POST('salt', 'alpha'));
+                $container->get('Sanitizer')->POST('email', 'email'),
+                $container->get('Sanitizer')->POST('password', 'pass'),
+                $container->get('Sanitizer')->POST('salt', 'alpha'));
             session_unset();
             session_destroy();
         } catch (Exception $e) {

@@ -9,10 +9,10 @@ $sanitize = new \PerSeo\Sanitizer();
 $app = new \PerSeo\NewApp;
 $app->add($sanitize);
 $container = $app->getContainer();
-$container->set('Sanitizer', function($container) use ($sanitize) {
+$container->set('Sanitizer', function ($container) use ($sanitize) {
     return $sanitize;
 });
-$container->set('csrf', function() {
+$container->set('csrf', function () {
     $guard = new \Slim\Csrf\Guard();
     $guard->setPersistentTokenMode(true);
     return $guard;
@@ -31,8 +31,8 @@ $container->set('notFoundHandler', function ($container) {
         });
         \PerSeo\Path::$ModuleName = '404';
         return $container->get('view')->render($response, '/404/views/404.tpl', [
-			'host' => \PerSeo\Path::SiteName($request),	
-			'vars' => \PerSeo\Template::vars(),
+            'host' => \PerSeo\Path::SiteName($request),
+            'vars' => \PerSeo\Template::vars(),
             'name' => $args['params']
         ]);
     };
