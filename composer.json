@@ -7,7 +7,8 @@
         "composer/ca-bundle": "^1.1",
         "slim/twig-view": "^2.4",
         "slim/csrf": "^0.8.3",
-        "phpfastcache/phpfastcache": "^7.0"
+        "phpfastcache/phpfastcache": "^7.0",
+        "php-di/slim-bridge": "^2.0"
     },
 
     "autoload": {

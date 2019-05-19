@@ -4,7 +4,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Uri;
 
-$container['view'] = function ($container) {
+$container->set('view', function ($container) {
     $view = new \Slim\Views\Twig('modules', [
         'cache' => 'cache'
     ]);
@@ -14,7 +14,7 @@ $container['view'] = function ($container) {
     $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
 
     return $view;
-};
+});
 $app->get('/login[/]', function (Request $request, Response $response, $args) use ($container) {
     $uri = $request->getUri()->getBasePath();
     return $response->withRedirect($uri . '/login/user', 307);

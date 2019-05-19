@@ -4,7 +4,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Uri;
 
-$container['view'] = function ($container) {
+$container->set('view', function ($container) {
     $view = new \Slim\Views\Twig('modules', [
         'cache' => false
         //'cache' => 'cache'
@@ -14,7 +14,7 @@ $container['view'] = function ($container) {
     $view->addExtension(new Slim\Views\TwigExtension($router, $uri));
 
     return $view;
-};
+});
 if (!\PerSeo\CheckConfig::verify()) {
     $app->any('/wizard[{params:\b(?!wizard\b).*\w+}]',
         function (Request $request, Response $response, $args) use ($container) {
