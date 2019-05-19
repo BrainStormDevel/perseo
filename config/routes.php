@@ -5,23 +5,21 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Uri;
 
-$settings = require \PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'settings.php';
 $sanitize = new \PerSeo\Sanitizer();
-$app = new \Slim\App($settings);
+$app = new \PerSeo\NewApp;
 $app->add($sanitize);
 $container = $app->getContainer();
-$container['Sanitizer'] = function ($container) use ($sanitize) {
+$container->set('Sanitizer', function($container) use ($sanitize) {
     return $sanitize;
-};
-$container['csrf'] = function ($container) {
+});
+$container->set('csrf', function() {
     $guard = new \Slim\Csrf\Guard();
     $guard->setPersistentTokenMode(true);
     return $guard;
-};
-
-$container['notFoundHandler'] = function ($container) {
+});
+$container->set('notFoundHandler', function ($container) {
     return function (Request $request, Response $response) use ($container) {
-        $container['view'] = function ($container) {
+        $container->set('view', function ($container) {
             $view = new \Slim\Views\Twig('modules', [
                 'cache' => 'cache'
             ]);
@@ -30,16 +28,15 @@ $container['notFoundHandler'] = function ($container) {
             $view->addExtension(new Slim\Views\TwigExtension($router, $uri));
 
             return $view;
-        };
+        });
         \PerSeo\Path::$ModuleName = '404';
-        $container['view']['host'] = \PerSeo\Path::SiteName($request);
-        $container['view']['vars'] = \PerSeo\Template::vars();
-        $container['view']['cookiepath'] = \PerSeo\Path::cookiepath($request);
-        return $container->view->render($response, '/404/views/404.tpl', [
+        return $container->get('view')->render($response, '/404/views/404.tpl', [
+			'host' => \PerSeo\Path::SiteName($request),	
+			'vars' => \PerSeo\Template::vars(),
             'name' => $args['params']
         ]);
     };
-};
+});
 $wizardMiddleware = function (Request $request, Response $response, callable $next) use ($container) {
     $route = $request->getAttribute('route');
     if (empty($route)) {
