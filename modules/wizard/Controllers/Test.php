@@ -6,9 +6,9 @@ class Test
 {
     public static function main($container)
     {
-        $db = new \PerSeo\DB("mysql", $container->Sanitizer->POST('dbname', 'pass'),
-            $container->Sanitizer->POST('dbhost', 'user'), $container->Sanitizer->POST('dbuser', 'user'),
-            $container->Sanitizer->POST('dbpass', 'pass'));
+        $db = new \PerSeo\DB("mysql", $container->get('Sanitizer')->POST('dbname', 'pass'),
+            $container->get('Sanitizer')->POST('dbhost', 'user'), $container->get('Sanitizer')->POST('dbuser', 'user'),
+            $container->get('Sanitizer')->POST('dbpass', 'pass'));
         $error = $db->err();
         if (isset($error['msg'])) {
             echo json_encode($error);

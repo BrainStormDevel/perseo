@@ -10,40 +10,38 @@ $container->set('view', function ($container) {
     ]);
     $router = $container->get('router');
     $uri = Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-    $view->addExtension(new Slim\Views\TwigExtension($router, $uri));
+    $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
 
     return $view;
 });
-$app->get('/users/admin[/]', function (Request $request, Response $response, $args) use ($container) {
+$app->get('/users/admin[/]', function (Request $request, Response $response) use ($container) {
     try {
         $csrfarray = array();
-        $csrfarray['nameKey'] = $this->csrf->getTokenNameKey();
-        $csrfarray['valueKey'] = $this->csrf->getTokenValueKey();
+        $csrfarray['nameKey'] = $this->get('csrf')->getTokenNameKey();
+        $csrfarray['valueKey'] = $this->get('csrf')->getTokenValueKey();
         $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
         $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
         \PerSeo\Path::$ModuleName = 'users';
         $lang = new \PerSeo\Translator(\PerSeo\Language::Get(), \PerSeo\Path::LangPath());
         $lang->module('title');
         $lang->module('body');
-        $container['view']['csrf'] = $csrfarray;
-        $container['view']['lang'] = $lang->vars();
-        $container['view']['titlesite'] = constant("SITENAME");
-        $container['view']['username'] = \PerSeo\Login::username();
-        $container['view']['bodytpl'] = '/users/views/admin/dashboard.tpl';
-        $container['view']['menuarray'] = \admin\Controllers\Menu::listall();
-        $container['view']['host'] = \PerSeo\Path::SiteName($request);
-        $container['view']['adm_host'] = \PerSeo\Path::SiteName($request) . '/admin';
-        $container['view']['vars'] = \PerSeo\Template::vars();
-        $container['view']['cookiepath'] = \PerSeo\Path::cookiepath($request);
-        return $this->view->render($response, '/users/views/admin/index.tpl', [
-            'name' => $args['params']
+        return $this->get('view')->render($response, '/users/views/admin/index.tpl', [
+            'titlesite' => constant("SITENAME"),
+			'username' => \PerSeo\Login::username(),
+			'menuarray' => \admin\Controllers\Menu::listall(),
+			'bodytpl' => '/users/views/admin/dashboard.tpl',
+            'host' => \PerSeo\Path::SiteName($request),
+			'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
+            'csrf' => $csrfarray,
+            'lang' => $lang->vars(),
+            'vars' => \PerSeo\Template::vars(),
+			'cookiepath' => \PerSeo\Path::cookiepath($request)
         ]);
-        //echo "admin";
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());
     }
 })->setName('requireadmin');
-$app->post('/users/logout[/]', function (Request $request, Response $response, $args) use ($container) {
+$app->post('/users/logout[/]', function (Request $request, Response $response) use ($container) {
     $mylogin = new \PerSeo\Login();
     echo $mylogin->logout('admins');
 })->setName('requireadmin');

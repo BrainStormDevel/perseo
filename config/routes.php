@@ -5,24 +5,13 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Uri;
 
-//$settings = require \PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'settings.php';
 $sanitize = new \PerSeo\Sanitizer();
 $app = new \PerSeo\NewApp;
-//var_dump($app);
 $app->add($sanitize);
 $container = $app->getContainer();
 $container->set('Sanitizer', function($container) use ($sanitize) {
     return $sanitize;
 });
-//$app->add(new Slim\Csrf\Guard());
-/*$container['Sanitizer'] = function ($container) use ($sanitize) {
-    return $sanitize;
-};*/
-/*$container['csrf'] = function ($container) {
-    $guard = new \Slim\Csrf\Guard();
-    $guard->setPersistentTokenMode(true);
-    return $guard;
-};*/
 $container->set('csrf', function() {
     $guard = new \Slim\Csrf\Guard();
     $guard->setPersistentTokenMode(true);
@@ -41,10 +30,9 @@ $container->set('notFoundHandler', function ($container) {
             return $view;
         });
         \PerSeo\Path::$ModuleName = '404';
-        //$container['view']['host'] = \PerSeo\Path::SiteName($request);
-        //$container['view']['vars'] = \PerSeo\Template::vars();
-        //$container['view']['cookiepath'] = \PerSeo\Path::cookiepath($request);
         return $container->get('view')->render($response, '/404/views/404.tpl', [
+			'host' => \PerSeo\Path::SiteName($request),	
+			'vars' => \PerSeo\Template::vars(),
             'name' => $args['params']
         ]);
     };
