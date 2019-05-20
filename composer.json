@@ -1,5 +1,5 @@
 {
-    "name": "BrainStormDevel/perseo",
+    "name": "brainstorm/perseo",
     "description": "PerSeo 0.9 beta based on Slim Framework 3, Password stored SHA512+salt, input sanitized, multi-language",
     "type": "project",
     "keywords": ["slim-framework", "php-di", "medoo", "secure", "cms"],
