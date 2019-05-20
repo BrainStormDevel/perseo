@@ -85,5 +85,4 @@ foreach ($dirobj as $fileinfo) {
         }
     }
 }
-var_dump($container->get('router'));
 $app->run();
