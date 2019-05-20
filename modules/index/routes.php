@@ -25,7 +25,6 @@ $app->get('/', function (Request $request, Response $response) use ($container) 
         $lang = new \PerSeo\Translator(\PerSeo\Language::Get(), \PerSeo\Path::LangPath());
         $lang->module('title');
         $lang->module('body');
-        //$container['view']['cookiepath'] = \PerSeo\Path::cookiepath($request);
         return $this->get('view')->render($response, '/index/views/index.tpl', [
             'csrf' => $csrfarray,
             'lang' => $lang->vars(),
