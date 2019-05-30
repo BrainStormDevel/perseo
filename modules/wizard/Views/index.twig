@@ -270,7 +270,7 @@
 							$.ajax({
 								url: '{{ host }}/{{ vars.ModuleUrlName }}/test/',
 								type: 'post',
-								data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc},
+								data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "charset": dbenc},
 								success: function(response) {
 									result = JSON.parse(response);
 									if (result.err == 0) {
@@ -285,7 +285,7 @@
 									}
 								}
 							})
-							},1000);
+							},100);
 						}
 						var $total = navigation.find('li').length;
 						var $current = index+1;
@@ -308,7 +308,7 @@
 					$.ajax({
 						url: '{{ host }}/{{ vars.ModuleUrlName }}/install/',
 						type: 'post',
-						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
+						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
 						success: function(response) {
 							var result = JSON.parse(response);
 							if (result.code == 0) {

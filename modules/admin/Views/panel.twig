@@ -3,13 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{{ titlesite }} | Dashboard</title>
+  <title>{$title} | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  {% include 'admin/views/admin/head_panel.tpl' %}
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/flags.css">
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/brand.css">
-  <!-- {$css} -->
+  {include 'head_panel.twig'}
+  {if $header}{include file="file:$header"}{/if}
+  {$css}
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -25,11 +24,11 @@
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="{{ host }}/{{ vars.ModuleName }}/" class="logo">
+    <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini helmet"></span>
+      <span class="logo-mini"><b>P-S</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg scrittalogo"></span>
+      <span class="logo-lg"><b>PerSeo</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -237,17 +236,11 @@
               </li>
             </ul>
           </li>
-		  <li class="dropdown tasks-menu">
-		  <select id="lang" class="selectpicker lang_menu" data-style="btn-primary" data-width="auto">
-			<option data-icon="flag flag-it" value="it" {% if vars.language == 'it' %}selected{% endif %}>Italiano</option>
-			<option data-icon="flag flag-en" value="en" {% if vars.language == 'en' %}selected{% endif %}>English</option>
-		  </select>
-		  </li>
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="//www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" class="user-image" alt="User Image">
-              <span class="hidden-xs">{{ username }}</span>
+              <span class="hidden-xs">{$username}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -277,17 +270,17 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">{{ lang.l_profile }}</a>
+                  <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" id="logout" class="btn btn-default btn-flat">{{ lang.l_logout }}</a>
+                  <a href="#" id="logout" class="btn btn-default btn-flat">Logout</a>
                 </div>
               </li>
             </ul>
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
-            <a href="#" data-toggle="control-sidebar"><i class="fa fa-cogs"></i></a>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
           </li>
         </ul>
       </div>
@@ -303,14 +296,14 @@
           <img src="//www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>{{ username }}</p>
+          <p>{$username}</p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
       <!-- search form -->
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="{{ lang.l_search }}">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
           <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
@@ -320,9 +313,9 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-	  {% for menu in menuarray %}
-		{% include menu %}
-	  {% endfor %} 
+		{foreach $menu as $value}
+			{include file="file:$value"}
+		{/foreach}	  
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -330,14 +323,12 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-  {% if bodytpl is defined %}
-  {% include bodytpl %}
-  {% endif %}
+  {if $body_page}{include file="file:$body_page"}{/if}
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.4.10
+      <b>Version</b> 2.4.5
     </div>
     <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
     reserved.
@@ -348,7 +339,7 @@
     <!-- Create the tabs -->
     <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
       <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-cogs"></i></a></li>
+      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
@@ -538,26 +529,21 @@
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-{% include 'admin/views/admin/foot_panel.tpl' %}
-<!-- {$js} -->
+{include 'foot_panel.twig'}
+{if $footer}{include file="file:$footer"}{/if}
+{$js}
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-  $(function () {
-    $("#lang").on('change', function(e) {
-		Cookies.set('lang', $(this).val(), { expires: 30 });
-		window.location.reload(false);
-    });
-  });
   $.widget.bridge('uibutton', $.ui.button);
     $("#logout").click(function(e) {
   	$.ajax({
-	url: '{{ host }}/{{ vars.ModuleName }}/logout/',
+	url: '{$host}/{$AdminModuleName}/logout/',
 	type: 'post',
-	data: { "{{ csrf.nameKey }}": "{{ csrf.name }}", "{{ csrf.valueKey }}": "{{ csrf.value }}" },
+	data: { "{$CSRFname}": "{$CSRFToken}" },
 	success: function(response) {
 		obj = JSON.parse(response);
 		if (obj.code == 0) {
-			setTimeout("window.location.replace('{{ host }}/{{ vars.ModuleName }}/');",1000);
+			setTimeout("window.location.replace('{$host}/{$AdminModuleName}/');",1000);
 		}
 	}
 	});

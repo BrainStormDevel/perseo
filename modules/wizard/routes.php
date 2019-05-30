@@ -1,30 +1,24 @@
 <?php
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-use Slim\Http\Uri;
-
-$container->set('view', function ($container) {
-    $view = new \Slim\Views\Twig('modules', [
-        'cache' => false
-        //'cache' => 'cache'
-    ]);
-    $router = $container->get('router');
-    $uri = Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-    $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
-
-    return $view;
-});
-if (!\PerSeo\CheckConfig::verify()) {
+if (!empty($container->get('settings.database')['default'])) {
     $app->any('/wizard[{params:\b(?!wizard\b).*\w+}]',
-        function (Request $request, Response $response) use ($container) {
-            if (!\PerSeo\CheckConfig::verify()) {
-                return $response->withRedirect($request->getUri()->getBasePath());
-            }
+        function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
+
+            return $response->withRedirect($request->getUri()->getBasePath());
+
         });
 } else {
-    $app->get('/wizard[/]', function (Request $request, Response $response) use ($container) {
+    $app->get('/wizard[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
         try {
+            $container->set('view', function ($container) {
+                $view = new \Slim\Views\Twig('modules', [
+                    'cache' => false
+                ]);
+                $router = $container->get('router');
+                $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
+                $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+                return $view;
+            });
             $csrfarray = array();
             $csrfarray['nameKey'] = $this->get('csrf')->getTokenNameKey();
             $csrfarray['valueKey'] = $this->get('csrf')->getTokenValueKey();
@@ -34,11 +28,11 @@ if (!\PerSeo\CheckConfig::verify()) {
             $lang = new \PerSeo\Translator(\PerSeo\Language::Get(), \PerSeo\Path::LangPath());
             $lang->module('title');
             $lang->module('body');
-            return $this->get('view')->render($response, '/wizard/views/index.tpl', [
+            return $this->get('view')->render($response, '/wizard/views/index.twig', [
                 'csrf' => $csrfarray,
                 'lang' => $lang->vars(),
                 'host' => \PerSeo\Path::SiteName($request),
-                'vars' => \PerSeo\Template::vars(),
+                'vars' => \PerSeo\Template::vars($container),
                 'cookiepath' => \PerSeo\Path::cookiepath($request),
                 'writeperm' => (is_writable(\PerSeo\Path::CONF_PATH) ? "ok" : "no"),
                 'openssl' => (extension_loaded('openssl') ? "ok" : "no")
@@ -47,10 +41,12 @@ if (!\PerSeo\CheckConfig::verify()) {
             die("PerSeo ERROR : " . $e->getMessage());
         }
     })->setName('wizard');
-    $app->post('/wizard/test[/]', function (Request $request, Response $response) use ($container) {
-        \wizard\Controllers\Test::main($container);
-    })->setName('wizard');
-    $app->post('/wizard/install[/]', function (Request $request, Response $response) use ($container) {
-        \wizard\Controllers\Install::main($container);
-    })->setName('wizard');
+    $app->post('/wizard/test[/]',
+        function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
+            \wizard\Controllers\Test::main($container);
+        })->setName('wizard');
+    $app->post('/wizard/install[/]',
+        function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
+            \wizard\Controllers\Install::main($container);
+        })->setName('wizard');
 }

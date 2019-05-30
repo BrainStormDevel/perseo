@@ -7,6 +7,7 @@ use Exception;
 class Install
 {
 
+    private static $driver = "";
     private static $host = "";
     private static $name = "";
     private static $user = "";
@@ -18,50 +19,52 @@ class Install
 
     public static function main($container)
     {
-        $fileconf = \PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'config.php';
+        $fileconf = \PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'settings.php';
         try {
             $myfile = fopen($fileconf, "w");
-            $content = "<?php\n";
-            $content .= "define('DBHOST', '" . $container->get('Sanitizer')->POST('dbhost', 'user') . "');\n";
-            $content .= "define('DB', 'mysql');\n";
-            $content .= "define('DBPATH', NULL);\n";
-            $content .= "define('DBNAME', '" . $container->get('Sanitizer')->POST('dbname', 'pass') . "');\n";
-            $content .= "define('DBUSER', '" . $container->get('Sanitizer')->POST('dbuser', 'user') . "');\n";
-            $content .= "define('DBPASS', '" . $container->get('Sanitizer')->POST('dbpass', 'pass') . "');\n";
-            $content .= "define('DBENCODING', '" . $container->get('Sanitizer')->POST('dbencoding') . "');\n";
-            $content .= "define('SITENAME', '" . $container->get('Sanitizer')->POST('title') . "');\n";
-            $content .= "define('POSTFIX', '.html');\n";
-            $content .= "define('ENCODING', '" . $container->get('Sanitizer')->POST('encoding') . "');\n";
-            $content .= "define('LANG_DEFAULT', '" . $container->get('Sanitizer')->POST('lang', 'alpha') . "');\n";
-            $content .= "define('ADM_COOKNAME', '" . $container->get('Sanitizer')->POST('cookadm', 'user') . "');\n";
-            $content .= "define('USR_COOKNAME', '" . $container->get('Sanitizer')->POST('cookusr', 'user') . "');\n";
-            $content .= "define('MAX_U', '16');\n";
-            $content .= "define('MAX_P', '20');\n";
-            $content .= "define('MAX_E', '40');\n";
-            $content .= "define('MAX_T', '100');\n";
-            $content .= "define('MAX_FLOOD', '1');\n";
-            $content .= "define('CRYPT_SALT', '" . $container->get('Sanitizer')->POST('salt', 'alpha') . "');\n";
-            $content .= "define('TBL_', '" . $container->get('Sanitizer')->POST('prefix', 'user') . "');\n";
-            $content .= "define('COOKIE_EXPIRE', '" . $container->get('Sanitizer')->POST('cookexp', 'alpha') . "');\n";
-            $content .= "define('COOKIE_MAX_EXPIRE', '" . $container->get('Sanitizer')->POST('cookmaxexp',
-                    'alpha') . "');\n";
-            $content .= "define('COOKIE_PATH', '" . $container->get('Sanitizer')->POST('cookpath') . "');\n";
-            $content .= "define('COOKIE_SECURE', false);\n";
-            $content .= "define('COOKIE_HTTP', true);\n";
-            if (!empty($container->get('Sanitizer')->POST('facebook_app')) && !empty($container->get('Sanitizer')->POST('facebook_secret'))) {
-                $faceapp = 'F_APP_' . $_SERVER['SERVER_NAME'];
-                $facesecret = 'F_SECRET_' . $_SERVER['SERVER_NAME'];
-                $content .= "define('" . $faceapp . "', '" . $container->get('Sanitizer')->POST('facebook_app') . "');\n";
-                $content .= "define('" . $facesecret . "', '" . $container->get('Sanitizer')->POST('facebook_secret') . "');\n";
-            }
-            if (!empty($container->get('Sanitizer')->POST('google_key')) && !empty($container->get('Sanitizer')->POST('google_secret'))) {
-                $googlekey = 'G_KEY_' . $_SERVER['SERVER_NAME'];
-                $googlesecret = 'G_SECRET_' . $_SERVER['SERVER_NAME'];
-                $content .= "define('" . $googlekey . "', '" . $container->get('Sanitizer')->POST('google_key') . "');\n";
-                $content .= "define('" . $googlesecret . "', '" . $container->get('Sanitizer')->POST('google_secret') . "');\n";
-            }
+            $content = "<?php\n\n";
+            $content .= "return [
+    'settings.determineRouteBeforeAppMiddleware' => true,
+    'settings.displayErrorDetails' => true,
+    'settings.addContentLengthHeader' => false,
+    'settings.global' => [
+        'sitename' => '" . $container->get('Sanitizer')->POST('title') . "',
+        'encoding' => '" . $container->get('Sanitizer')->POST('encoding') . "',
+        'language' => '" . $container->get('Sanitizer')->POST('lang', 'alpha') . "'
+    ],
+    'settings.secure' => [
+        'crypt_salt' => '" . $container->get('Sanitizer')->POST('salt', 'alpha') . "',
+        'max_u' => '16',
+        'max_p' => '20',
+        'max_e' => '40',
+        'max_t' => '100'
+    ],
+    'settings.cookie' => [
+		'admin' => '" . $container->get('Sanitizer')->POST('cookadm', 'user') . "',
+		'user' => '" . $container->get('Sanitizer')->POST('cookusr', 'user') . "',
+        'cookie_exp' => '" . $container->get('Sanitizer')->POST('cookexp', 'alpha') . "',
+        'cookie_max_exp' => '" . $container->get('Sanitizer')->POST('cookmaxexp', 'alpha') . "',
+        'cookie_path' => '" . $container->get('Sanitizer')->POST('cookpath') . "',
+        'cookie_secure' => false,
+        'cookie_http' => true
+    ],
+    'settings.database' => [
+        'default' => [
+            'driver' => '" . $container->get('Sanitizer')->POST('driver', 'user') . "',
+            'host' => '" . $container->get('Sanitizer')->POST('dbhost', 'user') . "',
+            'database' => '" . $container->get('Sanitizer')->POST('dbname', 'pass') . "',
+            'username' => '" . $container->get('Sanitizer')->POST('dbuser', 'user') . "',
+            'password' => '" . $container->get('Sanitizer')->POST('dbpass', 'pass') . "',
+            'prefix' => '" . $container->get('Sanitizer')->POST('prefix', 'user') . "',
+            'charset' => '" . $container->get('Sanitizer')->POST('dbencoding', 'user') . "',
+            'port' => 3306
+
+        ]
+    ]
+];";
             fwrite($myfile, $content);
             fclose($myfile);
+            self::$driver = $container->get('Sanitizer')->POST('driver', 'user');
             self::$host = $container->get('Sanitizer')->POST('dbhost', 'user');
             self::$name = $container->get('Sanitizer')->POST('dbname', 'pass');
             self::$user = $container->get('Sanitizer')->POST('dbuser', 'user');
@@ -88,15 +91,22 @@ class Install
     private static function createdb($user, $email, $pass, $salt)
     {
         try {
-            $db = new \PerSeo\DB('mysql', self::$name, self::$host, self::$user, self::$pass, self::$tbprefix,
-                self::$encoding);
+            $db = new \PerSeo\DB([
+                'database_type' => self::$driver,
+                'database_name' => self::$name,
+                'server' => self::$host,
+                'username' => self::$user,
+                'password' => self::$pass,
+                'prefix' => self::$tbprefix,
+                'charset' => self::$encoding
+            ]);
             $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "admins (id int(100) NOT NULL auto_increment, user varchar(100) COLLATE utf8_unicode_ci NOT NULL, pass varchar(255) COLLATE utf8_unicode_ci NOT NULL, email varchar(255) COLLATE utf8_unicode_ci NOT NULL, superuser varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL, privilegi int(2) UNSIGNED DEFAULT NULL, stato int(2) NOT NULL, PRIMARY KEY (id), UNIQUE KEY user (user), UNIQUE KEY email (email)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
             $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "cookies (id int(100) NOT NULL auto_increment, uid int(100) NOT NULL, uuid varchar(255) COLLATE utf8_unicode_ci NOT NULL, type varchar(10) COLLATE utf8_unicode_ci NOT NULL, auth_token varchar(255) COLLATE utf8_unicode_ci NOT NULL, lastseen TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (id), UNIQUE KEY uuid (uuid)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
             $data = $db->insert("admins", [
                 "user" => $user,
-                "pass" => \PerSeo\Login::create_hash($pass),
+                "pass" => \login\Controllers\Login::create_hash($pass),
                 "email" => $email,
-                "superuser" => \PerSeo\Login::encrypt($user, $salt),
+                "superuser" => \login\Controllers\Login::encrypt($user, $salt),
                 "privilegi" => '1',
                 "stato" => '0'
             ]);
