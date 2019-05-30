@@ -113,6 +113,24 @@ class Login
         echo json_encode($result);
     }
 
+    public static function randStr($len)
+    {
+        $string1 = md5(rand());
+        $string2 = self::create_hash($string1);
+        $string3 = explode("$", $string2);
+        $string4 = implode("/", array_slice($string3, 3));
+        $result = preg_replace("/[^A-Za-z0-9]/", '', $string4);
+        return trim(substr($result, 0, $len));
+    }
+
+    public static function create_hash($string)
+    {
+        $options = [
+            'cost' => 12,
+        ];
+        return password_hash($string, PASSWORD_BCRYPT, $options);
+    }
+
     public function islogged($container)
     {
         $db = new DB();
@@ -185,23 +203,5 @@ class Login
                 $container->get('settings.cookie')['cookie_http']);
         }
         return false;
-    }
-
-    public static function randStr($len)
-    {
-        $string1 = md5(rand());
-        $string2 = self::create_hash($string1);
-        $string3 = explode("$", $string2);
-        $string4 = implode("/", array_slice($string3, 3));
-        $result = preg_replace("/[^A-Za-z0-9]/", '', $string4);
-        return trim(substr($result, 0, $len));
-    }
-
-    public static function create_hash($string)
-    {
-        $options = [
-            'cost' => 12,
-        ];
-        return password_hash($string, PASSWORD_BCRYPT, $options);
     }
 }
