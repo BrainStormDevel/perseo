@@ -8,12 +8,6 @@ class Sanitizer
 
     private $POST;
 
-    /**
-     * @param \Psr\Http\Message\ServerRequestInterface $requestInterface
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param callable $next
-     * @return \Psr\Http\Message\ResponseInterface
-     */
     public function __invoke(
         \Psr\Http\Message\ServerRequestInterface $requestInterface,
         \Psr\Http\Message\ResponseInterface $response,

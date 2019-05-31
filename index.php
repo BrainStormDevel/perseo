@@ -18,7 +18,10 @@ try {
     $app = new \PerSeo\NewApp;
     $app->add($sanitize);
     $container = $app->getContainer();
-    if (!empty($container->get('settings.secure')['crypt_salt'])) {
+    $container->set('Sanitizer', function ($container) use ($sanitize) {
+        return $sanitize;
+    });
+    if ($container->has('settings.secure')['crypt_salt']) {
         ini_set('session.save_handler', 'files');
         $key = $container->get('settings.secure')['crypt_salt'];
         $handler = new \PerSeo\Sessions($key);
@@ -33,7 +36,7 @@ try {
         ob_start();
     }
     session_start();
-    if (!empty($container->get('settings.database')['default'])) {
+    if ($container->has('settings.database')['default']) {
         $container->set('db', function ($container) {
             return new \PerSeo\DB([
                 'database_type' => $container->get('settings.database')['default']['driver'],
@@ -46,9 +49,6 @@ try {
             ]);
         });
     }
-    $container->set('Sanitizer', function ($container) use ($sanitize) {
-        return $sanitize;
-    });
     $container->set('csrf', function () {
         $guard = new \Slim\Csrf\Guard();
         $guard->setPersistentTokenMode(true);
@@ -86,7 +86,7 @@ try {
             'wizard'
         );
         $uri = $request->getUri()->getBasePath();
-        if (empty($container->get('settings.database')['default']) && !in_array($routeName, $publicRoutesArray)) {
+        if (!$container->has('settings.database')['default'] && !in_array($routeName, $publicRoutesArray)) {
             $response = $response->withRedirect($uri . '/wizard');
         } else {
             $response = $next($request, $response);
