@@ -1,6 +1,6 @@
 # PerSeo beta 0.9
 
-This is my CMS (based on Slim Framework 3 using PHP-DI 6 php-di.org), simply, modular, faster, SEO friendly and Secure. Code is PSR-4, PSR-7, PSR-16 compliant, and DB class using Medoo ORM for DB Access. The password are stored with SHA512 + salt, sensitive data can be encrypted and decrypted with a "salt password" stored in config.php. Request are sanitized using Methods $container->get('Sanitizer')->GET and $container->get('Sanitizer')->POST to prevent XSS, CSRF.
+This is my CMS (based on Slim Framework 3 using PHP-DI 6 php-di.org), simply, modular, faster, SEO friendly and Secure. Code is PSR-4, PSR-7, PSR-16 compliant, and DB class using Medoo ORM for DB Access. The password are stored with BCRYPT + salt, sensitive data can be encrypted and decrypted with a "salt password" stored in config.php. Request are sanitized using Methods $container->get('Sanitizer')->GET and $container->get('Sanitizer')->POST to prevent XSS, CSRF.
 
 
 Install and use is really simple.
