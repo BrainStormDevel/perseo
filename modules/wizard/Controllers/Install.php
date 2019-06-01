@@ -77,8 +77,6 @@ class Install
                 $container->get('Sanitizer')->POST('email', 'email'),
                 $container->get('Sanitizer')->POST('password', 'pass'),
                 $container->get('Sanitizer')->POST('salt', 'alpha'));
-            session_unset();
-            session_destroy();
         } catch (Exception $e) {
             $result = array(
                 'code' => $e->getCode(),

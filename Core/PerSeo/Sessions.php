@@ -2,17 +2,23 @@
 
 namespace PerSeo;
 
-use SessionHandler;
-
-class Sessions extends SessionHandler
+class Sessions extends \SessionHandler implements \SessionHandlerInterface, \SessionIdInterface
 {
     protected static $cipher = "AES-256-CBC";
 
-    private $key;
+    private $key, $cookie;
 
-    public function __construct($key)
+    public function __construct($container)
     {
-        $this->key = $key;
+        $this->key = $container->get('settings.secure')['crypt_salt'];
+        session_name('PERSEO_SESSID');
+        session_set_cookie_params(
+            0,
+            $container->get('settings.cookie')['cookie_path'],
+            null,
+            $container->get('settings.cookie')['cookie_secure'],
+            $container->get('settings.cookie')['cookie_http']
+        );
     }
 
     public function read($id)
@@ -45,6 +51,15 @@ class Sessions extends SessionHandler
         $iv = substr($result, 32, 16);
 
         return openssl_decrypt($ct, self::$cipher, $key, true, $iv);
+    }
+
+    public function create_sid()
+    {
+        $string = md5(rand());
+        $options = [
+            'cost' => 12,
+        ];
+        return preg_replace("/[^A-Za-z0-9]/", '', password_hash($string, PASSWORD_BCRYPT, $options));
     }
 
     public function write($id, $data)

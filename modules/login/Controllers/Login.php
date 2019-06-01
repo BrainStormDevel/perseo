@@ -133,13 +133,13 @@ class Login
 
     public function islogged($container)
     {
-        $db = new DB();
+        $db = $container->get('db');
         if ($type == 'admins') {
             $checktable = 'admins';
-            $cookname = constant("ADM_COOKNAME");
+            $cookname = $container->get('settings.cookie')['admin'];
         } elseif ($type == 'users') {
             $checktable = 'users';
-            $cookname = constant("USR_COOKNAME");
+            $cookname = $container->get('settings.cookie')['user'];
         }
         $cookietable = $checktable . '.user';
         $cookietype = $cookname . '_COOKID';
@@ -148,7 +148,7 @@ class Login
         if (!$uid) {
             return false;
         }
-        $result = $db->select($this->_table, [
+        $result = $db->select('cookies', [
             '[><]' . $type => [
                 'uid' => 'id'
             ]
@@ -162,7 +162,7 @@ class Login
         $cookiesalt = $_COOKIE[$cookiepub];
         $concat_string = $_SERVER['HTTP_USER_AGENT'] . ':~:' . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . ':~:' . $cookiesalt;
         $token = base64_encode($concat_string);
-        if (self::validate_hash($token, $result[0]['auth_token'])) {
+        if (password_verify($token, $result[0]['auth_token'])) {
             $result2 = $db->select($type, [
                 'id',
                 'superuser',

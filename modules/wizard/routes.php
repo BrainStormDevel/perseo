@@ -1,6 +1,6 @@
 <?php
 
-if ($container->has('settings.database')['default']) {
+if ($container->has('settings.database')) {
     $app->any('/wizard[{params:\b(?!wizard\b).*\w+}]',
         function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
 

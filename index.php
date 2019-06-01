@@ -21,10 +21,9 @@ try {
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });
-    if ($container->has('settings.secure')['crypt_salt']) {
+    if ($container->has('settings.secure')) {
         ini_set('session.save_handler', 'files');
-        $key = $container->get('settings.secure')['crypt_salt'];
-        $handler = new \PerSeo\Sessions($key);
+        $handler = new \PerSeo\Sessions($container);
         session_set_save_handler($handler, true);
     }
     if (ob_get_length()) {
@@ -35,8 +34,10 @@ try {
     } else {
         ob_start();
     }
-    session_start();
-    if ($container->has('settings.database')['default']) {
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if ($container->has('settings.database')) {
         $container->set('db', function ($container) {
             return new \PerSeo\DB([
                 'database_type' => $container->get('settings.database')['default']['driver'],
@@ -86,7 +87,7 @@ try {
             'wizard'
         );
         $uri = $request->getUri()->getBasePath();
-        if (!$container->has('settings.database')['default'] && !in_array($routeName, $publicRoutesArray)) {
+        if (!$container->has('settings.database') && !in_array($routeName, $publicRoutesArray)) {
             $response = $response->withRedirect($uri . '/wizard');
         } else {
             $response = $next($request, $response);
