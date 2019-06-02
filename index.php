@@ -94,7 +94,7 @@ try {
         }
         return $response;
     };
-    /*$adminMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
+    $adminMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
         $container
     ) {
         $route = $request->getAttribute('route');
@@ -105,17 +105,17 @@ try {
         $publicRoutesArray = array(
             'requireadmin'
         );
-        $login = new \PerSeo\Login;
+        $login = new \login\Controllers\Login;
         $uri = $request->getUri()->getBasePath();
-        if (!$login->islogged('admins') && in_array($routeName, $publicRoutesArray)) {
+        if (!$login->islogged($container, 'admins') && in_array($routeName, $publicRoutesArray)) {
             $response = $response->withRedirect($uri . '/login/admin');
         } else {
             $response = $next($request, $response);
         }
         return $response;
-    };*/
+    };
     $app->add($wizardMiddleware);
-    //$app->add($adminMiddleware);
+    $app->add($adminMiddleware);
     $app->add($container->get('csrf'));
     $directory = \PerSeo\Path::MOD_PATH;
     $dirobj = new \DirectoryIterator($directory);

@@ -36,6 +36,6 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
     }
 })->setName('requireadmin');
 $app->post('/admin/logout[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-    $mylogin = new \PerSeo\Login();
-    echo $mylogin->logout('admins');
+    $mylogin = new \login\Controllers\Login;
+    echo $mylogin->logout($container, 'admins');
 })->setName('requireadmin');

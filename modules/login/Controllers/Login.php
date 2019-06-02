@@ -4,6 +4,11 @@ namespace login\Controllers;
 
 class Login
 {
+	protected static $id = '';
+    protected static $name = '';
+    protected static $superuser = '';
+    protected static $privileges = '';
+	
     public static function encrypt($string, $key)
     {
         $ivlen = openssl_cipher_iv_length($cipher = "AES-256-CBC");
@@ -12,6 +17,20 @@ class Login
         $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
         $ciphertext_base64 = base64_encode($iv . $hmac . $ciphertext_raw);
         return trim($ciphertext_base64);
+    }
+
+    public static function decrypt($string, $key)
+    {
+        $c = base64_decode($string);
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-256-CBC");
+        $iv = substr($c, 0, $ivlen);
+        $hmac = substr($c, $ivlen, $sha2len = 32);
+        $ciphertext_raw = substr($c, $ivlen + $sha2len);
+        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
+        if (hash_equals($hmac, $calcmac)) {
+            return $original_plaintext;
+        }
     }
 
     public function check($container)
@@ -23,16 +42,16 @@ class Login
             );
             $type = (in_array($container->get('Sanitizer')->POST('type', 'alpha'),
                 $typesArray) ? $container->get('Sanitizer')->POST('type', 'alpha') : 'admins');
-            $db = $container->get('db');
-            /*if ($this->islogged($type)) {
+            if ($this->islogged($container, $type)) {
                 throw new Exception("OK", 0);
-            }*/
+            }
             $username = $container->get('Sanitizer')->POST('username', 'user');
             $password = $container->get('Sanitizer')->POST('password', 'pass');
             $remember = $container->get('Sanitizer')->POST('rememberme', 'int') == 1 ? false : true;
             if (!$username or !$password) {
                 throw new Exception("USR_PASS_EMPTY", 1);
             }
+			$db = $container->get('db');
             $result = $db->select($type, [
                 'id',
                 'user',
@@ -113,6 +132,50 @@ class Login
         echo json_encode($result);
     }
 
+    public function logout($container, $type)
+    {
+        try {
+			if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) {
+            if ($type == "admins") {
+                $cookname = $container->get('settings.cookie')['admin'];
+            } else {
+                $cookname = $container->get('settings.cookie')['user'];
+            }
+            $cookietype = $cookname . '_COOKID';
+            $uid = $_COOKIE[$cookietype];
+            if ($uid) {
+				$db = $container->get('db');
+                $db->delete('cookies', [
+                    "AND" => [
+                        "uuid" => $uid,
+                        "type" => $type
+                    ]
+                ]);
+                session_unset();
+                session_destroy();
+                \login\Controllers\Cookie::_setcookie($cookname . '_COOKID', '', time() - $container->get('settings.cookie')['cookie_max_exp'], $container->get('settings.cookie')['cookie_path'], null,
+                    $container->get('settings.cookie')['cookie_secure'], $container->get('settings.cookie')['cookie_http']);
+                \login\Controllers\Cookie::_setcookie($cookname . '_PUB', '', time() - $container->get('settings.cookie')['cookie_max_exp'], $container->get('settings.cookie')['cookie_path'], null, $container->get('settings.cookie')['cookie_secure'],
+                    $container->get('settings.cookie')['cookie_http']);
+                \login\Controllers\Cookie::_setcookie($cookname . '_REMEMBER', '', time() - $container->get('settings.cookie')['cookie_max_exp'], $container->get('settings.cookie')['cookie_path'], null,
+                    $container->get('settings.cookie')['cookie_secure'], $container->get('settings.cookie')['cookie_http']);
+                $result = array(
+                    'code' => '0',
+                    'msg' => 'OK'
+                );
+            } else {
+                throw new Exception("NO_COOKIE", 1);
+            }
+			}
+        } catch (Exception $e) {
+            $result = array(
+                'code' => $e->getCode(),
+                'msg' => $e->getMessage()
+            );
+        }
+        return json_encode($result);
+    }
+
     public static function randStr($len)
     {
         $string1 = md5(rand());
@@ -131,23 +194,24 @@ class Login
         return password_hash($string, PASSWORD_BCRYPT, $options);
     }
 
-    public function islogged($container)
+    public function islogged($container, $type)
     {
-        $db = $container->get('db');
+		if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) { return true; }
         if ($type == 'admins') {
             $checktable = 'admins';
-            $cookname = $container->get('settings.cookie')['admin'];
+            $cookname = ($container->has('settings.cookie') ? $container->get('settings.cookie')['admin'] : '');
         } elseif ($type == 'users') {
             $checktable = 'users';
-            $cookname = $container->get('settings.cookie')['user'];
+            $cookname = ($container->has('settings.cookie') ? $container->get('settings.cookie')['user'] : '');
         }
         $cookietable = $checktable . '.user';
         $cookietype = $cookname . '_COOKID';
         $cookiepub = $cookname . '_PUB';
-        $uid = $_COOKIE[$cookietype];
-        if (!$uid) {
-            return false;
-        }
+		if(!isset($_COOKIE[$cookietype])) {
+			return false;
+		}
+		$uid = $_COOKIE[$cookietype];
+		$db = $container->get('db');
         $result = $db->select('cookies', [
             '[><]' . $type => [
                 'uid' => 'id'
@@ -163,6 +227,7 @@ class Login
         $concat_string = $_SERVER['HTTP_USER_AGENT'] . ':~:' . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . ':~:' . $cookiesalt;
         $token = base64_encode($concat_string);
         if (password_verify($token, $result[0]['auth_token'])) {
+			$_SESSION['logged_in'] = 1;
             $result2 = $db->select($type, [
                 'id',
                 'superuser',
