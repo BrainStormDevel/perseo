@@ -47,6 +47,6 @@ $app->get('/login/{name}[/]',
         }
     })->setName('loginpage');
 $app->post('/login/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-	$login = new \login\Controllers\Login;
+    $login = new \login\Controllers\Login;
     $login->check($container);
 });

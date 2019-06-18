@@ -18,30 +18,51 @@ try {
     $app = new \PerSeo\NewApp;
     $app->add($sanitize);
     $container = $app->getContainer();
-	$app->add(new \PerSeo\WizardMiddleware($container));
-	$LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use ($container) {
-		if ($container->has('settings.global')) { $languages = $container->get('settings.global')['languages']; }
-		if (in_array(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)), $languages)) { $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)); }
-		else if (isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']), $languages)) { $currlang = strtolower($_COOKIE['lang']); }
-		else { $currlang = $container->get('settings.global')['language']; }
-		$req = $request->getUri()->getPath();
-		$basepath = $request->getUri()->getbasePath();
-		$langurl = explode("/", $request->getUri()->getPath());
-		if (($request->isGet()) && ($req != '/') &&($langurl[0] != 'admin')) {
-			if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
-				$currlang = $langurl[0];
-				$finalstring = substr($request->getUri()->getPath(), strlen($currlang));
-				$request = $request->withUri($request->getUri()->withPath($finalstring));
-				$request = $request->withUri($request->getUri()->withbasePath($basepath));
-			} else {
-				$container->set('current.language', $currlang);
-				throw new \Slim\Exception\NotFoundException($request, $response);
-			}
-		}
-		$container->set('current.language', $currlang);
-		return $next($request, $response);
-    };	
-	$app->add($LanguageMiddleware);
+    $app->add(new \PerSeo\WizardMiddleware($container));
+    $LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
+        $container
+    ) {
+        if ($container->has('settings.global')) {
+            $languages = $container->get('settings.global')['languages'];
+            if (isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']), $languages)) {
+                $currlang = strtolower($_COOKIE['lang']);
+            } else {
+                if (in_array(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)), $languages)) {
+                    $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+                } else {
+                    $currlang = $container->get('settings.global')['language'];
+                }
+            }
+            $req = $request->getUri()->getPath();
+            $basepath = $request->getUri()->getbasePath();
+            $langurl = explode("/", $request->getUri()->getPath());
+            if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
+                if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
+                    $currlang = $langurl[0];
+                    $finalstring = substr($request->getUri()->getPath(), strlen($currlang));
+                    $request = $request->withUri($request->getUri()->withPath($finalstring));
+                    $request = $request->withUri($request->getUri()->withbasePath($basepath));
+                } else {
+                    $container->set('current.language', $currlang);
+                    throw new \Slim\Exception\NotFoundException($request, $response);
+                }
+            }
+            $container->set('current.language', $currlang);
+        } else {
+            if (isset($_COOKIE['lang'])) {
+                $currlang = strtolower($_COOKIE['lang']);
+            } else {
+                if (!empty(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)))) {
+                    $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+                } else {
+                    $currlang = 'en';
+                }
+            }
+            $container->set('current.language', $currlang);
+        }
+        return $next($request, $response);
+    };
+    $app->add($LanguageMiddleware);
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });

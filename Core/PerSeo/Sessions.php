@@ -53,6 +53,11 @@ class Sessions extends \SessionHandler implements \SessionHandlerInterface, \Ses
         return openssl_decrypt($ct, self::$cipher, $key, true, $iv);
     }
 
+    public function create_sid()
+    {
+        return $this->get_rand();
+    }
+
     private function get_rand()
     {
         $string = md5(rand());
@@ -60,11 +65,6 @@ class Sessions extends \SessionHandler implements \SessionHandlerInterface, \Ses
             'cost' => 12,
         ];
         return preg_replace("/[^A-Za-z0-9]/", '', password_hash($string, PASSWORD_BCRYPT, $options));
-    }
-
-    public function create_sid()
-    {
-        return $this->get_rand();
     }
 
     public function write($id, $data)

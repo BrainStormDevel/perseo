@@ -2,24 +2,27 @@
 
 namespace login\Controllers;
 
-class CheckLogin extends Login {
+class CheckLogin extends Login
+{
 
     private $container;
-	
-	private $type;
 
-    public function __construct($container, $type) {
+    private $type;
+
+    public function __construct($container, $type)
+    {
         $this->container = $container;
-		$this->type = $type;
+        $this->type = $type;
     }
-	
-	public function __invoke(\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-        $uri = $request->getUri()->getBasePath() .'/'. $this->container->get('current.language');
+
+    public function __invoke(\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next)
+    {
+        $uri = $request->getUri()->getBasePath() . '/' . $this->container->get('current.language');
         if (!$this->islogged($this->container, $this->type)) {
             $response = $response->withRedirect($uri . '/login/admin');
         } else {
             $response = $next($request, $response);
         }
         return $response;
-	}
+    }
 }

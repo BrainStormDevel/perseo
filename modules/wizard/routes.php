@@ -3,9 +3,7 @@
 if ($container->has('settings.database')) {
     $app->any('/wizard[{params:\b(?!wizard\b).*\w+}]',
         function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-
             return $response->withRedirect($request->getUri()->getBasePath());
-
         });
 } else {
     $app->get('/wizard[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
@@ -25,7 +23,7 @@ if ($container->has('settings.database')) {
             $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
             $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
             \PerSeo\Path::$ModuleName = 'wizard';
-            $lang = new \PerSeo\Translator(\PerSeo\Language::Get(), \PerSeo\Path::LangPath());
+            $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
             $lang->module('title');
             $lang->module('body');
             return $this->get('view')->render($response, '/wizard/views/index.twig', [
