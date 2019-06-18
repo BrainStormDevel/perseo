@@ -18,6 +18,30 @@ try {
     $app = new \PerSeo\NewApp;
     $app->add($sanitize);
     $container = $app->getContainer();
+	$app->add(new \PerSeo\WizardMiddleware($container));
+	$LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use ($container) {
+		if ($container->has('settings.global')) { $languages = $container->get('settings.global')['languages']; }
+		if (in_array(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)), $languages)) { $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)); }
+		else if (isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']), $languages)) { $currlang = strtolower($_COOKIE['lang']); }
+		else { $currlang = $container->get('settings.global')['language']; }
+		$req = $request->getUri()->getPath();
+		$basepath = $request->getUri()->getbasePath();
+		$langurl = explode("/", $request->getUri()->getPath());
+		if (($request->isGet()) && ($req != '/') &&($langurl[0] != 'admin')) {
+			if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
+				$currlang = $langurl[0];
+				$finalstring = substr($request->getUri()->getPath(), strlen($currlang));
+				$request = $request->withUri($request->getUri()->withPath($finalstring));
+				$request = $request->withUri($request->getUri()->withbasePath($basepath));
+			} else {
+				$container->set('current.language', $currlang);
+				throw new \Slim\Exception\NotFoundException($request, $response);
+			}
+		}
+		$container->set('current.language', $currlang);
+		return $next($request, $response);
+    };	
+	$app->add($LanguageMiddleware);
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });
@@ -58,7 +82,7 @@ try {
     $container->set('notFoundHandler', function ($container) {
         return function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
             $container->set('view', function ($container) {
-                $view = new \Slim\Views\Twig('modules', [
+                $view = new \Slim\Views\Twig('modules/404/views', [
                     'cache' => 'cache'
                 ]);
                 $router = $container->get('router');
@@ -68,54 +92,12 @@ try {
                 return $view;
             });
             \PerSeo\Path::$ModuleName = '404';
-            return $container->get('view')->render($response, '/404/views/404.tpl', [
+            return $container->get('view')->render($response, '404.tpl', [
                 'host' => \PerSeo\Path::SiteName($request),
-                'vars' => \PerSeo\Template::vars($container),
-                'name' => $args['params']
+                'vars' => \PerSeo\Template::vars($container)
             ]);
         };
     });
-    $wizardMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
-        $container
-    ) {
-        $route = $request->getAttribute('route');
-        if (empty($route)) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
-        }
-        $routeName = $route->getName();
-        $publicRoutesArray = array(
-            'wizard'
-        );
-        $uri = $request->getUri()->getBasePath();
-        if (!$container->has('settings.database') && !in_array($routeName, $publicRoutesArray)) {
-            $response = $response->withRedirect($uri . '/wizard');
-        } else {
-            $response = $next($request, $response);
-        }
-        return $response;
-    };
-    $adminMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
-        $container
-    ) {
-        $route = $request->getAttribute('route');
-        if (empty($route)) {
-            throw new \Slim\Exception\NotFoundException($request, $response);
-        }
-        $routeName = $route->getName();
-        $publicRoutesArray = array(
-            'requireadmin'
-        );
-        $login = new \login\Controllers\Login;
-        $uri = $request->getUri()->getBasePath();
-        if (!$login->islogged($container, 'admins') && in_array($routeName, $publicRoutesArray)) {
-            $response = $response->withRedirect($uri . '/login/admin');
-        } else {
-            $response = $next($request, $response);
-        }
-        return $response;
-    };
-    $app->add($wizardMiddleware);
-    $app->add($adminMiddleware);
     $app->add($container->get('csrf'));
     $directory = \PerSeo\Path::MOD_PATH;
     $dirobj = new \DirectoryIterator($directory);

@@ -7,7 +7,7 @@ $app->get('/login/{name}[/]',
     function ($name, \Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
         try {
             $container->set('view', function ($container) {
-                $view = new \Slim\Views\Twig('modules', [
+                $view = new \Slim\Views\Twig('modules/login/views', [
                     'cache' => false
                 ]);
                 $router = $container->get('router');
@@ -21,7 +21,7 @@ $app->get('/login/{name}[/]',
             $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
             $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
             \PerSeo\Path::$ModuleName = 'login';
-            $lang = new \PerSeo\Translator(\PerSeo\Language::Get(), \PerSeo\Path::LangPath());
+            $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
             $lang->module('title');
             $lang->module('body');
             $faceapp = 'F_APP_' . $_SERVER['SERVER_NAME'];
@@ -34,7 +34,7 @@ $app->get('/login/{name}[/]',
             if (defined("$googlekey") && defined("$googlesecret")) {
                 $container['view']['googlekey'] = constant("$googlekey");
             }
-            return $this->get('view')->render($response, '/login/views/index.twig', [
+            return $this->get('view')->render($response, 'index.twig', [
                 'titlesite' => $this->get('settings.global')['sitename'],
                 'name' => $name,
                 'host' => \PerSeo\Path::SiteName($request),

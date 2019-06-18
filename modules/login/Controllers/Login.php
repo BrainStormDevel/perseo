@@ -8,8 +8,25 @@ class Login
     protected static $name = '';
     protected static $superuser = '';
     protected static $privileges = '';
+
+    public function id()
+    {
+        return self::$id;
+    }
+    public function username()
+    {
+        return self::$name;
+    }
+    public function superuser()
+    {
+        return self::$superuser;
+    }
+    public function privileges()
+    {
+        return self::$privileges;
+    }
 	
-    public static function encrypt($string, $key)
+    public function encrypt($string, $key)
     {
         $ivlen = openssl_cipher_iv_length($cipher = "AES-256-CBC");
         $iv = openssl_random_pseudo_bytes($ivlen);
@@ -19,7 +36,7 @@ class Login
         return trim($ciphertext_base64);
     }
 
-    public static function decrypt($string, $key)
+    public function decrypt($string, $key)
     {
         $c = base64_decode($string);
         $ivlen = openssl_cipher_iv_length($cipher = "AES-256-CBC");
@@ -62,7 +79,7 @@ class Login
             ]);
             $error = $db->error();
             if (($error[1] != null) && ($error[2] != null)) {
-                throw new Exception($error[2], 1);
+                throw new \Exception($error[2], 1);
             }
             if (password_verify($password, $result[0]['pass'])) {
                 $id = $result[0]['id'];
@@ -73,11 +90,11 @@ class Login
                 } else {
                     $cookname = $container->get('settings.cookie')['user'];
                 }
-                $cookiesalt = self::randStr(100);
+                $cookiesalt = $this->randStr(100);
                 $concat_string = $_SERVER['HTTP_USER_AGENT'] . ':~:' . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . ':~:' . $cookiesalt;
                 $token_first = base64_encode($concat_string);
-                $tokenhash = self::create_hash($token_first);
-                $uid = substr(preg_replace("/[^A-Za-z0-9]/", '', self::create_hash($id)), 11);
+                $tokenhash = $this->create_hash($token_first);
+                $uid = substr(preg_replace("/[^A-Za-z0-9]/", '', $this->create_hash($id)), 11);
                 $db->insert('cookies', [
                     "uid" => $id,
                     "uuid" => $uid,
@@ -86,7 +103,7 @@ class Login
                 ]);
                 $error = $db->error();
                 if (($error[1] != null) && ($error[2] != null)) {
-                    throw new Exception($error[2], 1);
+                    throw new \Exception($error[2], 1);
                 }
                 if ($remember) {
                     \login\Controllers\Cookie::_setcookie($cookname . '_COOKID', $uid,
@@ -176,17 +193,17 @@ class Login
         return json_encode($result);
     }
 
-    public static function randStr($len)
+    public function randStr($len)
     {
         $string1 = md5(rand());
-        $string2 = self::create_hash($string1);
+        $string2 = $this->create_hash($string1);
         $string3 = explode("$", $string2);
         $string4 = implode("/", array_slice($string3, 3));
         $result = preg_replace("/[^A-Za-z0-9]/", '', $string4);
         return trim(substr($result, 0, $len));
     }
 
-    public static function create_hash($string)
+    public function create_hash($string)
     {
         $options = [
             'cost' => 12,
@@ -196,7 +213,6 @@ class Login
 
     public function islogged($container, $type)
     {
-		if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) { return true; }
         if ($type == 'admins') {
             $checktable = 'admins';
             $cookname = ($container->has('settings.cookie') ? $container->get('settings.cookie')['admin'] : '');
@@ -208,8 +224,10 @@ class Login
         $cookietype = $cookname . '_COOKID';
         $cookiepub = $cookname . '_PUB';
 		if(!isset($_COOKIE[$cookietype])) {
+			unset($_SESSION['logged_in']);
 			return false;
 		}
+		if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) { return true; }
 		$uid = $_COOKIE[$cookietype];
 		$db = $container->get('db');
         $result = $db->select('cookies', [
@@ -236,7 +254,7 @@ class Login
                 'id' => $result[0]['id'],
                 'stato' => 0
             ]);
-            $checksu = self::decrypt($result2[0]['superuser'], CRYPT_SALT);
+            $checksu = $this->decrypt($result2[0]['superuser'], CRYPT_SALT);
             self::$id = $result2[0]['id'];
             self::$name = $result[0]['user'];
             self::$superuser = ($result[0]['user'] == $checksu ? true : false);

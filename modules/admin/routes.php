@@ -16,14 +16,14 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
         $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
         $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
         \PerSeo\Path::$ModuleName = 'admin';
-        $lang = new \PerSeo\Translator(\PerSeo\Language::Get(), \PerSeo\Path::LangAdminPath());
+        $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangAdminPath());
         $lang->module('title');
         $lang->module('body');
         return $this->get('view')->render($response, '/admin/views/admin/index.twig', [
             'csrf' => $csrfarray,
             'lang' => $lang->vars(),
             'titlesite' => $this->get('settings.global')['sitename'],
-            'username' => \PerSeo\Login::username(),
+            'username' => \login\Controllers\Login::username(),
             'bodytpl' => '/admin/views/admin/dashboard.twig',
             'menuarray' => \admin\Controllers\Menu::listall(),
             'host' => \PerSeo\Path::SiteName($request),
@@ -34,8 +34,8 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());
     }
-})->setName('requireadmin');
+})->add(new \login\Controllers\CheckLogin($container, 'admins'));
 $app->post('/admin/logout[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
     $mylogin = new \login\Controllers\Login;
     echo $mylogin->logout($container, 'admins');
-})->setName('requireadmin');
+})->add(new \login\Controllers\CheckLogin($container, 'admins'));
