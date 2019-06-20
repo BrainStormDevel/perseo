@@ -103,7 +103,7 @@ try {
     $container->set('notFoundHandler', function ($container) {
         return function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
             $container->set('view', function ($container) {
-                $view = new \Slim\Views\Twig('modules/404/views/'. $container->get('settings.global')['template'], [
+                $view = new \Slim\Views\Twig('modules/404/views/' . $container->get('settings.global')['template'], [
                     'cache' => 'cache'
                 ]);
                 $router = $container->get('router');

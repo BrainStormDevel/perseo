@@ -7,7 +7,7 @@ $app->get('/login/{name}[/]',
     function ($name, \Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
         try {
             $container->set('view', function ($container) {
-                $view = new \Slim\Views\Twig('modules/login/views/'. $container->get('settings.global')['template'], [
+                $view = new \Slim\Views\Twig('modules/login/views/' . $container->get('settings.global')['template'], [
                     'cache' => false
                 ]);
                 $router = $container->get('router');

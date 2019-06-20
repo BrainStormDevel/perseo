@@ -15,9 +15,9 @@ class Translator
         $this->language = strtolower($language);
         $this->path = $path . DIRECTORY_SEPARATOR;
         $this->result = array();
-		if (file_exists($this->path . $this->language . '.lng')) {
-			$content = file_get_contents($this->path . $this->language . '.lng');
-			$this->result = json_decode($content, true);
+        if (file_exists($this->path . $this->language . '.lng')) {
+            $content = file_get_contents($this->path . $this->language . '.lng');
+            $this->result = json_decode($content, true);
         }
     }
 

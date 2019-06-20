@@ -17,18 +17,19 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
         $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
         \PerSeo\Path::$ModuleName = 'admin';
         $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangAdminPath());
-        return $this->get('view')->render($response, '/admin/views/'. $container->get('settings.global')['template'] .'/admin/index.twig', [
-            'csrf' => $csrfarray,
-            'lang' => $lang->get(),
-            'titlesite' => $this->get('settings.global')['sitename'],
-            'username' => \login\Controllers\Login::username(),
-            'bodytpl' => '/admin/views/'. $container->get('settings.global')['template'] .'/admin/dashboard.twig',
-            'menuarray' => \admin\Controllers\Menu::listall(),
-            'host' => \PerSeo\Path::SiteName($request),
-            'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
-            'vars' => \PerSeo\Template::vars($container),
-            'cookiepath' => \PerSeo\Path::cookiepath($request)
-        ]);
+        return $this->get('view')->render($response,
+            '/admin/views/' . $container->get('settings.global')['template'] . '/admin/index.twig', [
+                'csrf' => $csrfarray,
+                'lang' => $lang->get(),
+                'titlesite' => $this->get('settings.global')['sitename'],
+                'username' => \login\Controllers\Login::username(),
+                'bodytpl' => '/admin/views/' . $container->get('settings.global')['template'] . '/admin/dashboard.twig',
+                'menuarray' => \admin\Controllers\Menu::listall(),
+                'host' => \PerSeo\Path::SiteName($request),
+                'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
+                'vars' => \PerSeo\Template::vars($container),
+                'cookiepath' => \PerSeo\Path::cookiepath($request)
+            ]);
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());
     }
