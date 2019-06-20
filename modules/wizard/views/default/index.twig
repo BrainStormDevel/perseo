@@ -122,6 +122,9 @@
 						</div>
 						</p>
 						<p>
+						  <div class="input-group"><span class="input-group-addon">{{ lang.l_locale_url }}</span><select id="locale" class="form-control"><option value="1">{{ lang.l_yes }}</option><option value="0">{{ lang.l_no }}</option></select></div>
+						</p>						
+						<p>
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_template_default }}</span><select id="template" class="form-control"><option value="default">default</option></select></div>
 						</p>						
 						<p>
@@ -317,11 +320,12 @@
 				$("#install").click(function() {
 					language = $('#lang option:selected').val();
 					defaultlang = $('#langdefault option:selected').val();
+					locale = $('#locale option:selected').val();
 					template = $('#template option:selected').val();
 					$.ajax({
 						url: '{{ host }}/{{ vars.ModuleUrlName }}/install/',
 						type: 'post',
-						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "template": template, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
+						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "locale": locale, "template": template, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
 						success: function(response) {
 							var result = JSON.parse(response);
 							if (result.code == 0) {

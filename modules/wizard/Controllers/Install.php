@@ -31,11 +31,13 @@ class Install
         'sitename' => '" . $container->get('Sanitizer')->POST('title') . "',
         'encoding' => '" . $container->get('Sanitizer')->POST('encoding') . "',
 		'template' => '" . $container->get('Sanitizer')->POST('template', 'alpha') . "',
+		'locale' => " . (boolval($container->get('Sanitizer')->POST('locale', 'num')) ? 'true' : 'false') . ",
         'language' => '" . $container->get('Sanitizer')->POST('defaultlang', 'alpha') . "',
 		'languages' => ['it', 'en']
     ],
     'settings.secure' => [
         'crypt_salt' => '" . $container->get('Sanitizer')->POST('salt', 'alpha') . "',
+		'max_a' => '200',
         'max_u' => '16',
         'max_p' => '20',
         'max_e' => '40',

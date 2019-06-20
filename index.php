@@ -14,15 +14,15 @@ try {
     if ((!@include_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) || (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
         throw new \Exception (__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php does not exist. Use composer to install dependencies.');
     }
-    $sanitize = new \PerSeo\Sanitizer();
     $app = new \PerSeo\NewApp;
-    $app->add($sanitize);
     $container = $app->getContainer();
+    $sanitize = new \PerSeo\Sanitizer($container);
+    $app->add($sanitize);
     $app->add(new \PerSeo\WizardMiddleware($container));
     $LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
         $container
     ) {
-        if ($container->has('settings.global')) {
+        if ($container->has('settings.global') && ($container->get('settings.global')['locale'])) {
             $languages = $container->get('settings.global')['languages'];
             if (isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']), $languages)) {
                 $currlang = strtolower($_COOKIE['lang']);
