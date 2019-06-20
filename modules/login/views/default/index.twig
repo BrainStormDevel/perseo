@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ionicons/4.0.0-19/css/ionicons.min.css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.10/css/AdminLTE.min.css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/square/blue.css" />
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/flags.css">
+  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/{{ vars.template }}/resources/css/flags.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -22,7 +22,7 @@
   <![endif]-->
 
   <!-- Google Font -->
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/infobox.css">
+  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/{{ vars.template }}/resources/css/infobox.css">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition login-page">
@@ -91,7 +91,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
-<script src="{{ host }}/modules/{{ vars.ModuleName }}/resources/js/securetoken.min.js"></script>{% endspaceless %}
+<script src="{{ host }}/modules/{{ vars.ModuleName }}/views/{{ vars.template }}/resources/js/securetoken.min.js"></script>{% endspaceless %}
 <script>
   $(function () {
 	$("#lang").on('change', function(e) {

@@ -30,7 +30,9 @@ class Install
     'settings.global' => [
         'sitename' => '" . $container->get('Sanitizer')->POST('title') . "',
         'encoding' => '" . $container->get('Sanitizer')->POST('encoding') . "',
-        'language' => '" . $container->get('Sanitizer')->POST('lang', 'alpha') . "'
+		'template' => '" . $container->get('Sanitizer')->POST('template', 'alpha') . "',
+        'language' => '" . $container->get('Sanitizer')->POST('defaultlang', 'alpha') . "',
+		'languages' => ['it', 'en']
     ],
     'settings.secure' => [
         'crypt_salt' => '" . $container->get('Sanitizer')->POST('salt', 'alpha') . "',

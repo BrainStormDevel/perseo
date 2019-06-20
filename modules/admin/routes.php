@@ -17,14 +17,12 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
         $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
         \PerSeo\Path::$ModuleName = 'admin';
         $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangAdminPath());
-        $lang->module('title');
-        $lang->module('body');
-        return $this->get('view')->render($response, '/admin/views/admin/index.twig', [
+        return $this->get('view')->render($response, '/admin/views/'. $container->get('settings.global')['template'] .'/admin/index.twig', [
             'csrf' => $csrfarray,
-            'lang' => $lang->vars(),
+            'lang' => $lang->get(),
             'titlesite' => $this->get('settings.global')['sitename'],
             'username' => \login\Controllers\Login::username(),
-            'bodytpl' => '/admin/views/admin/dashboard.twig',
+            'bodytpl' => '/admin/views/'. $container->get('settings.global')['template'] .'/admin/dashboard.twig',
             'menuarray' => \admin\Controllers\Menu::listall(),
             'host' => \PerSeo\Path::SiteName($request),
             'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',

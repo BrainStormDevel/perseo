@@ -24,11 +24,9 @@ if ($container->has('settings.database')) {
             $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
             \PerSeo\Path::$ModuleName = 'wizard';
             $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
-            $lang->module('title');
-            $lang->module('body');
-            return $this->get('view')->render($response, '/wizard/views/index.twig', [
+            return $this->get('view')->render($response, '/wizard/views/default/index.twig', [
                 'csrf' => $csrfarray,
-                'lang' => $lang->vars(),
+                'lang' => $lang->get(),
                 'host' => \PerSeo\Path::SiteName($request),
                 'vars' => \PerSeo\Template::vars($container),
                 'cookiepath' => \PerSeo\Path::cookiepath($request),

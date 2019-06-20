@@ -12,7 +12,7 @@ class Menu
         $dirobj = new \DirectoryIterator($directory);
         foreach ($dirobj as $fileinfo) {
             if (!$fileinfo->isDot()) {
-                $menu = $fileinfo->getFilename() . DIRECTORY_SEPARATOR . 'Views' . DIRECTORY_SEPARATOR . 'admin/menu.twig';
+                $menu = $fileinfo->getFilename() . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'default/admin/menu.twig';
                 if (file_exists($fileinfo->getPath() . DIRECTORY_SEPARATOR . $menu)) {
                     array_push($menus, $menu);
                 }

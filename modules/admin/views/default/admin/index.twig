@@ -6,9 +6,9 @@
   <title>{{ titlesite }} | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  {% include 'admin/views/admin/head_panel.twig' %}
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/flags.css">
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/brand.css">
+  {% include 'admin/views/default/admin/head_panel.twig' %}
+  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/css/flags.css">
+  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/css/brand.css">
   <!-- {$css} -->
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -538,7 +538,7 @@
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-{% include 'admin/views/admin/foot_panel.twig' %}
+{% include 'admin/views/default/admin/foot_panel.twig' %}
 <!-- {$js} -->
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>

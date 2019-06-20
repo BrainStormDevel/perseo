@@ -7,7 +7,7 @@ $app->get('/login/{name}[/]',
     function ($name, \Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
         try {
             $container->set('view', function ($container) {
-                $view = new \Slim\Views\Twig('modules/login/views', [
+                $view = new \Slim\Views\Twig('modules/login/views/'. $container->get('settings.global')['template'], [
                     'cache' => false
                 ]);
                 $router = $container->get('router');
@@ -22,8 +22,6 @@ $app->get('/login/{name}[/]',
             $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
             \PerSeo\Path::$ModuleName = 'login';
             $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
-            $lang->module('title');
-            $lang->module('body');
             $faceapp = 'F_APP_' . $_SERVER['SERVER_NAME'];
             $facesecret = 'F_SECRET_' . $_SERVER['SERVER_NAME'];
             if (defined("$faceapp") && defined("$facesecret")) {
@@ -39,7 +37,7 @@ $app->get('/login/{name}[/]',
                 'name' => $name,
                 'host' => \PerSeo\Path::SiteName($request),
                 'csrf' => $csrfarray,
-                'lang' => $lang->vars(),
+                'lang' => $lang->get(),
                 'vars' => \PerSeo\Template::vars($container)
             ]);
         } catch (Exception $e) {

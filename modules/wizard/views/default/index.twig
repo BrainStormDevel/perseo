@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/style.css">
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/loader.css">
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/resources/css/flags.css">
+  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/css/style.css">
+  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/css/loader.css">
+  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/css/flags.css">
 </head>
 <body>
 <input type="hidden" name="{{ csrf.nameKey }}" value="{{ csrf.name }}">
@@ -19,7 +19,7 @@
 
 			<section id="wizard">
 			  <div class="page-header">
-	            <h1>{{ lang.l_welcome }} {{ lang.ProdName }} {{ lang.ProdVer }}</h1>
+	            <h1>{{ lang.l_welcome }} {{ vars.ProdName }} {{ vars.ProdVer }}</h1>
 	          </div>
 
 				<div id="tabinstall" class="tabbable tabs-left">
@@ -105,7 +105,7 @@
 						<p>
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_title }}</span><input type="text" name="title" id="title" class="form-control" placeholder="{{ lang.l_title_ph }}">
 						  </div>
-						</p>
+						</p>	
 						<p>
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_prefix_tb }}</span><input type="text" name="prefix" id="prefix" class="form-control" placeholder="{{ lang.l_prefix_tb_ph }}">
 						  </div>
@@ -113,6 +113,17 @@
 						<p>
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_prefix_salt }}</span><input type="text" name="salt" id="salt" class="form-control" placeholder="{{ lang.l_prefix_salt_ph }}"><span class="input-group-btn"><button type="button" id="saltbtn" class="btn btn-default">{{ lang.l_generate }}</button></span></div>
 						</p>
+						<p>
+						<div class="input-group"><span class="input-group-addon">{{ lang.l_lang_default }}</span>
+								<select id="langdefault" class="selectpicker" data-style="btn-info">
+								<option data-icon="flag flag-it" value="it" {% if vars.language == 'it' %}selected{% endif %}>Italiano</option>
+								<option data-icon="flag flag-en" value="en" {% if vars.language == 'en' %}selected{% endif %}>English</option>
+							</select>
+						</div>
+						</p>
+						<p>
+						  <div class="input-group"><span class="input-group-addon">{{ lang.l_template_default }}</span><select id="template" class="form-control"><option value="default">default</option></select></div>
+						</p>						
 						<p>
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_encoding_page }}</span><input type="text" name="encoding" id="encoding" class="form-control" placeholder="{{ lang.l_encoding_page_ph }}" value="utf-8"></div>
 						</p>
@@ -179,8 +190,8 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.complexify.js/0.5.1/jquery.complexify.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
-	<script type="text/javascript" src="{{ host }}/modules/{{ vars.ModuleName }}/resources/js/functions.js" charset="UTF-8"></script>
-	<script type="text/javascript" src="{{ host }}/modules/{{ vars.ModuleName }}/resources/js/jquery.jquery-password-generator-plugin.min.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/js/functions.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/js/jquery.jquery-password-generator-plugin.min.js" charset="UTF-8"></script>
 	<script>
 	$(document).ready(function() {			
             $("#pass").complexify({}, function (valid, complexity) {
@@ -305,10 +316,12 @@
 					}});
 				$("#install").click(function() {
 					language = $('#lang option:selected').val();
+					defaultlang = $('#langdefault option:selected').val();
+					template = $('#template option:selected').val();
 					$.ajax({
 						url: '{{ host }}/{{ vars.ModuleUrlName }}/install/',
 						type: 'post',
-						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
+						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "template": template, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
 						success: function(response) {
 							var result = JSON.parse(response);
 							if (result.code == 0) {

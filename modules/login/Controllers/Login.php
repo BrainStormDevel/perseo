@@ -183,7 +183,7 @@ class Login
                 'id' => $result[0]['id'],
                 'stato' => 0
             ]);
-            $checksu = $this->decrypt($result2[0]['superuser'], CRYPT_SALT);
+            $checksu = $this->decrypt($result2[0]['superuser'], ($container->has('settings.secure') ? $container->get('settings.secure')['crypt_salt'] : ''));
             self::$id = $result2[0]['id'];
             self::$name = $result[0]['user'];
             self::$superuser = ($result[0]['user'] == $checksu ? true : false);
