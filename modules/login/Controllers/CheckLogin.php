@@ -17,7 +17,7 @@ class CheckLogin extends Login
 
     public function __invoke(\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next)
     {
-        $uri = $request->getUri()->getBasePath() . '/' . $this->container->get('current.language');
+        $uri = $this->container->get('redirect.url');
         if (!$this->islogged($this->container, $this->type)) {
             $response = $response->withRedirect($uri . '/login/admin');
         } else {

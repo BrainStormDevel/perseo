@@ -39,6 +39,7 @@ try {
             if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
                 if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
                     $currlang = $langurl[0];
+                    $container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
                     $finalstring = substr($request->getUri()->getPath(), strlen($currlang));
                     $request = $request->withUri($request->getUri()->withPath($finalstring));
                     $request = $request->withUri($request->getUri()->withbasePath($basepath));
@@ -47,8 +48,14 @@ try {
                     throw new \Slim\Exception\NotFoundException($request, $response);
                 }
             }
+            if ($container->get('settings.global')['locale']) {
+                $container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
+            } else {
+                $container->set('redirect.url', $request->getUri()->getBasePath());
+            }
             $container->set('current.language', $currlang);
         } else {
+            $container->set('redirect.url', $request->getUri()->getBasePath());
             if (isset($_COOKIE['lang'])) {
                 $currlang = strtolower($_COOKIE['lang']);
             } else {
