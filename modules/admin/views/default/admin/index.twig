@@ -7,8 +7,8 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   {% include 'admin/views/default/admin/head_panel.twig' %}
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/css/flags.css">
-  <link rel="stylesheet" href="{{ host }}/modules/{{ vars.ModuleName }}/views/default/resources/css/brand.css">
+  <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/admin/foot_panel/views/default/resources/css/flags.css">
+  <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/resources/css/brand.css">
   <!-- {$css} -->
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,7 +25,7 @@
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="{{ host }}/{{ vars.ModuleName }}/" class="logo">
+    <a href="{{ host }}/admin/" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini helmet"></span>
       <!-- logo for regular state and mobile devices -->
@@ -277,10 +277,10 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">{{ lang.l_profile }}</a>
+                  <a href="#" class="btn btn-default btn-flat">{{ adminlang.l_profile }}</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" id="logout" class="btn btn-default btn-flat">{{ lang.l_logout }}</a>
+                  <a href="#" id="logout" class="btn btn-default btn-flat">{{ adminlang.l_logout }}</a>
                 </div>
               </li>
             </ul>
@@ -310,7 +310,7 @@
       <!-- search form -->
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="{{ lang.l_search }}">
+          <input type="text" name="q" class="form-control" placeholder="{{ adminlang.l_search }}">
           <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
@@ -320,8 +320,14 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-	  {% for menu in menuarray %}
-		{% include menu %}
+	  {% for currmenu in menu %}
+	  {% if currmenu.menu|length %}
+	  <li {% if vars.ModuleName == currmenu.name %}class="active"{% endif %}>
+		<a href="{{ host }}{{ currmenu.menu.location }}">
+		<i class="{{ currmenu.menu.icon }}"></i> <span>{{ langmenu[currmenu.name][currmenu.menu.title] }}</span>
+		</a>
+	  </li>
+	  {% endif %}
 	  {% endfor %} 
       </ul>
     </section>
@@ -551,13 +557,13 @@
   $.widget.bridge('uibutton', $.ui.button);
     $("#logout").click(function(e) {
   	$.ajax({
-	url: '{{ host }}/{{ vars.ModuleName }}/logout/',
+	url: '{{ host }}/admin/logout/',
 	type: 'post',
 	data: { "{{ csrf.nameKey }}": "{{ csrf.name }}", "{{ csrf.valueKey }}": "{{ csrf.value }}" },
 	success: function(response) {
 		obj = JSON.parse(response);
 		if (obj.code == 0) {
-			setTimeout("window.location.replace('{{ host }}/{{ vars.ModuleName }}/');",1000);
+			setTimeout("window.location.replace('{{ host }}/admin/');",1000);
 		}
 	}
 	});

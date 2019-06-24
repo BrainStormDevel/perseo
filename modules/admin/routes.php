@@ -10,26 +10,10 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
             $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
             return $view;
         });
-        $csrfarray = array();
-        $csrfarray['nameKey'] = $this->get('csrf')->getTokenNameKey();
-        $csrfarray['valueKey'] = $this->get('csrf')->getTokenValueKey();
-        $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
-        $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
         \PerSeo\Path::$ModuleName = 'admin';
-        $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangAdminPath());
+		$panel = new \admin\Controllers\Panel($container, $request);
         return $this->get('view')->render($response,
-            '/admin/views/' . $container->get('settings.global')['template'] . '/admin/index.twig', [
-                'csrf' => $csrfarray,
-                'lang' => $lang->get(),
-                'titlesite' => $this->get('settings.global')['sitename'],
-                'username' => \login\Controllers\Login::username(),
-                'bodytpl' => '/admin/views/' . $container->get('settings.global')['template'] . '/admin/dashboard.twig',
-                'menuarray' => \admin\Controllers\Menu::listall(),
-                'host' => \PerSeo\Path::SiteName($request),
-                'adm_host' => \PerSeo\Path::SiteName($request) . '/admin',
-                'vars' => \PerSeo\Template::vars($container),
-                'cookiepath' => \PerSeo\Path::cookiepath($request)
-            ]);
+				'/admin/views/' . $container->get('settings.global')['template'] . '/admin/index.twig', $panel->get('/admin/views/' . $container->get('settings.global')['template'] . '/admin/dashboard.twig'));
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());
     }

@@ -5,4 +5,4 @@ $app->get('/admin/users[/]', function (\Slim\Http\Request $request, \Slim\Http\R
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());
     }
-});
+})->add(new \login\Controllers\CheckLogin($container, 'admins'));

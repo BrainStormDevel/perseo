@@ -2,7 +2,7 @@
 $app->get('/', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
     try {
         $container->set('view', function ($container) {
-            $view = new \Slim\Views\Twig('modules/index/views', [
+            $view = new \Slim\Views\Twig('modules/index/views/' . $container->get('settings.global')['template'], [
                 'cache' => false
             ]);
             $router = $container->get('router');
@@ -17,9 +17,10 @@ $app->get('/', function (\Slim\Http\Request $request, \Slim\Http\Response $respo
         $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
         \PerSeo\Path::$ModuleName = 'index';
         $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
+		$langall = $lang->get();
         return $this->get('view')->render($response, 'index.twig', [
             'csrf' => $csrfarray,
-            'lang' => $lang->get(),
+            'lang' => $langall['body'],
             'host' => \PerSeo\Path::SiteName($request),
             'vars' => \PerSeo\Template::vars($container)
         ]);

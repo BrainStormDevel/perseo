@@ -22,6 +22,7 @@ $app->get('/login/{name}[/]',
             $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
             \PerSeo\Path::$ModuleName = 'login';
             $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
+			$langall = $lang->get();
             $faceapp = 'F_APP_' . $_SERVER['SERVER_NAME'];
             $facesecret = 'F_SECRET_' . $_SERVER['SERVER_NAME'];
             if (defined("$faceapp") && defined("$facesecret")) {
@@ -37,7 +38,7 @@ $app->get('/login/{name}[/]',
                 'name' => $name,
                 'host' => \PerSeo\Path::SiteName($request),
                 'csrf' => $csrfarray,
-                'lang' => $lang->get(),
+                'lang' => $langall['body'],
                 'vars' => \PerSeo\Template::vars($container)
             ]);
         } catch (Exception $e) {

@@ -12,7 +12,6 @@ class Path
     const CORE_PATH = D_ROOT . DS . 'Core';
     const CONF_PATH = D_ROOT . DS . 'config';
     const MOD_PATH = D_ROOT . DS . 'modules';
-    const LANG_PATH = D_ROOT . DS . 'Languages';
     const INC_PATH = D_ROOT . DS . 'vendor';
     const INST_PATH = D_ROOT . DS . 'install';
 
@@ -25,12 +24,12 @@ class Path
 
     public static function LangPath($module = null)
     {
-        return realpath(self::MOD_PATH . DIRECTORY_SEPARATOR . ($module == null ? self::$ModuleName : $module) . DIRECTORY_SEPARATOR . 'Languages');
+        return realpath(self::MOD_PATH . DIRECTORY_SEPARATOR . ($module == null ? self::$ModuleName : $module) . DIRECTORY_SEPARATOR . 'languages');
     }
 
     public static function LangAdminPath($module = null)
     {
-        return realpath(self::MOD_PATH . DIRECTORY_SEPARATOR . ($module == null ? self::$ModuleName : $module) . DIRECTORY_SEPARATOR . 'Languages' . DIRECTORY_SEPARATOR . 'Admin');
+        return realpath(self::MOD_PATH . DIRECTORY_SEPARATOR . ($module == null ? self::$ModuleName : $module) . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . 'admin');
     }
 
     public static function ModuleName()
