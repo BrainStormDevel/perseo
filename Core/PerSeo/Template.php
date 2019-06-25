@@ -4,16 +4,23 @@ namespace PerSeo;
 
 class Template
 {
-    public static function vars($container)
+	private $container;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
+	
+    public function vars($modulename)
     {
         $vars = array();
-        $vars['ProdName'] = $container->get('settings.prodname');
-        $vars['ProdVer'] = $container->get('settings.prodver');
-        $vars['encoding'] = $container->has('settings.global') ? $container->get('settings.global')['encoding'] : '';
-        $vars['template'] = $container->has('settings.global') ? $container->get('settings.global')['template'] : '';
-        $vars['language'] = $container->get('current.language');
-        $vars['ModuleName'] = \PerSeo\Path::ModuleName();
-        $vars['ModuleUrlName'] = strtolower(\PerSeo\Path::ModuleName());
+        $vars['ProdName'] = $this->container->get('settings.prodname');
+        $vars['ProdVer'] = $this->container->get('settings.prodver');
+        $vars['encoding'] = $this->container->has('settings.global') ? $this->container->get('settings.global')['encoding'] : '';
+        $vars['template'] = $this->container->has('settings.global') ? $this->container->get('settings.global')['template'] : '';
+        $vars['language'] = $this->container->get('current.language');
+        $vars['ModuleName'] = $modulename;
+        $vars['ModuleUrlName'] = strtolower($modulename);
         return $vars;
     }
 }

@@ -20,8 +20,7 @@ $app->get('/login/{name}[/]',
             $csrfarray['valueKey'] = $this->get('csrf')->getTokenValueKey();
             $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
             $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
-            \PerSeo\Path::$ModuleName = 'login';
-            $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
+            $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath('login'));
 			$langall = $lang->get();
             $faceapp = 'F_APP_' . $_SERVER['SERVER_NAME'];
             $facesecret = 'F_SECRET_' . $_SERVER['SERVER_NAME'];
@@ -39,7 +38,7 @@ $app->get('/login/{name}[/]',
                 'host' => \PerSeo\Path::SiteName($request),
                 'csrf' => $csrfarray,
                 'lang' => $langall['body'],
-                'vars' => \PerSeo\Template::vars($container)
+                'vars' => $container->get('Templater')->vars('login')
             ]);
         } catch (Exception $e) {
             die("PerSeo ERROR : " . $e->getMessage());

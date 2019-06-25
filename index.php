@@ -19,6 +19,14 @@ try {
     $sanitize = new \PerSeo\Sanitizer($container);
     $app->add($sanitize);
     $app->add(new \PerSeo\WizardMiddleware($container));
+	$container->set('Cookie', function($container){
+		$request = $container->get('request');
+		return new \Slim\Http\Cookies($request->getCookieParams());
+	});
+	$container->set('Templater', function ($container) {
+		$template = new \PerSeo\Template($container);
+		return $template;
+	});
     $LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
         $container
     ) {
@@ -119,10 +127,9 @@ try {
 
                 return $view;
             });
-            \PerSeo\Path::$ModuleName = '404';
             return $container->get('view')->render($response, '404.twig', [
                 'host' => \PerSeo\Path::SiteName($request),
-                'vars' => \PerSeo\Template::vars($container)
+                'vars' => $container->get('Templater')->vars('404')
             ]);
         };
     });

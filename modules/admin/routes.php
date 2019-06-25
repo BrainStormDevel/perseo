@@ -10,7 +10,6 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
             $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
             return $view;
         });
-        \PerSeo\Path::$ModuleName = 'admin';
 		$panel = new \admin\Controllers\Panel($container, $request);
         return $this->get('view')->render($response,
 				'/admin/views/' . $container->get('settings.global')['template'] . '/admin/index.twig', $panel->get('/admin/views/' . $container->get('settings.global')['template'] . '/admin/dashboard.twig'));

@@ -95,28 +95,28 @@ class Login
                     throw new \Exception($error[2], 1);
                 }
                 if ($remember) {
-                    \login\Controllers\Cookie::_setcookie($cookname . '_COOKID', $uid,
+                    setcookie($cookname . '_COOKID', $uid,
                         time() + $container->get('settings.cookie')['cookie_max_exp'],
                         $container->get('settings.cookie')['cookie_path'], null,
                         $container->get('settings.cookie')['cookie_secure'],
                         $container->get('settings.cookie')['cookie_http']);
-                    \login\Controllers\Cookie::_setcookie($cookname . '_PUB', $cookiesalt,
+                    setcookie($cookname . '_PUB', $cookiesalt,
                         time() + $container->get('settings.cookie')['cookie_max_exp'],
                         $container->get('settings.cookie')['cookie_path'], null,
                         $container->get('settings.cookie')['cookie_secure'],
                         $container->get('settings.cookie')['cookie_http']);
-                    \login\Controllers\Cookie::_setcookie($cookname . '_REMEMBER', 'rememberme',
+                    setcookie($cookname . '_REMEMBER', 'rememberme',
                         time() + $container->get('settings.cookie')['cookie_max_exp'],
                         $container->get('settings.cookie')['cookie_path'],
                         null, $container->get('settings.cookie')['cookie_secure'],
                         $container->get('settings.cookie')['cookie_http']);
                 } else {
-                    \login\Controllers\Cookie::_setcookie($cookname . '_COOKID', $uid,
+                    setcookie($cookname . '_COOKID', $uid,
                         time() + $container->get('settings.cookie')['cookie_exp'],
                         $container->get('settings.cookie')['cookie_path'], null,
                         $container->get('settings.cookie')['cookie_secure'],
                         $container->get('settings.cookie')['cookie_http']);
-                    \login\Controllers\Cookie::_setcookie($cookname . '_PUB', $cookiesalt,
+                    setcookie($cookname . '_PUB', $cookiesalt,
                         time() + $container->get('settings.cookie')['cookie_exp'],
                         $container->get('settings.cookie')['cookie_path'], null,
                         $container->get('settings.cookie')['cookie_secure'],
@@ -199,17 +199,17 @@ class Login
             ]);
             session_unset();
             session_destroy();
-            \login\Controllers\Cookie::_setcookie($cookname . '_COOKID', $uid,
+            setcookie($cookname . '_COOKID', $uid,
                 time() - $container->get('settings.cookie')['cookie_max_exp'],
                 $container->get('settings.cookie')['cookie_path'], null,
                 $container->get('settings.cookie')['cookie_secure'],
                 $container->get('settings.cookie')['cookie_http']);
-            \login\Controllers\Cookie::_setcookie($cookname . '_PUB', $cookiesalt,
+            setcookie($cookname . '_PUB', $cookiesalt,
                 time() - $container->get('settings.cookie')['cookie_max_exp'],
                 $container->get('settings.cookie')['cookie_path'], null,
                 $container->get('settings.cookie')['cookie_secure'],
                 $container->get('settings.cookie')['cookie_http']);
-            \login\Controllers\Cookie::_setcookie($cookname . '_REMEMBER', 'rememberme',
+            setcookie($cookname . '_REMEMBER', 'rememberme',
                 time() - $container->get('settings.cookie')['cookie_max_exp'],
                 $container->get('settings.cookie')['cookie_path'],
                 null, $container->get('settings.cookie')['cookie_secure'],
@@ -271,17 +271,17 @@ class Login
                     ]);
                     session_unset();
                     session_destroy();
-                    \login\Controllers\Cookie::_setcookie($cookname . '_COOKID', '',
+                    setcookie($cookname . '_COOKID', '',
                         time() - $container->get('settings.cookie')['cookie_max_exp'],
                         $container->get('settings.cookie')['cookie_path'], null,
                         $container->get('settings.cookie')['cookie_secure'],
                         $container->get('settings.cookie')['cookie_http']);
-                    \login\Controllers\Cookie::_setcookie($cookname . '_PUB', '',
+                    setcookie($cookname . '_PUB', '',
                         time() - $container->get('settings.cookie')['cookie_max_exp'],
                         $container->get('settings.cookie')['cookie_path'], null,
                         $container->get('settings.cookie')['cookie_secure'],
                         $container->get('settings.cookie')['cookie_http']);
-                    \login\Controllers\Cookie::_setcookie($cookname . '_REMEMBER', '',
+                    setcookie($cookname . '_REMEMBER', '',
                         time() - $container->get('settings.cookie')['cookie_max_exp'],
                         $container->get('settings.cookie')['cookie_path'], null,
                         $container->get('settings.cookie')['cookie_secure'],

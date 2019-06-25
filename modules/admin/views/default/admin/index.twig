@@ -9,6 +9,9 @@
   {% include 'admin/views/default/admin/head_panel.twig' %}
   <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/admin/foot_panel/views/default/resources/css/flags.css">
   <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/resources/css/brand.css">
+  {% if headertpl|length %}
+  {% include headertpl %}
+  {% endif %}
   <!-- {$css} -->
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -545,6 +548,9 @@
 </div>
 <!-- ./wrapper -->
 {% include 'admin/views/default/admin/foot_panel.twig' %}
+  {% if footertpl|length %}
+  {% include footertpl %}
+  {% endif %}
 <!-- {$js} -->
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>

@@ -15,14 +15,13 @@ $app->get('/', function (\Slim\Http\Request $request, \Slim\Http\Response $respo
         $csrfarray['valueKey'] = $this->get('csrf')->getTokenValueKey();
         $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
         $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
-        \PerSeo\Path::$ModuleName = 'index';
-        $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath());
+        $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath('index'));
 		$langall = $lang->get();
         return $this->get('view')->render($response, 'index.twig', [
             'csrf' => $csrfarray,
             'lang' => $langall['body'],
             'host' => \PerSeo\Path::SiteName($request),
-            'vars' => \PerSeo\Template::vars($container)
+            'vars' => $container->get('Templater')->vars('index')
         ]);
     } catch (Exception $e) {
         die("PerSeo ERROR : " . $e->getMessage());
