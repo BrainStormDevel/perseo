@@ -4,13 +4,13 @@ namespace PerSeo;
 
 class Template
 {
-	private $container;
+    private $container;
 
     public function __construct($container)
     {
         $this->container = $container;
     }
-	
+
     public function vars($modulename)
     {
         $vars = array();

@@ -16,7 +16,7 @@ $app->get('/', function (\Slim\Http\Request $request, \Slim\Http\Response $respo
         $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
         $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
         $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath('index'));
-		$langall = $lang->get();
+        $langall = $lang->get();
         return $this->get('view')->render($response, 'index.twig', [
             'csrf' => $csrfarray,
             'lang' => $langall['body'],

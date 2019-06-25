@@ -19,14 +19,10 @@ try {
     $sanitize = new \PerSeo\Sanitizer($container);
     $app->add($sanitize);
     $app->add(new \PerSeo\WizardMiddleware($container));
-	$container->set('Cookie', function($container){
-		$request = $container->get('request');
-		return new \Slim\Http\Cookies($request->getCookieParams());
-	});
-	$container->set('Templater', function ($container) {
-		$template = new \PerSeo\Template($container);
-		return $template;
-	});
+    $container->set('Templater', function ($container) {
+        $template = new \PerSeo\Template($container);
+        return $template;
+    });
     $LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
         $container
     ) {
@@ -136,24 +132,26 @@ try {
     $app->add($container->get('csrf'));
     $directory = \PerSeo\Path::MOD_PATH;
     $dirobj = new \DirectoryIterator($directory);
-	$modules = array();
-	$curmod = 0;
+    $modules = array();
+    $curmod = 0;
     foreach ($dirobj as $fileinfo) {
         if (!$fileinfo->isDot()) {
-			$menu = $fileinfo->getPathname() . DIRECTORY_SEPARATOR .'views'. DIRECTORY_SEPARATOR . 'menu.json';
+            $menu = $fileinfo->getPathname() . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'menu.json';
             $routes = $fileinfo->getPathname() . DIRECTORY_SEPARATOR . 'routes.php';
-			$modules[$curmod]['name'] = $fileinfo->getBasename();
-			if (file_exists($menu)) {
-				$currfile = file_get_contents($menu);
-				$modules[$curmod]['menu'] = json_decode($currfile, true);
+            $modules[$curmod]['name'] = $fileinfo->getBasename();
+            if (file_exists($menu)) {
+                $currfile = file_get_contents($menu);
+                $modules[$curmod]['menu'] = json_decode($currfile, true);
             }
             if (file_exists($routes)) {
                 @include_once($routes);
             }
-			$curmod++;
+            $curmod++;
         }
     }
-	if (!empty($modules)) { $container->set('modules.name', $modules); }
+    if (!empty($modules)) {
+        $container->set('modules.name', $modules);
+    }
     $app->run();
 } catch (Exception $e) {
     die("PerSeo ERROR : " . $e->getMessage());
