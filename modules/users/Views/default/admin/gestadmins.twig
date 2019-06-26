@@ -27,7 +27,6 @@
                         <th>Password</th>
                         <th>Email</th>
                         <th>{{ lang.role }}</th>
-						<th>Domain</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -38,8 +37,7 @@
 						<td>{{ curname.user }}</td>
                         <td>*****</td>
                         <td>{{ curname.email }}</td>
-                        <td>{{ curname.privilegi }}</td>
-						<td>{{ curname.domain }}</td>
+                        <td>{{ curname.label }}</td>
                         <td><a class="edit" href="javascript:void(0);"><i class="fa fa-edit" title="{{ lang.edit }}"></i></a>&nbsp;&nbsp;<a class="delete" href="javascript:void(0);"><i class="fa fa-trash" title="{{ lang.delete }}"></i></a></td>
 					  </tr>
 					  {% endfor %}
@@ -51,7 +49,6 @@
                         <th>Password</th>
                         <th>Email</th>
                         <th>{{ lang.role }}</th>
-						<th>Domain</th>
                         <th></th>
                       </tr>
                     </tfoot>
