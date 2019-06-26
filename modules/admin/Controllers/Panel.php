@@ -7,12 +7,19 @@ class Panel
     private $request;
 
     private $container;
+	
+	private $vars = array();
 
     public function __construct($container, $request)
     {
         $this->container = $container;
         $this->request = $request;
     }
+	
+    public function add($name, $param)
+    {
+        $this->vars[$name] = $param;
+    }	
 
     public function get($body, $name = null, $header = null, $footer = null)
     {
@@ -30,6 +37,8 @@ class Panel
             \PerSeo\Path::LangAdminPath('admin'));
         $langadminall = $langadmin->get();
         $langmenu = new \admin\Controllers\Langmenu($this->container);
+		$curvar = ($name != null ? $this->container->get('Templater')->vars($name) : $this->container->get('Templater')->vars('admin'));
+		$vars = array_merge_recursive($curvar, $this->vars);
         return [
             'menu' => $this->container->get('modules.name'),
             'langmenu' => $langmenu->get(),
@@ -43,7 +52,8 @@ class Panel
             'footertpl' => $footer,
             'host' => \PerSeo\Path::SiteName($this->request),
             'adm_host' => \PerSeo\Path::SiteName($this->request) . '/admin',
-            'vars' => ($name != null ? $this->container->get('Templater')->vars($name) : $this->container->get('Templater')->vars('admin')),
+            'vars' => $vars,
+			'mod' => (!empty($this->vars) ? $this->vars : array()),
             'cookiepath' => \PerSeo\Path::cookiepath($this->request)
         ];
     }

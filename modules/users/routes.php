@@ -34,10 +34,12 @@ $app->get('/admin/users/edit_admins[/]',
                 return $view;
             });
             $panel = new \admin\Controllers\Panel($container, $request);
+			$users = new \users\Controllers\Listusers($container);
+			$panel->add('users', $users->admins());
             return $this->get('view')->render($response,
                 '/admin/views/' . $container->get('settings.global')['template'] . '/admin/index.twig',
                 $panel->get('/users/views/' . $container->get('settings.global')['template'] . '/admin/gestadmins.twig',
-                    'users'));
+                    'users', '/users/views/' . $container->get('settings.global')['template'] . '/admin/head_include.twig', '/users/views/' . $container->get('settings.global')['template'] . '/admin/foot_include.twig'));
         } catch (Exception $e) {
             die("PerSeo ERROR : " . $e->getMessage());
         }

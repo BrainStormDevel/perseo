@@ -19,8 +19,6 @@
                 </div><!-- /.box-header -->
                 <div class="box-body">
 				 <a id="add_new" href="javascript:void(0);" class="btn btn-flat btn-primary">{{ lang.add_new }}</a><br><br>
-				 <input name="CSRFName" id="CSRFName" type="hidden" value="{$CSRFName}">
-				 <input name="CSRFToken" id="CSRFToken" type="hidden" value="{$CSRFToken}">
                   <table id="list_admins" class="table table-bordered table-striped">
                     <thead>
                       <tr>
@@ -28,23 +26,23 @@
                         <th>Username</th>
                         <th>Password</th>
                         <th>Email</th>
-                        <th>{$l_role}</th>
+                        <th>{{ lang.role }}</th>
 						<th>Domain</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
-					  {for $i=0 to $admtot}
+					  {% for key, curname in vars[vars.ModuleName] %}
 					  <tr>
-						<td><input type="hidden" value={$admins[{$i}].id}"><input type="hidden" value="{$admins[{$i}].token}"></td>
-						<td>{$admins[{$i}].user}</td>
+						<td><input type="hidden" value="{{ curname.id }}"></td>
+						<td>{{ curname.user }}</td>
                         <td>*****</td>
-                        <td>{$admins[{$i}].email}</td>
-                        <td>{if $admins[$i].privilegi eq '1'}Admin{elseif $admins[$i].privilegi eq '2'}Operatore{else}{$admins[{$i}].privilegi}{/if}</td>
-						<td>{$admins[{$i}].domain}</td>
-                        <td>{$admins[{$i}].edit}&nbsp;&nbsp;{$admins[{$i}].delete}</td>
+                        <td>{{ curname.email }}</td>
+                        <td>{{ curname.privilegi }}</td>
+						<td>{{ curname.domain }}</td>
+                        <td><a class="edit" href="javascript:void(0);"><i class="fa fa-edit" title="{{ lang.edit }}"></i></a>&nbsp;&nbsp;<a class="delete" href="javascript:void(0);"><i class="fa fa-trash" title="{{ lang.delete }}"></i></a></td>
 					  </tr>
-					  {/for}
+					  {% endfor %}
                     </tbody>
                     <tfoot>
                       <tr>
@@ -52,7 +50,7 @@
                         <th>Username</th>
                         <th>Password</th>
                         <th>Email</th>
-                        <th>{$l_role}</th>
+                        <th>{{ lang.role }}</th>
 						<th>Domain</th>
                         <th></th>
                       </tr>

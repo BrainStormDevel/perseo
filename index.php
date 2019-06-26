@@ -18,11 +18,11 @@ try {
     $container = $app->getContainer();
     $sanitize = new \PerSeo\Sanitizer($container);
     $app->add($sanitize);
-    $app->add(new \PerSeo\WizardMiddleware($container));
     $container->set('Templater', function ($container) {
         $template = new \PerSeo\Template($container);
         return $template;
     });
+	$app->add(new \PerSeo\WizardMiddleware($container));
     $LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
         $container
     ) {
