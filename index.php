@@ -9,6 +9,7 @@
 */############################################
 
 //error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 try {
     @include_once(__DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php');
     if ((!@include_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) || (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
@@ -39,7 +40,7 @@ try {
             }
             $req = $request->getUri()->getPath();
             $basepath = $request->getUri()->getbasePath();
-			if (empty($basepath)) { $getpath = substr($request->getUri()->getPath(), 1); }
+			$getpath = (empty($basepath) ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
             $langurl = explode("/", $getpath);
             if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
                 if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
