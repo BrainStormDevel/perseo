@@ -39,12 +39,13 @@ try {
             }
             $req = $request->getUri()->getPath();
             $basepath = $request->getUri()->getbasePath();
-            $langurl = explode("/", $request->getUri()->getPath());
+			if (empty($basepath)) { $getpath = substr($request->getUri()->getPath(), 1); }
+            $langurl = explode("/", $getpath);
             if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
                 if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
                     $currlang = $langurl[0];
                     $container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
-                    $finalstring = substr($request->getUri()->getPath(), strlen($currlang));
+                    $finalstring = substr($getpath, strlen($currlang));
                     $request = $request->withUri($request->getUri()->withPath($finalstring));
                     $request = $request->withUri($request->getUri()->withbasePath($basepath));
                 } else {
