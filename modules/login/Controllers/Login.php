@@ -8,6 +8,16 @@ class Login
     protected static $name = '';
     protected static $superuser = '';
     protected static $privileges = '';
+	protected $container;
+    protected $type;
+	protected $db;
+	
+	public function __construct($container, $type)
+    {
+        $this->container = $container;
+        $this->type = $type;
+		$this->db = $container->get('db');
+    }
 
     public function id()
     {
@@ -39,26 +49,19 @@ class Login
         return trim($ciphertext_base64);
     }
 
-    public function check($container)
+    public function check()
     {
         try {
-            $typesArray = array(
-                'admins',
-                'users'
-            );
-            $type = (in_array($container->get('Sanitizer')->POST('type', 'alpha'),
-                $typesArray) ? $container->get('Sanitizer')->POST('type', 'alpha') : 'admins');
-            if ($this->islogged($container, $type)) {
-                throw new Exception("OK", 0);
+			if ($this->islogged($this->type)) {
+                throw new \Exception("OK", 0);
             }
-            $username = $container->get('Sanitizer')->POST('username', 'user');
-            $password = $container->get('Sanitizer')->POST('password', 'pass');
-            $remember = $container->get('Sanitizer')->POST('rememberme', 'int') == 1 ? false : true;
+            $username = $this->container->get('Sanitizer')->POST('username', 'user');
+            $password = $this->container->get('Sanitizer')->POST('password', 'pass');
+            $remember = $this->container->get('Sanitizer')->POST('rememberme', 'int') == 1 ? false : true;
             if (!$username or !$password) {
-                throw new Exception("USR_PASS_EMPTY", 1);
+                throw new \Exception("USR_PASS_EMPTY", 1);
             }
-            $db = $container->get('db');
-            $result = $db->select($type, [
+			$result = $this->db->select($this->type, [
                 'id',
                 'user',
                 'pass',
@@ -66,70 +69,70 @@ class Login
             ], [
                 'user' => $username
             ]);
-            $error = $db->error();
+            $error = $this->db->error();
             if (($error[1] != null) && ($error[2] != null)) {
                 throw new \Exception($error[2], 1);
             }
-            if (password_verify($password, $result[0]['pass'])) {
+			if (password_verify($password, $result[0]['pass'])) {
                 $id = $result[0]['id'];
                 $user = $result[0]['user'];
                 $privil = $result[0]['privilegi'];
-                if ($type == "admins") {
-                    $cookname = $container->get('settings.cookie')['admin'];
+                if ($this->type == "admins") {
+                    $cookname = $this->container->get('settings.cookie')['admin'];
                 } else {
-                    $cookname = $container->get('settings.cookie')['user'];
+                    $cookname = $this->container->get('settings.cookie')['user'];
                 }
                 $cookiesalt = $this->randStr(100);
                 $concat_string = $_SERVER['HTTP_USER_AGENT'] . ':~:' . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . ':~:' . $cookiesalt;
                 $token_first = base64_encode($concat_string);
                 $tokenhash = $this->create_hash($token_first);
                 $uid = substr(preg_replace("/[^A-Za-z0-9]/", '', $this->create_hash($id)), 11);
-                $db->insert('cookies', [
+                $this->db->insert('cookies', [
                     "uid" => $id,
                     "uuid" => $uid,
-                    "type" => $type,
+                    "type" => $this->type,
                     "auth_token" => $tokenhash
                 ]);
-                $error = $db->error();
+                $error = $this->db->error();
                 if (($error[1] != null) && ($error[2] != null)) {
                     throw new \Exception($error[2], 1);
                 }
                 if ($remember) {
                     setcookie($cookname . '_COOKID', $uid,
-                        time() + $container->get('settings.cookie')['cookie_max_exp'],
-                        $container->get('settings.cookie')['cookie_path'], null,
-                        $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() + $this->container->get('settings.cookie')['cookie_max_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'], null,
+                        $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                     setcookie($cookname . '_PUB', $cookiesalt,
-                        time() + $container->get('settings.cookie')['cookie_max_exp'],
-                        $container->get('settings.cookie')['cookie_path'], null,
-                        $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() + $this->container->get('settings.cookie')['cookie_max_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'], null,
+                        $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                     setcookie($cookname . '_REMEMBER', 'rememberme',
-                        time() + $container->get('settings.cookie')['cookie_max_exp'],
-                        $container->get('settings.cookie')['cookie_path'],
-                        null, $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() + $this->container->get('settings.cookie')['cookie_max_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'],
+                        null, $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                 } else {
                     setcookie($cookname . '_COOKID', $uid,
-                        time() + $container->get('settings.cookie')['cookie_exp'],
-                        $container->get('settings.cookie')['cookie_path'], null,
-                        $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() + $this->container->get('settings.cookie')['cookie_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'], null,
+                        $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                     setcookie($cookname . '_PUB', $cookiesalt,
-                        time() + $container->get('settings.cookie')['cookie_exp'],
-                        $container->get('settings.cookie')['cookie_path'], null,
-                        $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() + $this->container->get('settings.cookie')['cookie_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'], null,
+                        $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                 }
                 $result = array(
                     'code' => '0',
                     'msg' => 'OK'
                 );
             } else {
-                throw new Exception("USR_PASS_ERR", 1);
+                throw new \Exception("USR_PASS_ERR", 1);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $result = array(
                 'code' => $e->getCode(),
                 'msg' => $e->getMessage()
@@ -138,14 +141,14 @@ class Login
         echo json_encode($result);
     }
 
-    public function islogged($container, $type)
+    public function islogged($type)
     {
         if ($type == 'admins') {
             $checktable = 'admins';
-            $cookname = ($container->has('settings.cookie') ? $container->get('settings.cookie')['admin'] : '');
+            $cookname = ($this->container->has('settings.cookie') ? $this->container->get('settings.cookie')['admin'] : '');
         } elseif ($type == 'users') {
             $checktable = 'users';
-            $cookname = ($container->has('settings.cookie') ? $container->get('settings.cookie')['user'] : '');
+            $cookname = ($this->container->has('settings.cookie') ? $this->container->get('settings.cookie')['user'] : '');
         }
         $cookietable = $checktable . '.user';
         $cookietype = $cookname . '_COOKID';
@@ -158,8 +161,7 @@ class Login
             return true;
         }
         $uid = $_COOKIE[$cookietype];
-        $db = $container->get('db');
-        $result = $db->select('cookies', [
+        $result = $this->db->select('cookies', [
             '[><]' . $type => [
                 'uid' => 'id'
             ]
@@ -175,7 +177,7 @@ class Login
         $token = base64_encode($concat_string);
         if (password_verify($token, $result[0]['auth_token'])) {
             $_SESSION['logged_in'] = 1;
-            $result2 = $db->select($type, [
+            $result2 = $this->db->select($type, [
                 'id',
                 'superuser',
                 'privilegi'
@@ -184,14 +186,14 @@ class Login
                 'stato' => 0
             ]);
             $checksu = $this->decrypt($result2[0]['superuser'],
-                ($container->has('settings.secure') ? $container->get('settings.secure')['crypt_salt'] : ''));
+                ($this->container->has('settings.secure') ? $this->container->get('settings.secure')['crypt_salt'] : ''));
             self::$id = $result2[0]['id'];
             self::$name = $result[0]['user'];
             self::$superuser = ($result[0]['user'] == $checksu ? true : false);
             self::$privileges = $result2[0]['privilegi'];
             return true;
         } else {
-            $db->delete('cookies', [
+            $this->db->delete('cookies', [
                 "AND" => [
                     "uuid" => $uid,
                     "type" => $type
@@ -200,20 +202,20 @@ class Login
             session_unset();
             session_destroy();
             setcookie($cookname . '_COOKID', $uid,
-                time() - $container->get('settings.cookie')['cookie_max_exp'],
-                $container->get('settings.cookie')['cookie_path'], null,
-                $container->get('settings.cookie')['cookie_secure'],
-                $container->get('settings.cookie')['cookie_http']);
+                time() - $this->container->get('settings.cookie')['cookie_max_exp'],
+                $this->container->get('settings.cookie')['cookie_path'], null,
+                $this->container->get('settings.cookie')['cookie_secure'],
+                $this->container->get('settings.cookie')['cookie_http']);
             setcookie($cookname . '_PUB', $cookiesalt,
-                time() - $container->get('settings.cookie')['cookie_max_exp'],
-                $container->get('settings.cookie')['cookie_path'], null,
-                $container->get('settings.cookie')['cookie_secure'],
-                $container->get('settings.cookie')['cookie_http']);
+                time() - $this->container->get('settings.cookie')['cookie_max_exp'],
+                $this->container->get('settings.cookie')['cookie_path'], null,
+                $this->container->get('settings.cookie')['cookie_secure'],
+                $this->container->get('settings.cookie')['cookie_http']);
             setcookie($cookname . '_REMEMBER', 'rememberme',
-                time() - $container->get('settings.cookie')['cookie_max_exp'],
-                $container->get('settings.cookie')['cookie_path'],
-                null, $container->get('settings.cookie')['cookie_secure'],
-                $container->get('settings.cookie')['cookie_http']);
+                time() - $this->container->get('settings.cookie')['cookie_max_exp'],
+                $this->container->get('settings.cookie')['cookie_path'],
+                null, $this->container->get('settings.cookie')['cookie_secure'],
+                $this->container->get('settings.cookie')['cookie_http']);
         }
         return false;
     }
@@ -250,20 +252,19 @@ class Login
         return password_hash($string, PASSWORD_BCRYPT, $options);
     }
 
-    public function logout($container, $type)
+    public function logout($type)
     {
         try {
             if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) {
                 if ($type == "admins") {
-                    $cookname = $container->get('settings.cookie')['admin'];
+                    $cookname = $this->container->get('settings.cookie')['admin'];
                 } else {
-                    $cookname = $container->get('settings.cookie')['user'];
+                    $cookname = $this->container->get('settings.cookie')['user'];
                 }
                 $cookietype = $cookname . '_COOKID';
                 $uid = $_COOKIE[$cookietype];
                 if ($uid) {
-                    $db = $container->get('db');
-                    $db->delete('cookies', [
+                    $this->db->delete('cookies', [
                         "AND" => [
                             "uuid" => $uid,
                             "type" => $type
@@ -272,20 +273,20 @@ class Login
                     session_unset();
                     session_destroy();
                     setcookie($cookname . '_COOKID', '',
-                        time() - $container->get('settings.cookie')['cookie_max_exp'],
-                        $container->get('settings.cookie')['cookie_path'], null,
-                        $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() - $this->container->get('settings.cookie')['cookie_max_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'], null,
+                        $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                     setcookie($cookname . '_PUB', '',
-                        time() - $container->get('settings.cookie')['cookie_max_exp'],
-                        $container->get('settings.cookie')['cookie_path'], null,
-                        $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() - $this->container->get('settings.cookie')['cookie_max_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'], null,
+                        $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                     setcookie($cookname . '_REMEMBER', '',
-                        time() - $container->get('settings.cookie')['cookie_max_exp'],
-                        $container->get('settings.cookie')['cookie_path'], null,
-                        $container->get('settings.cookie')['cookie_secure'],
-                        $container->get('settings.cookie')['cookie_http']);
+                        time() - $this->container->get('settings.cookie')['cookie_max_exp'],
+                        $this->container->get('settings.cookie')['cookie_path'], null,
+                        $this->container->get('settings.cookie')['cookie_secure'],
+                        $this->container->get('settings.cookie')['cookie_http']);
                     $result = array(
                         'code' => '0',
                         'msg' => 'OK'

@@ -19,6 +19,6 @@ $app->get('/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Respons
     }
 })->add(new \login\Controllers\CheckLogin($container, 'admins'));
 $app->post('/admin/logout[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-    $mylogin = new \login\Controllers\Login;
-    echo $mylogin->logout($container, 'admins');
+    $mylogin = new \login\Controllers\Login($container, 'admins');
+    echo $mylogin->logout('admins');
 })->add(new \login\Controllers\CheckLogin($container, 'admins'));
