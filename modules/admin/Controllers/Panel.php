@@ -46,7 +46,7 @@ class Panel
             'adminlang' => $langadminall['body'],
             'lang' => ($name != null ? $langall['body'] : array()),
             'titlesite' => $this->container->get('settings.global')['sitename'],
-            'username' => \login\Controllers\Login::username(),
+            'username' => '',//\login\Controllers\Login::username(),
             'headertpl' => $header,
             'bodytpl' => $body,
             'footertpl' => $footer,

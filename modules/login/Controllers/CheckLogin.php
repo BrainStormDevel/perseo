@@ -5,9 +5,9 @@ namespace login\Controllers;
 class CheckLogin extends Login
 {
 
-    public function __construct($container, $type)
+    public function __construct($db, $type)
     {
-		parent::__construct($container, $type);
+		parent::__construct($db, $type);
     }
 
     public function __invoke(\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next)
