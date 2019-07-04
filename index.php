@@ -97,7 +97,7 @@ try {
     }
     if ($container->has('settings.database')) {
         $container->set('db', function ($container) {
-            return new \PerSeo\DB([
+			$instance = \PerSeo\DB::getInstance([
                 'database_type' => $container->get('settings.database')['default']['driver'],
                 'database_name' => $container->get('settings.database')['default']['database'],
                 'server' => $container->get('settings.database')['default']['host'],
@@ -106,6 +106,7 @@ try {
                 'prefix' => $container->get('settings.database')['default']['prefix'],
                 'charset' => $container->get('settings.database')['default']['charset']
             ]);
+            return $instance->getConnection();
         });
     }
     $container->set('csrf', function () {
