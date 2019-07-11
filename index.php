@@ -17,8 +17,23 @@ try {
     }
     $app = new \PerSeo\NewApp;
     $container = $app->getContainer();
+    if ($container->has('settings.database')) {
+        $container->set('db', function ($container) {
+            return new \PerSeo\DB([
+                'database_type' => $container->get('settings.database')['default']['driver'],
+                'database_name' => $container->get('settings.database')['default']['database'],
+                'server' => $container->get('settings.database')['default']['host'],
+                'username' => $container->get('settings.database')['default']['username'],
+                'password' => $container->get('settings.database')['default']['password'],
+                'prefix' => $container->get('settings.database')['default']['prefix'],
+                'charset' => $container->get('settings.database')['default']['charset']
+            ]);
+        });
+    }
     $sanitize = new \PerSeo\Sanitizer($container);
+	$redirector = new \PerSeo\Redirector($container);
     $app->add($sanitize);
+	$app->add($redirector);
     $container->set('Templater', function ($container) {
         $template = new \PerSeo\Template($container);
         return $template;
@@ -40,13 +55,12 @@ try {
             }
             $req = $request->getUri()->getPath();
             $basepath = $request->getUri()->getbasePath();
-			$getpath = (empty($basepath) ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
-            $langurl = explode("/", $getpath);
+            $langurl = explode("/", $request->getUri()->getPath());
             if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
                 if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
                     $currlang = $langurl[0];
                     $container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
-                    $finalstring = substr($getpath, strlen($currlang));
+                    $finalstring = substr($request->getUri()->getPath(), strlen($currlang));
                     $request = $request->withUri($request->getUri()->withPath($finalstring));
                     $request = $request->withUri($request->getUri()->withbasePath($basepath));
                 } else {
@@ -79,6 +93,9 @@ try {
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });
+	$container->set('Redirector', function ($container) use ($redirector) {
+        return $redirector;
+    });	
     if ($container->has('settings.secure')) {
         ini_set('session.save_handler', 'files');
         $handler = new \PerSeo\Sessions($container);
@@ -94,20 +111,6 @@ try {
     }
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
-    }
-    if ($container->has('settings.database')) {
-        $container->set('db', function ($container) {
-			$instance = \PerSeo\DB::getInstance([
-                'database_type' => $container->get('settings.database')['default']['driver'],
-                'database_name' => $container->get('settings.database')['default']['database'],
-                'server' => $container->get('settings.database')['default']['host'],
-                'username' => $container->get('settings.database')['default']['username'],
-                'password' => $container->get('settings.database')['default']['password'],
-                'prefix' => $container->get('settings.database')['default']['prefix'],
-                'charset' => $container->get('settings.database')['default']['charset']
-            ]);
-            return $instance->getConnection();
-        });
     }
     $container->set('csrf', function () {
         $guard = new \Slim\Csrf\Guard();
