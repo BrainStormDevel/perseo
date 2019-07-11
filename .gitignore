@@ -1,0 +1,6 @@
+/vendor
+/config/settings.php
+/composer.lock
+.DS_Store
+/.idea
+*.iml
