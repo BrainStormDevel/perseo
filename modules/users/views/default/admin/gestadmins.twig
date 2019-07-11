@@ -1,0 +1,60 @@
+        <section class="content-header">
+          <h1>
+            {{ lang.users_panel }}
+            <small>{{ lang.users_panel_info }}</small>
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="{{ host }}/admin/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{{ host }}/admin/users/">{{ lang.gest_users }}</a></li>
+            <li class="active">{{ lang.gest_admin }}</li>
+          </ol>
+        </section>
+		<!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box box-primary">
+                <div class="box-header">
+                  <h3 class="box-title">{{ lang.gest_admin }}</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+				 <a id="add_new" href="javascript:void(0);" class="btn btn-flat btn-primary">{{ lang.add_new }}</a><br><br>
+                  <table id="list_admins" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+						<th></th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Email</th>
+                        <th>{{ lang.role }}</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+					  {% for key, curname in vars[vars.ModuleName] %}
+					  <tr>
+						<td><input type="hidden" value="{{ curname.id }}"></td>
+						<td>{{ curname.user }}</td>
+                        <td>*****</td>
+                        <td>{{ curname.email }}</td>
+                        <td>{{ curname.label }}</td>
+                        <td><a class="edit" href="javascript:void(0);"><i class="fa fa-edit" title="{{ lang.edit }}"></i></a>&nbsp;&nbsp;<a class="delete" href="javascript:void(0);"><i class="fa fa-trash" title="{{ lang.delete }}"></i></a></td>
+					  </tr>
+					  {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+						<th></th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Email</th>
+                        <th>{{ lang.role }}</th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </section><!-- /.content -->
