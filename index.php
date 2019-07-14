@@ -56,7 +56,6 @@ try {
             $req = ((strlen($request->getUri()->getPath()) > 1) && (substr($request->getUri()->getPath(), 0, 1) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
             $basepath = $request->getUri()->getbasePath();
             $langurl = explode("/", $req);
-			var_dump($req);
             if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
                 if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
                     $currlang = $langurl[0];
