@@ -53,14 +53,15 @@ try {
                     $currlang = $container->get('settings.global')['language'];
                 }
             }
-            $req = $request->getUri()->getPath();
+            $req = ((strlen($request->getUri()->getPath()) > 1) && (substr($request->getUri()->getPath(), 0, 1) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
             $basepath = $request->getUri()->getbasePath();
-            $langurl = explode("/", $request->getUri()->getPath());
+            $langurl = explode("/", $req);
+			var_dump($req);
             if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
                 if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
                     $currlang = $langurl[0];
                     $container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
-                    $finalstring = substr($request->getUri()->getPath(), strlen($currlang));
+                    $finalstring = substr($req, strlen($currlang));
                     $request = $request->withUri($request->getUri()->withPath($finalstring));
                     $request = $request->withUri($request->getUri()->withbasePath($basepath));
                 } else {
