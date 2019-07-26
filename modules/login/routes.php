@@ -1,7 +1,7 @@
 <?php
 $app->get('/login[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-    $uri = $request->getUri()->getBasePath();
-    return $response->withRedirect($uri . '/login/user', 307);
+	$response = $container->get('Redirector')->withBaseRedirect('/login/user', 307);
+	return $response;
 });
 $app->get('/login/{name}[/]',
     function ($name, \Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {

@@ -159,6 +159,7 @@ try {
         $container->set('modules.name', $modules);
     }
     $app->run();
+	//var_dump($_SESSION);
 } catch (Exception $e) {
     die("PerSeo ERROR : " . $e->getMessage());
 }

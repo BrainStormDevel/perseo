@@ -4,14 +4,15 @@ namespace login\Controllers;
 
 class Login
 {
-    protected static $id = '';
-    protected static $name = '';
-    protected static $superuser = '';
-    protected static $privileges = '';
     protected $type;
 	protected $db;
 	protected $cookie;
 	protected $secure;
+	
+	private static $id;
+	private static $user;
+	private static $priv;
+	private static $super;
 	
 	public function __construct($container, $type)
     {
@@ -19,28 +20,28 @@ class Login
 		$this->db = ($container->has('db') ? $container->get('db') : NULL);
 		$this->cookie = ($container->has('settings.cookie') ? $container->get('settings.cookie') : NULL);
 		$this->secure = ($container->has('settings.secure') ? $container->get('settings.secure') : NULL);
-    }	
-
-    public function id()
-    {
-        return self::$id;
     }
 
-    public function username()
+    public static function id()
     {
-        return self::$name;
-    }
-
-    public function superuser()
+		return self::$id;
+	}
+	
+    public static function user()
     {
-        return self::$superuser;
-    }
-
-    public function privileges()
+		return self::$user;
+	}
+	
+	public static function priv()
     {
-        return self::$privileges;
-    }
+		return self::$priv;
+	}
 
+    public static function superuser()
+    {
+		return self::$super;
+	}
+	
     public function encrypt($string, $key)
     {
         $ivlen = openssl_cipher_iv_length($cipher = "AES-256-CBC");
@@ -64,7 +65,8 @@ class Login
                 'id',
                 'user',
                 'pass',
-                'privilegi'
+				'superuser',
+                'type'
             ], [
                 'user' => $user
             ]);
@@ -73,9 +75,8 @@ class Login
                 throw new \Exception($error[2], 1);
             }
             if (password_verify($pass, $result[0]['pass'])) {
+				$logintype = $this->type .'_';
                 $id = $result[0]['id'];
-                $user = $result[0]['user'];
-                $privil = $result[0]['privilegi'];
                 if ($this->type == "admins") {
                     $cookname = $this->cookie['admin'];
                 } else {
@@ -149,15 +150,15 @@ class Login
             $checktable = 'users';
             $cookname = $this->cookie['user'];
         }
-        $cookietable = $checktable . '.user';
+		$typeid = $checktable . '.id';
+        $typeuser = $checktable . '.user';
+		$typetype = $checktable . '.type';
+		$typesuper = $checktable . '.superuser';
+		$typestato = $checktable . '.stato';
         $cookietype = $cookname . '_COOKID';
         $cookiepub = $cookname . '_PUB';
         if (!isset($_COOKIE[$cookietype])) {
-            unset($_SESSION['logged_in']);
             return false;
-        }
-        if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) {
-            return true;
         }
         $uid = $_COOKIE[$cookietype];
         $result = $this->db->select('cookies', [
@@ -165,30 +166,27 @@ class Login
                 'uid' => 'id'
             ]
         ], [
+			'cookies.uid',
             'cookies.auth_token',
-            $cookietable
+			$typeid,
+            $typeuser,
+			$typetype,
+			$typesuper
         ], [
-            'uuid' => $uid,
-            'type' => $this->type
+            'cookies.uuid' => $uid,
+            'cookies.type' => $this->type,
+			$typestato => 0
         ]);
         $cookiesalt = $_COOKIE[$cookiepub];
         $concat_string = $_SERVER['HTTP_USER_AGENT'] . ':~:' . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . ':~:' . $cookiesalt;
         $token = base64_encode($concat_string);
         if (password_verify($token, $result[0]['auth_token'])) {
-            $_SESSION['logged_in'] = 1;
-            $result2 = $this->db->select($this->type, [
-                'id',
-                'superuser',
-                'privilegi'
-            ], [
-                'id' => $result[0]['id'],
-                'stato' => 0
-            ]);
-            $checksu = $this->decrypt($result2[0]['superuser'], $this->secure['crypt_salt']);
-            self::$id = $result2[0]['id'];
-            self::$name = $result[0]['user'];
-            self::$superuser = ($result[0]['user'] == $checksu ? true : false);
-            self::$privileges = $result2[0]['privilegi'];
+			$logintype = $this->type .'_';
+            $checksu = $this->decrypt($result[0]['superuser'], $this->secure['crypt_salt']);
+			self::$id = $result[0]['id'];
+			self::$user = $result[0]['user'];
+			self::$priv = $result[0]['type'];
+			self::$super = ($result[0]['user'] == $checksu ? true : false);
             return true;
         } else {
             $this->db->delete('cookies', [
@@ -253,45 +251,43 @@ class Login
     public function logout()
     {
         try {
-            if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) {
-                if ($this->type == "admins") {
-                    $cookname = $this->cookie['admin'];
-                } else {
-                    $cookname = $this->cookie['user'];
-                }
-                $cookietype = $cookname . '_COOKID';
-                $uid = $_COOKIE[$cookietype];
-                if ($uid) {
-                    $this->db->delete('cookies', [
-                        "AND" => [
-                            "uuid" => $uid,
-                            "type" => $this->type
-                        ]
-                    ]);
-                    session_unset();
-                    session_destroy();
-                    setcookie($cookname . '_COOKID', '',
-                        time() - $this->cookie['cookie_max_exp'],
-                        $this->cookie['cookie_path'], null,
-                        $this->cookie['cookie_secure'],
-                        $this->cookie['cookie_http']);
-                    setcookie($cookname . '_PUB', '',
-                        time() - $this->cookie['cookie_max_exp'],
-                        $this->cookie['cookie_path'], null,
-                        $this->cookie['cookie_secure'],
-                        $this->cookie['cookie_http']);
-                    setcookie($cookname . '_REMEMBER', '',
-                        time() - $this->cookie['cookie_max_exp'],
-                        $this->cookie['cookie_path'], null,
-                        $this->cookie['cookie_secure'],
-                        $this->cookie['cookie_http']);
-                    $result = array(
-                        'code' => '0',
-                        'msg' => 'OK'
-                    );
-                } else {
-                    throw new \Exception("NO_COOKIE", 1);
-                }
+			if ($this->type == "admins") {
+				$cookname = $this->cookie['admin'];
+            } else {
+                $cookname = $this->cookie['user'];
+            }
+            $cookietype = $cookname . '_COOKID';
+            $uid = $_COOKIE[$cookietype];
+            if ($uid) {
+                $this->db->delete('cookies', [
+                    "AND" => [
+                        "uuid" => $uid,
+                        "type" => $this->type
+                    ]
+                ]);
+                session_unset();
+                session_destroy();
+                setcookie($cookname . '_COOKID', '',
+                    time() - $this->cookie['cookie_max_exp'],
+                    $this->cookie['cookie_path'], null,
+                    $this->cookie['cookie_secure'],
+                    $this->cookie['cookie_http']);
+                setcookie($cookname . '_PUB', '',
+                    time() - $this->cookie['cookie_max_exp'],
+                    $this->cookie['cookie_path'], null,
+                    $this->cookie['cookie_secure'],
+                    $this->cookie['cookie_http']);
+                setcookie($cookname . '_REMEMBER', '',
+                    time() - $this->cookie['cookie_max_exp'],
+                    $this->cookie['cookie_path'], null,
+                    $this->cookie['cookie_secure'],
+                    $this->cookie['cookie_http']);
+                $result = array(
+                    'code' => '0',
+                    'msg' => 'OK'
+                );
+            } else {
+                throw new \Exception("NO_COOKIE", 1);
             }
         } catch (\Exception $e) {
             $result = array(

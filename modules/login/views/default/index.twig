@@ -96,7 +96,7 @@
   $(function () {
 	$("#lang").on('change', function(e) {
 		Cookies.set('lang', $(this).val(), { expires: 30 });
-		window.location.reload(false);
+		window.location.replace('{{ host }}/' + $(this).val() + '/{{ vars.ModuleName }}/{{ name }}');
 	});  
     $('#msgbox').hide();
     $('input').iCheck({
@@ -117,7 +117,7 @@
 		if (obj.code == 1) {
 			$('#msgbox').attr('class', 'isa_error');
 			var str = '<i class="fa fa-times-circle"></i>' + msg;
-			setTimeout("window.location.replace('{{ host }}/{{ vars.ModuleName }}/{{ name }}');",1000);
+			setTimeout("window.location.replace('{{ host }}/{{ vars.language }}/{{ vars.ModuleName }}/{{ name }}');",1000);
 		}
 		else {
 			$('#msgbox').attr('class', 'isa_success');

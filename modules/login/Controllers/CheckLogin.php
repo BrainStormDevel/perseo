@@ -15,7 +15,7 @@ class CheckLogin extends Login
     public function __invoke(\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next)
     {
         if (!$this->islogged()) {
-            $response = $this->redirect->withBaseRedirect('/login/admin', 303);
+            $response = $this->redirect->withBaseRedirect('/login/admin', 307);
         } else {
             $response = $next($request, $response);
         }

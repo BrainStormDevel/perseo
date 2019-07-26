@@ -33,12 +33,6 @@ class Sanitizer
         return $next($requestInterface, $response);
     }
 
-    public function num($string)
-    {
-        $pattern = '/[^0-9]/';
-        return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_T));
-    }
-
     public function GET($var = null, $type = null)
     {
         if (isset($this->GET[$var])) {
@@ -48,7 +42,7 @@ class Sanitizer
                         return $this->no_xss($this->GET[$var]);
                         break;
                     case 'int':
-                        return intval($this->GET[$var]);
+                        return $this->number($this->GET[$var]);
                         break;
                     case 'user':
                         return $this->user($this->GET[$var]);
@@ -104,6 +98,12 @@ class Sanitizer
     {
         $pattern = '/[^A-Za-z0-9]/';
         return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_A));
+    }
+	
+	public function number($string)
+    {
+        $pattern = '/[^0-9]/';
+        return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_T));
     }
 
     public function to_url($string)
@@ -414,7 +414,7 @@ class Sanitizer
                         return $this->no_xss($this->POST[$var]);
                         break;
                     case 'int':
-                        return intval($this->POST[$var]);
+                        return $this->number($this->POST[$var]);
                         break;
                     case 'user':
                         return $this->user($this->POST[$var]);

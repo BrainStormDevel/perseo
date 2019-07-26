@@ -15,15 +15,24 @@ class Listusers
     {
 		$db = $this->container->get('db');
 		$result = $db->select("admins", [
-			"[>]admins_priv" => ["privilegi" => "pid"]
+			"[>]admins_types" => ["type" => "pid"]
 		], [		
 			"admins.id (id)",
 			"admins.user (user)",
 			"admins.email (email)",
-			"admins.privilegi (privilegi)",
+			"admins.type (type)",
 			"admins.stato (stato)",
-			"admins_priv.label (label)"
+			"admins_types.label (label)"
 		]);
 		return $result;
     }
+    public function adminstype()
+    {
+		$db = $this->container->get('db');
+		$result = $db->select("admins_types", [	
+			"pid",
+			"label"
+		]);
+		return $result;
+    }	
 }
