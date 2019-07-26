@@ -46,14 +46,26 @@ class GestAdmin
 					);
 				}
 				else {
-					$data = $db->update("admins", [
-						"user" => $user,
-						"pass" => $login->create_hash($pass),
-						"email" => $email,
-						"type" => $type,
-					], [
-						"id" => $id
-					]);
+					if (\login\Controllers\Login::id() == $id) {			
+						$data = $db->update("admins", [
+							"user" => $user,
+							"pass" => $login->create_hash($pass),
+							"email" => $email,
+							"type" => $type,
+						], [
+							"id" => $id
+						]);
+					} else {			
+						$data = $db->update("admins", [
+							"user" => $user,
+							"pass" => $login->create_hash($pass),
+							"email" => $email,
+							"type" => $type,
+						], [
+							"id" => $id,
+							"superuser" => ''
+						]);
+					}
 					if ($data->rowCount() <= 0) {
 						throw new \Exception('Errore aggiornamento utente', 001);
 					} else {
@@ -84,17 +96,18 @@ class GestAdmin
 				if (\login\Controllers\Login::id() == $id) {
 					throw new \Exception('Non puoi eliminare il tuo utente', 001);
 				}
-				if (\login\Controllers\Login::id() > 1) {
+				if (\login\Controllers\Login::priv() > 1) {
 					throw new \Exception('Non hai i permessi per eliminare questo utente', 001);
 				}
 				$db = $this->container->get('db');
 				$data = $db->delete("admins", [
 					"AND" => [
-					"id" => $id
+					"id" => $id,
+					"superuser" => ''
 					]
 				]);
 				if ($data->rowCount() <= 0) {
-					throw new \Exception('Errore aggiornamento utente', 001);
+					throw new \Exception('Errore Eliminazione utente', 001);
 				}
 				$result = Array(
 					"err" => 0,
