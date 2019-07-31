@@ -8,8 +8,7 @@
 
 */############################################
 
-//error_reporting(E_ERROR | E_PARSE);
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+//error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 try {
     @include_once(__DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php');
     if ((!@include_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) || (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
@@ -38,58 +37,9 @@ try {
         $template = new \PerSeo\Template($container);
         return $template;
     });
-	$app->add(new \PerSeo\WizardMiddleware($container));
-    $LanguageMiddleware = function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) use (
-        $container
-    ) {
-        if ($container->has('settings.global') && ($container->get('settings.global')['locale'])) {
-            $languages = $container->get('settings.global')['languages'];
-            if (isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']), $languages)) {
-                $currlang = strtolower($_COOKIE['lang']);
-            } else {
-                if (in_array(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)), $languages)) {
-                    $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-                } else {
-                    $currlang = $container->get('settings.global')['language'];
-                }
-            }
-            $req = ((strlen($request->getUri()->getPath()) > 1) && (substr($request->getUri()->getPath(), 0, 1) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
-            $basepath = $request->getUri()->getbasePath();
-            $langurl = explode("/", $req);
-            if (($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
-                if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
-                    $currlang = $langurl[0];
-                    $container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
-                    $finalstring = substr($req, strlen($currlang));
-                    $request = $request->withUri($request->getUri()->withPath($finalstring));
-                    $request = $request->withUri($request->getUri()->withbasePath($basepath));
-                } else {
-                    $container->set('current.language', $currlang);
-                    throw new \Slim\Exception\NotFoundException($request, $response);
-                }
-            }
-            if ($container->get('settings.global')['locale']) {
-                $container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
-            } else {
-                $container->set('redirect.url', $request->getUri()->getBasePath());
-            }
-            $container->set('current.language', $currlang);
-        } else {
-            $container->set('redirect.url', $request->getUri()->getBasePath());
-            if (isset($_COOKIE['lang'])) {
-                $currlang = strtolower($_COOKIE['lang']);
-            } else {
-                if (!empty(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)))) {
-                    $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-                } else {
-                    $currlang = 'en';
-                }
-            }
-            $container->set('current.language', $currlang);
-        }
-        return $next($request, $response);
-    };
-    $app->add($LanguageMiddleware);
+	$app->add(new \PerSeo\WizardMiddleware($container));	
+	$LanguageMiddleware = new \PerSeo\LanguageMiddleware($container);
+	$app->add($LanguageMiddleware);
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });
@@ -159,7 +109,6 @@ try {
         $container->set('modules.name', $modules);
     }
     $app->run();
-	//var_dump($_SESSION);
 } catch (Exception $e) {
     die("PerSeo ERROR : " . $e->getMessage());
 }

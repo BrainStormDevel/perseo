@@ -34,5 +34,16 @@ class Listusers
 			"label"
 		]);
 		return $result;
-    }	
+    }
+    public function users()
+    {
+		$db = $this->container->get('db');
+		$result = $db->select("users", [		
+			"id",
+			"user",
+			"email",
+			"stato"
+		]);
+		return $result;
+    }
 }
