@@ -17,6 +17,7 @@ class LanguageMiddleware
         callable $next
     ) {
 		$myreq = $request->getUri()->getPath();
+		if ($this->container->has('db')) {
 		$db = $this->container->get('db');
 		$result = $db->select('routes', [
                'dest',
@@ -24,7 +25,8 @@ class LanguageMiddleware
 			   'redirect'
         ], [
                'request' => $myreq
-        ]);		
+        ]);
+		}		
         if ($this->container->has('settings.global') && ($this->container->get('settings.global')['locale'])) {
             $languages = $this->container->get('settings.global')['languages'];
             if (isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']), $languages)) {
@@ -73,7 +75,7 @@ class LanguageMiddleware
 		if (!empty($result[0]['dest'])) {
 			$type = $result[0]['type'];
 			$dest = $result[0]['dest'];
-			$redirect = $result[0]['redirect'];
+			$redirect = (int) $result[0]['redirect'];
 			if ($type == 1) {
 				$basepath = $request->getUri()->getbasePath();
 				$request = $request->withUri($request->getUri()->withPath($dest));
