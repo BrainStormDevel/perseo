@@ -1,8 +1,8 @@
 <?php
 
-namespace PerSeo;
+namespace PerSeo\MiddleWare;
 
-class WizardMiddleware
+class Wizard
 {
 
     private $container;

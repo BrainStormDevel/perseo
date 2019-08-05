@@ -1,8 +1,8 @@
 <?php
 
-namespace PerSeo;
+namespace PerSeo\MiddleWare;
 
-class LanguageMiddleware
+class Language
 {
 	private $container;
 

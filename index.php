@@ -8,7 +8,7 @@
 
 */############################################
 
-//error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 try {
     @include_once(__DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php');
     if ((!@include_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) || (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
@@ -29,17 +29,17 @@ try {
             ]);
         });
     }
-    $sanitize = new \PerSeo\Sanitizer($container);
-	$redirector = new \PerSeo\Redirector($container);
+    $sanitize = new \PerSeo\MiddleWare\Sanitizer($container);
+	$redirector = new \PerSeo\MiddleWare\Redirector($container);
     $app->add($sanitize);
 	$app->add($redirector);
     $container->set('Templater', function ($container) {
         $template = new \PerSeo\Template($container);
         return $template;
     });
-	$app->add(new \PerSeo\WizardMiddleware($container));	
-	$LanguageMiddleware = new \PerSeo\LanguageMiddleware($container);
-	$app->add($LanguageMiddleware);
+	$app->add(new \PerSeo\MiddleWare\Wizard($container));
+	$app->add(new \PerSeo\MiddleWare\Maintenance($container));
+	$app->add(new \PerSeo\MiddleWare\Language($container));
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });
@@ -69,6 +69,8 @@ try {
     });
     $container->set('notFoundHandler', function ($container) {
         return function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
+			$lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath('404'));
+            $langall = $lang->get();
             $container->set('view', function ($container) {
                 $view = new \Slim\Views\Twig('modules/404/views/' . $container->get('settings.global')['template'], [
                     'cache' => 'cache'
@@ -81,6 +83,7 @@ try {
             });
             return $container->get('view')->render($response, '404.twig', [
                 'host' => \PerSeo\Path::SiteName($request),
+				'lang' => $langall['body'],
                 'vars' => $container->get('Templater')->vars('404')
             ]);
         };

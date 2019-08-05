@@ -1,6 +1,6 @@
 <?php
 
-namespace PerSeo;
+namespace PerSeo\MiddleWare;
 
 class Redirector
 {

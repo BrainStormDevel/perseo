@@ -114,6 +114,9 @@
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_prefix_salt }}</span><input type="text" name="salt" id="salt" class="form-control" placeholder="{{ lang.l_prefix_salt_ph }}"><span class="input-group-btn"><button type="button" id="saltbtn" class="btn btn-default">{{ lang.l_generate }}</button></span></div>
 						</p>
 						<p>
+						  <div class="input-group"><span class="input-group-addon">{{ lang.l_maintenance }}</span><input type="text" name="maintenancekey" id="maintenancekey" class="form-control" placeholder="{{ lang.l_maintenance_ph }}"><span class="input-group-btn"><button type="button" id="maintenancebtn" class="btn btn-default">{{ lang.l_generate }}</button></span></div>
+						</p>						
+						<p>
 						<div class="input-group"><span class="input-group-addon">{{ lang.l_lang_default }}</span>
 								<select id="langdefault" class="selectpicker" data-style="btn-info">
 								<option data-icon="flag flag-it" value="it" {% if vars.language == 'it' %}selected{% endif %}>Italiano</option>
@@ -205,12 +208,18 @@
 				window.location.reload(false);
 			});
 			salt = makerand("abcdef0123456789", 64);
+			mainpass = makerand("abcdefghijklmnopqrstuvwxyz0123456789", 12);
 			tbl = makerand("abcdefghijklmnopqrstuvwxyz", 5) + "_";
 			$('#salt').val(salt);
 			$('#prefix').val(tbl);
+			$('#maintenancekey').val(mainpass);
 			$("#saltbtn").click(function() {
 				salt = makerand("abcdef0123456789", 64);
 				$('#salt').val(salt);
+			});
+			$("#maintenancebtn").click(function() {
+				mainpass = makerand("abcdefghijklmnopqrstuvwxyz0123456789", 12);
+				$('#maintenancekey').val(mainpass);
 			});
 			$("#randpass").click(function() {
 				password = $.passGen({ 'length' : 16, 'special' : true });
@@ -325,7 +334,7 @@
 					$.ajax({
 						url: '{{ host }}/{{ vars.ModuleUrlName }}/install/',
 						type: 'post',
-						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "locale": locale, "template": template, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
+						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "locale": locale, "template": template, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "maintenancekey": $("#maintenancekey").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
 						success: function(response) {
 							var result = JSON.parse(response);
 							if (result.code == 0) {
