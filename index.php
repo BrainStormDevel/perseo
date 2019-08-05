@@ -30,22 +30,22 @@ try {
         });
     }
     $sanitize = new \PerSeo\MiddleWare\Sanitizer($container);
-	$redirector = new \PerSeo\MiddleWare\Redirector($container);
+    $redirector = new \PerSeo\MiddleWare\Redirector($container);
     $app->add($sanitize);
-	$app->add($redirector);
+    $app->add($redirector);
     $container->set('Templater', function ($container) {
         $template = new \PerSeo\Template($container);
         return $template;
     });
-	$app->add(new \PerSeo\MiddleWare\Wizard($container));
-	$app->add(new \PerSeo\MiddleWare\Maintenance($container));
-	$app->add(new \PerSeo\MiddleWare\Language($container));
+    $app->add(new \PerSeo\MiddleWare\Wizard($container));
+    $app->add(new \PerSeo\MiddleWare\Maintenance($container));
+    $app->add(new \PerSeo\MiddleWare\Language($container));
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });
-	$container->set('Redirector', function ($container) use ($redirector) {
+    $container->set('Redirector', function ($container) use ($redirector) {
         return $redirector;
-    });	
+    });
     if ($container->has('settings.secure')) {
         ini_set('session.save_handler', 'files');
         $handler = new \PerSeo\Sessions($container);
@@ -69,7 +69,7 @@ try {
     });
     $container->set('notFoundHandler', function ($container) {
         return function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-			$lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath('404'));
+            $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath('404'));
             $langall = $lang->get();
             $container->set('view', function ($container) {
                 $view = new \Slim\Views\Twig('modules/404/views/' . $container->get('settings.global')['template'], [
@@ -83,7 +83,7 @@ try {
             });
             return $container->get('view')->render($response, '404.twig', [
                 'host' => \PerSeo\Path::SiteName($request),
-				'lang' => $langall['body'],
+                'lang' => $langall['body'],
                 'vars' => $container->get('Templater')->vars('404')
             ]);
         };

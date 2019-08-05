@@ -1,7 +1,7 @@
 <?php
 $app->get('/login[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-	$response = $container->get('Redirector')->withBaseRedirect('/login/user', 307);
-	return $response;
+    $response = $container->get('Redirector')->withBaseRedirect('/login/user', 307);
+    return $response;
 });
 $app->get('/login/{name}[/]',
     function ($name, \Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
@@ -45,7 +45,8 @@ $app->get('/login/{name}[/]',
         }
     })->setName('loginpage');
 $app->post('/login/admin[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-	$remember = $container->get('Sanitizer')->POST('rememberme', 'int') == 1 ? false : true;
+    $remember = $container->get('Sanitizer')->POST('rememberme', 'int') == 1 ? false : true;
     $login = new \login\Controllers\Login($container, 'admins');
-    $login->check($container->get('Sanitizer')->POST('username', 'user'), $container->get('Sanitizer')->POST('password', 'pass'), $remember);
+    $login->check($container->get('Sanitizer')->POST('username', 'user'),
+        $container->get('Sanitizer')->POST('password', 'pass'), $remember);
 });

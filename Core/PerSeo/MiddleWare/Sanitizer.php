@@ -82,6 +82,12 @@ class Sanitizer
         return trim(preg_replace($pattern, ' ', $string));
     }
 
+    public function number($string)
+    {
+        $pattern = '/[^0-9]/';
+        return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_T));
+    }
+
     public function user($string)
     {
         $pattern = '/[^A-Za-z0-9-_.]/';
@@ -98,12 +104,6 @@ class Sanitizer
     {
         $pattern = '/[^A-Za-z0-9]/';
         return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_A));
-    }
-	
-	public function number($string)
-    {
-        $pattern = '/[^0-9]/';
-        return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_T));
     }
 
     public function to_url($string)

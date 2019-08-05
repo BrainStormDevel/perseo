@@ -23,7 +23,7 @@ if ($container->has('settings.database')) {
             $csrfarray['name'] = $request->getAttribute($csrfarray['nameKey']);
             $csrfarray['value'] = $request->getAttribute($csrfarray['valueKey']);
             $lang = new \PerSeo\Translator($container->get('current.language'), \PerSeo\Path::LangPath('wizard'));
-			$langall = $lang->get();
+            $langall = $lang->get();
             return $this->get('view')->render($response, '/wizard/views/default/index.twig', [
                 'csrf' => $csrfarray,
                 'lang' => $langall['body'],

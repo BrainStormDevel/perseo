@@ -4,44 +4,43 @@ namespace login\Controllers;
 
 class Login
 {
+    private static $id;
+    private static $user;
+    private static $priv;
+    private static $super;
     protected $type;
-	protected $db;
-	protected $cookie;
-	protected $secure;
-	
-	private static $id;
-	private static $user;
-	private static $priv;
-	private static $super;
-	
-	public function __construct($container, $type)
+    protected $db;
+    protected $cookie;
+    protected $secure;
+
+    public function __construct($container, $type)
     {
         $this->type = $type;
-		$this->db = ($container->has('db') ? $container->get('db') : NULL);
-		$this->cookie = ($container->has('settings.cookie') ? $container->get('settings.cookie') : NULL);
-		$this->secure = ($container->has('settings.secure') ? $container->get('settings.secure') : NULL);
+        $this->db = ($container->has('db') ? $container->get('db') : null);
+        $this->cookie = ($container->has('settings.cookie') ? $container->get('settings.cookie') : null);
+        $this->secure = ($container->has('settings.secure') ? $container->get('settings.secure') : null);
     }
 
     public static function id()
     {
-		return self::$id;
-	}
-	
+        return self::$id;
+    }
+
     public static function user()
     {
-		return self::$user;
-	}
-	
-	public static function priv()
+        return self::$user;
+    }
+
+    public static function priv()
     {
-		return self::$priv;
-	}
+        return self::$priv;
+    }
 
     public static function superuser()
     {
-		return self::$super;
-	}
-	
+        return self::$super;
+    }
+
     public function encrypt($string, $key)
     {
         $ivlen = openssl_cipher_iv_length($cipher = "AES-256-CBC");
@@ -65,7 +64,7 @@ class Login
                 'id',
                 'user',
                 'pass',
-				'superuser',
+                'superuser',
                 'type'
             ], [
                 'user' => $user
@@ -75,7 +74,7 @@ class Login
                 throw new \Exception($error[2], 1);
             }
             if (password_verify($pass, $result[0]['pass'])) {
-				$logintype = $this->type .'_';
+                $logintype = $this->type . '_';
                 $id = $result[0]['id'];
                 if ($this->type == "admins") {
                     $cookname = $this->cookie['admin'];
@@ -150,11 +149,11 @@ class Login
             $checktable = 'users';
             $cookname = $this->cookie['user'];
         }
-		$typeid = $checktable . '.id';
+        $typeid = $checktable . '.id';
         $typeuser = $checktable . '.user';
-		$typetype = $checktable . '.type';
-		$typesuper = $checktable . '.superuser';
-		$typestato = $checktable . '.stato';
+        $typetype = $checktable . '.type';
+        $typesuper = $checktable . '.superuser';
+        $typestato = $checktable . '.stato';
         $cookietype = $cookname . '_COOKID';
         $cookiepub = $cookname . '_PUB';
         if (!isset($_COOKIE[$cookietype])) {
@@ -166,27 +165,27 @@ class Login
                 'uid' => 'id'
             ]
         ], [
-			'cookies.uid',
+            'cookies.uid',
             'cookies.auth_token',
-			$typeid,
+            $typeid,
             $typeuser,
-			$typetype,
-			$typesuper
+            $typetype,
+            $typesuper
         ], [
             'cookies.uuid' => $uid,
             'cookies.type' => $this->type,
-			$typestato => 0
+            $typestato => 0
         ]);
         $cookiesalt = $_COOKIE[$cookiepub];
         $concat_string = $_SERVER['HTTP_USER_AGENT'] . ':~:' . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . ':~:' . $cookiesalt;
         $token = base64_encode($concat_string);
         if (password_verify($token, $result[0]['auth_token'])) {
-			$logintype = $this->type .'_';
+            $logintype = $this->type . '_';
             $checksu = $this->decrypt($result[0]['superuser'], $this->secure['crypt_salt']);
-			self::$id = $result[0]['id'];
-			self::$user = $result[0]['user'];
-			self::$priv = $result[0]['type'];
-			self::$super = ($result[0]['user'] == $checksu ? true : false);
+            self::$id = $result[0]['id'];
+            self::$user = $result[0]['user'];
+            self::$priv = $result[0]['type'];
+            self::$super = ($result[0]['user'] == $checksu ? true : false);
             return true;
         } else {
             $this->db->delete('cookies', [
@@ -251,8 +250,8 @@ class Login
     public function logout()
     {
         try {
-			if ($this->type == "admins") {
-				$cookname = $this->cookie['admin'];
+            if ($this->type == "admins") {
+                $cookname = $this->cookie['admin'];
             } else {
                 $cookname = $this->cookie['user'];
             }

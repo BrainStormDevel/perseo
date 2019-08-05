@@ -4,29 +4,29 @@ namespace PerSeo\MiddleWare;
 
 class Language
 {
-	private $container;
+    private $container;
 
     public function __construct($container)
     {
         $this->container = $container;
     }
-	
-	public function __invoke(
+
+    public function __invoke(
         \Slim\Http\Request $request,
         \Slim\Http\Response $response,
         callable $next
     ) {
-		$myreq = $request->getUri()->getPath();
-		if ($this->container->has('db')) {
-		$db = $this->container->get('db');
-		$result = $db->select('routes', [
-               'dest',
-               'type',
-			   'redirect'
-        ], [
-               'request' => $myreq
-        ]);
-		}		
+        $myreq = $request->getUri()->getPath();
+        if ($this->container->has('db')) {
+            $db = $this->container->get('db');
+            $result = $db->select('routes', [
+                'dest',
+                'type',
+                'redirect'
+            ], [
+                'request' => $myreq
+            ]);
+        }
         if ($this->container->has('settings.global') && ($this->container->get('settings.global')['locale'])) {
             $languages = $this->container->get('settings.global')['languages'];
             if (isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']), $languages)) {
@@ -38,7 +38,8 @@ class Language
                     $currlang = $this->container->get('settings.global')['language'];
                 }
             }
-            $req = ((strlen($request->getUri()->getPath()) > 1) && (substr($request->getUri()->getPath(), 0, 1) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
+            $req = ((strlen($request->getUri()->getPath()) > 1) && (substr($request->getUri()->getPath(), 0,
+                    1) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
             $basepath = $request->getUri()->getbasePath();
             $langurl = explode("/", $req);
             if (empty($result[0]['dest']) && ($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
@@ -72,20 +73,19 @@ class Language
             }
             $this->container->set('current.language', $currlang);
         }
-		if (!empty($result[0]['dest'])) {
-			$type = $result[0]['type'];
-			$dest = $result[0]['dest'];
-			$redirect = (int) $result[0]['redirect'];
-			if ($type == 1) {
-				$basepath = $request->getUri()->getbasePath();
-				$request = $request->withUri($request->getUri()->withPath($dest));
-				$request = $request->withUri($request->getUri()->withbasePath($basepath));
-			}
-			else {
-				$uriBase = '//' . $_SERVER['HTTP_HOST'] . $request->getUri()->getBasePath() .'/';
-				$response = $response->withRedirect($uriBase . $dest, $redirect);
-			}
-		}		
+        if (!empty($result[0]['dest'])) {
+            $type = $result[0]['type'];
+            $dest = $result[0]['dest'];
+            $redirect = (int)$result[0]['redirect'];
+            if ($type == 1) {
+                $basepath = $request->getUri()->getbasePath();
+                $request = $request->withUri($request->getUri()->withPath($dest));
+                $request = $request->withUri($request->getUri()->withbasePath($basepath));
+            } else {
+                $uriBase = '//' . $_SERVER['HTTP_HOST'] . $request->getUri()->getBasePath() . '/';
+                $response = $response->withRedirect($uriBase . $dest, $redirect);
+            }
+        }
         return $next($request, $response);
     }
 }

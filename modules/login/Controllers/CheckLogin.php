@@ -4,12 +4,12 @@ namespace login\Controllers;
 
 class CheckLogin extends Login
 {
-	protected $redirect;
-	
+    protected $redirect;
+
     public function __construct($container, $type)
     {
-		$this->redirect = $container->get('Redirector');
-		parent::__construct($container, $type);
+        $this->redirect = $container->get('Redirector');
+        parent::__construct($container, $type);
     }
 
     public function __invoke(\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next)
