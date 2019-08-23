@@ -31,15 +31,10 @@ try {
     }
     $sanitize = new \PerSeo\MiddleWare\Sanitizer($container);
     $redirector = new \PerSeo\MiddleWare\Redirector($container);
-    $app->add($sanitize);
-    $app->add($redirector);
     $container->set('Templater', function ($container) {
         $template = new \PerSeo\Template($container);
         return $template;
     });
-    $app->add(new \PerSeo\MiddleWare\Wizard($container));
-    $app->add(new \PerSeo\MiddleWare\Maintenance($container));
-    $app->add(new \PerSeo\MiddleWare\Language($container));
     $container->set('Sanitizer', function ($container) use ($sanitize) {
         return $sanitize;
     });
@@ -88,7 +83,6 @@ try {
             ]);
         };
     });
-    $app->add($container->get('csrf'));
     $directory = \PerSeo\Path::MOD_PATH;
     $dirobj = new \DirectoryIterator($directory);
     $modules = array();
@@ -111,6 +105,12 @@ try {
     if (!empty($modules)) {
         $container->set('modules.name', $modules);
     }
+    $app->add($sanitize);
+    $app->add($redirector);
+	$app->add(new \PerSeo\MiddleWare\Maintenance($container));
+	$app->add(new \PerSeo\MiddleWare\Language($container));
+	$app->add(new \PerSeo\MiddleWare\Wizard($container));
+	$app->add($container->get('csrf'));
     $app->run();
 } catch (Exception $e) {
     die("PerSeo ERROR : " . $e->getMessage());
