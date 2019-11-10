@@ -14,8 +14,11 @@ class DB extends Medoo
             throw new \Exception($e->getMessage());
         }
     }
-	public function isError() {
-		$lastError = $this->error();
+
+    public function isError()
+    {
+        $lastError = $this->error();
+
         return (isset($lastError[2]) && $lastError[2]) ? true : false;
-	}
+    }
 }

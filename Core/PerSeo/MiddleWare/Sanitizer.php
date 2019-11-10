@@ -30,6 +30,7 @@ class Sanitizer
     ) {
         $this->GET = $requestInterface->getQueryParams();
         $this->POST = $requestInterface->getParsedBody();
+
         return $next($requestInterface, $response);
     }
 
@@ -73,36 +74,42 @@ class Sanitizer
     public function no_xss($string)
     {
         $pattern = strip_tags($string, '<p><table><tbody><thead><tr><td>');
+
         return trim($this->xssinject($pattern));
     }
 
     protected function xssinject($string)
     {
         $pattern = '/\sseeksegmenttime=|\sonmousedown=|\sonmousemove=|\sonmmouseup=|\sonmouseover=|\sonmouseout=|\sonload=|\sonunload=|\sonfocus=|\sonblur=|\sonchange=|\sonsubmit=|\sondblclick=|\sonclick=|\sonkeydown=|\sonkeyup=|\sonkeypress=|\sonmouseenter=|\sonmouseleave=|\sonerror=|\sonselect=|\sonreset=|\sonabort=|\sondragdrop=|\sonresize=|\sonactivate=|\sonafterprint=|\sonmoveend=|\sonafterupdate=|\sonbeforeactivate=|\sonbeforecopy=|\sonbeforecut=|\sonbeforedeactivate=|\sonbeforeeditfocus=|\sonbeforepaste=|\sonbeforeprint=|\sonbeforeunload=|\sonbeforeupdate=|\sonmove=|\sonbounce=|\soncellchange=|\soncontextmenu=|\soncontrolselect=|\soncopy=|\soncut=|\sondataavailable=|\sondatasetchanged=|\sondatasetcomplete=|\sondeactivate=|\sondrag=|\sondragend=|\sondragenter=|\sonmousewheel=|\sondragleave=|\sondragover=|\sondragstart=|\sondrop=|\sonerrorupdate=|\sonfilterchange=|\sonfinish=|\sonfocusin=|\sonfocusout=|\sonhashchange=|\sonhelp=|\soninput=|\sonlosecapture=|\sonmessage=|\sonmouseup=|\sonmovestart=|\sonoffline=|\sononline=|\sonpaste=|\sonpropertychange=|\sonreadystatechange=|\sonresizeend=|\sonresizestart=|\sonrowenter=|\sonrowexit=|\sonrowsdelete=|\sonrowsinserted=|\sonscroll=|\sonsearch=|\sonselectionchange=|\sonselectstart=|\sonstart=|\sonstop=|\sformaction=|\sonforminput=|\sonformchange=|xlink:href=|\sdirname=|\ssrcdoc=|\ssrcset=|\sbackground=|javascript:/i';
+
         return trim(preg_replace($pattern, ' ', $string));
     }
 
     public function number($string)
     {
         $pattern = '/[^0-9]/';
+
         return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_T));
     }
 
     public function user($string)
     {
         $pattern = '/[^A-Za-z0-9-_.]/';
+
         return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_U));
     }
 
     public function pwd($string)
     {
         $pattern = '/[^A-Za-z0-9-#_$^&@%,.]/';
+
         return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_P));
     }
 
     public function alpha($string)
     {
         $pattern = '/[^A-Za-z0-9]/';
+
         return trim(substr(preg_replace($pattern, '', $string), 0, $this->MAX_A));
     }
 
@@ -112,12 +119,13 @@ class Sanitizer
         $string = preg_replace('/\s/i', '-', $string);
         $string = strtolower($string);
         $string = preg_replace('/[^a-z0-9-]/', '', $string);
+
         return trim(substr($string, 0, $this->MAX_T));
     }
 
     protected function unaccent($txt)
     {
-        $transliterationTable = array(
+        $transliterationTable = [
             'á' => 'a',
             'Á' => 'A',
             'à' => 'a',
@@ -389,8 +397,9 @@ class Sanitizer
             'ю' => 'ju',
             'Ю' => 'ju',
             'я' => 'ja',
-            'Я' => 'ja'
-        );
+            'Я' => 'ja',
+        ];
+
         return str_replace(array_keys($transliterationTable), array_values($transliterationTable), $txt);
     }
 
@@ -402,6 +411,7 @@ class Sanitizer
     public function no_html($string)
     {
         $pattern = filter_var($string, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
         return trim($this->xssinject($pattern));
     }
 

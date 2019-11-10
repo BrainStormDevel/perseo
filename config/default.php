@@ -2,6 +2,6 @@
 
 return [
     'settings.determineRouteBeforeAppMiddleware' => true,
-    'settings.displayErrorDetails' => true,
-    'settings.addContentLengthHeader' => false
+    'settings.displayErrorDetails'               => true,
+    'settings.addContentLengthHeader'            => false,
 ];

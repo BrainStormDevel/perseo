@@ -20,16 +20,18 @@ class Redirector
     ) {
         $this->request = $request;
         $this->response = $response;
+
         return $next($request, $response);
     }
 
     public function withBaseRedirect($uri, $type)
     {
         if ($this->container->has('settings.global') && ($this->container->get('settings.global')['locale'])) {
-            $uriBase = '//' . $_SERVER['HTTP_HOST'] . $this->request->getUri()->getBasePath() . '/' . $this->container->get('current.language');
+            $uriBase = '//'.$_SERVER['HTTP_HOST'].$this->request->getUri()->getBasePath().'/'.$this->container->get('current.language');
         } else {
-            $uriBase = '//' . $_SERVER['HTTP_HOST'] . $this->request->getUri()->getBasePath();
+            $uriBase = '//'.$_SERVER['HTTP_HOST'].$this->request->getUri()->getBasePath();
         }
-        return $this->response->withRedirect($uriBase . $uri, $type);
+
+        return $this->response->withRedirect($uriBase.$uri, $type);
     }
 }

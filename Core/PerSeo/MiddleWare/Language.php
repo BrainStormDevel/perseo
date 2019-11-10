@@ -22,9 +22,9 @@ class Language
             $result = $db->select('routes', [
                 'dest',
                 'type',
-                'redirect'
+                'redirect',
             ], [
-                'request' => $myreq
+                'request' => $myreq,
             ]);
         }
         if ($this->container->has('settings.global') && ($this->container->get('settings.global')['locale'])) {
@@ -41,21 +41,22 @@ class Language
             $req = ((strlen($request->getUri()->getPath()) > 1) && (substr($request->getUri()->getPath(), 0,
                     1) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
             $basepath = $request->getUri()->getbasePath();
-            $langurl = explode("/", $req);
+            $langurl = explode('/', $req);
             if (empty($result[0]['dest']) && ($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
                 if (!empty($langurl[0]) && (in_array($langurl[0], $languages))) {
                     $currlang = $langurl[0];
-                    $this->container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
+                    $this->container->set('redirect.url', $request->getUri()->getBasePath().'/'.$currlang);
                     $finalstring = substr($req, strlen($currlang));
                     $request = $request->withUri($request->getUri()->withPath($finalstring));
                     $request = $request->withUri($request->getUri()->withbasePath($basepath));
                 } else {
                     $this->container->set('current.language', $currlang);
+
                     throw new \Slim\Exception\NotFoundException($request, $response);
                 }
             }
             if ($this->container->get('settings.global')['locale']) {
-                $this->container->set('redirect.url', $request->getUri()->getBasePath() . '/' . $currlang);
+                $this->container->set('redirect.url', $request->getUri()->getBasePath().'/'.$currlang);
             } else {
                 $this->container->set('redirect.url', $request->getUri()->getBasePath());
             }
@@ -76,16 +77,17 @@ class Language
         if (!empty($result[0]['dest'])) {
             $type = $result[0]['type'];
             $dest = $result[0]['dest'];
-            $redirect = (int)$result[0]['redirect'];
+            $redirect = (int) $result[0]['redirect'];
             if ($type == 1) {
                 $basepath = $request->getUri()->getbasePath();
                 $request = $request->withUri($request->getUri()->withPath($dest));
                 $request = $request->withUri($request->getUri()->withbasePath($basepath));
             } else {
-                $uriBase = '//' . $_SERVER['HTTP_HOST'] . $request->getUri()->getBasePath() . '/';
-                $response = $response->withRedirect($uriBase . $dest, $redirect);
+                $uriBase = '//'.$_SERVER['HTTP_HOST'].$request->getUri()->getBasePath().'/';
+                $response = $response->withRedirect($uriBase.$dest, $redirect);
             }
         }
+
         return $next($request, $response);
     }
 }

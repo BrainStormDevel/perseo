@@ -25,9 +25,9 @@ class Maintenance
                 \PerSeo\Path::LangPath('maintenance'));
             $langall = $lang->get();
             $this->container->set('view', function ($container) {
-                $view = new \Slim\Views\Twig('modules/maintenance/views/' . $this->container->get('settings.global')['template'],
+                $view = new \Slim\Views\Twig('modules/maintenance/views/'.$this->container->get('settings.global')['template'],
                     [
-                        'cache' => 'cache'
+                        'cache' => 'cache',
                     ]);
                 $router = $this->container->get('router');
                 $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
@@ -35,12 +35,14 @@ class Maintenance
 
                 return $view;
             });
+
             return $this->container->get('view')->render($response, 'index.twig', [
                 'host' => \PerSeo\Path::SiteName($request),
                 'lang' => $langall['body'],
-                'vars' => $this->container->get('Templater')->vars('maintenance')
+                'vars' => $this->container->get('Templater')->vars('maintenance'),
             ]);
         }
+
         return $next($request, $response);
     }
 }

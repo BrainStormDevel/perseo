@@ -13,7 +13,7 @@ class Template
 
     public function vars($modulename)
     {
-        $vars = array();
+        $vars = [];
         $vars['ProdName'] = $this->container->get('settings.prodname');
         $vars['ProdVer'] = $this->container->get('settings.prodver');
         $vars['encoding'] = $this->container->has('settings.global') ? $this->container->get('settings.global')['encoding'] : '';
@@ -21,6 +21,7 @@ class Template
         $vars['language'] = $this->container->get('current.language');
         $vars['ModuleName'] = $modulename;
         $vars['ModuleUrlName'] = strtolower($modulename);
+
         return $vars;
     }
 }
