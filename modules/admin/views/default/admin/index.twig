@@ -7,8 +7,10 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   {% include 'admin/views/default/admin/head_panel.twig' %}
-  <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/admin/foot_panel/views/default/resources/css/flags.css">
+  <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/resources/css/flags.css">
   <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/resources/css/brand.css">
+  <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/resources/css/maior.css">
+  <link rel="stylesheet" href="{{ host }}/modules/admin/views/default/resources/css/colorpicker.css">
   {% if headertpl|length %}
   {% include headertpl %}
   {% endif %}
@@ -560,6 +562,19 @@
     });
   });
   $.widget.bridge('uibutton', $.ui.button);
+$('.color').ColorPicker({
+	onSubmit: function(hsb, hex, rgb, el) {
+		$(el).val(hex);
+		$(el).ColorPickerHide();
+		$(el).next().css('background-color', '#' + hex);
+	},
+	onBeforeShow: function () {
+		$(this).ColorPickerSetColor(this.value);
+	}
+})
+.bind('keyup', function(){
+	$(this).ColorPickerSetColor(this.value);
+});  
     $("#logout").click(function(e) {
   	$.ajax({
 	url: '{{ host }}/admin/logout/',

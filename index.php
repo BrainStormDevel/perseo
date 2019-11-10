@@ -29,6 +29,52 @@ try {
             ]);
         });
     }
+    if ($container->has('settings.logger')) {
+        $container->set('loggerCritical', function ($container) {
+			$settings = $container->get('settings.logger')['critical'];
+			$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+			$formatter = new \Monolog\Formatter\LineFormatter($output);
+			$stream = new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']);
+			$stream->setFormatter($formatter);
+			$logger = new \Monolog\Logger($settings['name']);
+			$logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+			$logger->pushHandler($stream);
+			return $logger;
+        });
+        $container->set('loggerError', function ($container) {
+			$settings = $container->get('settings.logger')['error'];
+			$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+			$formatter = new \Monolog\Formatter\LineFormatter($output);
+			$stream = new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']);
+			$stream->setFormatter($formatter);
+			$logger = new \Monolog\Logger($settings['name']);
+			$logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+			$logger->pushHandler($stream);
+			return $logger;
+        });
+        $container->set('loggerWarning', function ($container) {
+			$settings = $container->get('settings.logger')['warning'];
+			$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+			$formatter = new \Monolog\Formatter\LineFormatter($output);
+			$stream = new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']);
+			$stream->setFormatter($formatter);
+			$logger = new \Monolog\Logger($settings['name']);
+			$logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+			$logger->pushHandler($stream);
+			return $logger;
+        });
+        $container->set('loggerNotice', function ($container) {
+			$settings = $container->get('settings.logger')['notice'];
+			$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+			$formatter = new \Monolog\Formatter\LineFormatter($output);
+			$stream = new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']);
+			$stream->setFormatter($formatter);
+			$logger = new \Monolog\Logger($settings['name']);
+			$logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+			$logger->pushHandler($stream);
+			return $logger;
+        });		
+    }	
     $sanitize = new \PerSeo\MiddleWare\Sanitizer($container);
     $redirector = new \PerSeo\MiddleWare\Redirector($container);
     $container->set('Templater', function ($container) {
@@ -83,6 +129,12 @@ try {
             ]);
         };
     });
+	$container->set('errorHandler', function ($container) {
+		return new \PerSeo\MiddleWare\ErrorHandler($container);
+	});
+	$container->set('phpErrorHandler', function ($container) {
+		return new \PerSeo\MiddleWare\ErrorHandler($container);
+	});	
     $directory = \PerSeo\Path::MOD_PATH;
     $dirobj = new \DirectoryIterator($directory);
     $modules = array();

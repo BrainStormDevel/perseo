@@ -16,18 +16,13 @@ class Test
                 'charset' => $container->get('Sanitizer')->POST('charset', 'user')
             ]);
             $result = Array(
-                "err" => 0,
                 "code" => 0,
-                "msg" => "ok"
+                "message" => "OK"
             );
-        } catch (\Exception $e) {
-            $result = Array(
-                "err" => 1,
-                "code" => $e->getCode(),
-                "msg" => $e->getMessage()
-            );
+			return $result;
+        } catch (\Throwable $e) {
+			throw new \Exception($e->getMessage(), $e->getCode());
         }
-        echo json_encode($result);
     }
 
 }

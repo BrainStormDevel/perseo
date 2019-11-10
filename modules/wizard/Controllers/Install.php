@@ -82,13 +82,10 @@ class Install
             $result = self::createdb($container);
             setcookie(session_name(), “”, time() - 31556926, “ / ”);
             session_destroy();
-        } catch (Exception $e) {
-            $result = array(
-                'code' => $e->getCode(),
-                'msg' => $e->getMessage()
-            );
+			return $result;
+        } catch (\Throwable $e) {
+			throw new \Exception($e->getMessage(), $e->getCode());
         }
-        echo json_encode($result);
     }
 
     private static function createdb($container)
@@ -136,16 +133,13 @@ class Install
                 "type" => '1',
                 "stato" => '0'
             ]);
-            $result = array(
-                'code' => '0',
-                'msg' => 'OK'
+            $result = Array(
+                "code" => 0,
+                "message" => "OK"
             );
-        } catch (Exception $e) {
-            $result = array(
-                'code' => $e->getCode(),
-                'msg' => $e->getMessage()
-            );
+			return $result;
+        } catch (\Throwable $e) {
+			throw new \Exception($e->getMessage(), $e->getCode());
         }
-        return $result;
     }
 }

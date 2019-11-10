@@ -293,20 +293,25 @@
 							$.ajax({
 								url: '{{ host }}/{{ vars.ModuleUrlName }}/test/',
 								type: 'post',
+								dataType: "json",
 								data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "charset": dbenc},
 								success: function(response) {
-									result = JSON.parse(response);
-									if (result.err == 0) {
+									if (response.code == 0) {
 										$('#loader').hide();
 										$('#result').append('<center><i class="fa fa-check-circle-o fa-5x text-success"></i><br>{{ lang.l_check_db_ok }}</center>');
 										test = true;
 									}
 									else {
 										$('#loader').hide();
-										$('#result').append('<center><i class="fa fa-times-circle-o fa-5x text-danger"></i><br>{{ lang.l_check_db_no }}&nbsp;&nbsp;' + result.msg + '</center>');
+										$('#result').append('<center><i class="fa fa-times-circle-o fa-5x text-danger"></i><br>{{ lang.l_check_db_no }}&nbsp;&nbsp;' + response.message + '</center>');
 										test = false;
 									}
-								}
+								},
+								error: function(response){
+									$('#loader').hide();
+									$('#result').append('<center><i class="fa fa-times-circle-o fa-5x text-danger"></i><br>{{ lang.l_check_db_no }}&nbsp;&nbsp;' + response.responseJSON['message'] + '</center>');
+									test = false;
+								}	
 							})
 							},100);
 						}
@@ -334,16 +339,19 @@
 					$.ajax({
 						url: '{{ host }}/{{ vars.ModuleUrlName }}/install/',
 						type: 'post',
+						dataType: "json",
 						data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "locale": locale, "template": template, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "maintenancekey": $("#maintenancekey").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
 						success: function(response) {
-							var result = JSON.parse(response);
-							if (result.code == 0) {
+							if (response.code == 0) {
 							$('#endresult').append('<center><i class="fa fa-check-circle-o fa-5x text-success"></i><br>{{ lang.l_install_ok }}</center>');
 							setTimeout(function(){ location.href="{{ host }}/" } , 3000);
 							}
 							else {
-							$('#result').append('<center><i class="fa fa-times-circle-o fa-5x text-danger"></i><br>{{ lang.l_install_ko }}&nbsp;&nbsp;' + result.msg + '</center>');
+							$('#result').append('<center><i class="fa fa-times-circle-o fa-5x text-danger"></i><br>{{ lang.l_install_ko }}&nbsp;&nbsp;' + response.message + '</center>');
 							}
+						},
+						error: function(response){
+							$('#result').append('<center><i class="fa fa-times-circle-o fa-5x text-danger"></i><br>{{ lang.l_install_ko }}&nbsp;&nbsp;' + response.responseJSON['message'] + '</center>');
 						}
 					});
 				});		

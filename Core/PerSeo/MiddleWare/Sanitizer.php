@@ -401,7 +401,7 @@ class Sanitizer
 
     public function no_html($string)
     {
-        $pattern = filter_var($string, FILTER_SANITIZE_STRING);
+        $pattern = filter_var($string, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         return trim($this->xssinject($pattern));
     }
 

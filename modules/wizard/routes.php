@@ -7,7 +7,6 @@ if ($container->has('settings.database')) {
         });
 } else {
     $app->get('/wizard[/]', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-        try {
             $container->set('view', function ($container) {
                 $view = new \Slim\Views\Twig('modules', [
                     'cache' => false
@@ -33,16 +32,23 @@ if ($container->has('settings.database')) {
                 'writeperm' => (is_writable(\PerSeo\Path::CONF_PATH) ? "ok" : "no"),
                 'openssl' => (extension_loaded('openssl') ? "ok" : "no")
             ]);
-        } catch (Exception $e) {
-            die("PerSeo ERROR : " . $e->getMessage());
-        }
     })->setName('wizard');
     $app->post('/wizard/test[/]',
         function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-            \wizard\Controllers\Test::main($container);
+			$myresponse = array(
+				'type' => 'json',
+				'verbose' => false
+			);
+			$container->set('myresponse', $myresponse);
+            return $response->withJson(\wizard\Controllers\Test::main($container));
         })->setName('wizard');
     $app->post('/wizard/install[/]',
         function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-            \wizard\Controllers\Install::main($container);
+			$myresponse = array(
+				'type' => 'json',
+				'verbose' => false
+			);
+			$container->set('myresponse', $myresponse);
+            return $response->withJson(\wizard\Controllers\Install::main($container));
         })->setName('wizard');
 }
