@@ -4,9 +4,10 @@ namespace PerSeo;
 
 class Sessions extends \SessionHandler implements \SessionHandlerInterface, \SessionIdInterface
 {
-    protected static $cipher = "AES-256-CBC";
+    protected static $cipher = 'AES-256-CBC';
 
-    private $key, $cookie;
+    private $key;
+    private $cookie;
 
     public function __construct($container)
     {
@@ -26,7 +27,7 @@ class Sessions extends \SessionHandler implements \SessionHandlerInterface, \Ses
         $data = parent::read($id);
 
         if (!$data) {
-            return "";
+            return '';
         } else {
             return self::decrypt($data, $this->key);
         }
@@ -39,12 +40,12 @@ class Sessions extends \SessionHandler implements \SessionHandlerInterface, \Ses
         $ct = substr($data, 16);
 
         $rounds = 3; // depends on key length
-        $data00 = $password . $salt;
-        $hash = array();
+        $data00 = $password.$salt;
+        $hash = [];
         $hash[0] = hash('sha256', $data00, true);
         $result = $hash[0];
         for ($i = 1; $i < $rounds; $i++) {
-            $hash[$i] = hash('sha256', $hash[$i - 1] . $data00, true);
+            $hash[$i] = hash('sha256', $hash[$i - 1].$data00, true);
             $result .= $hash[$i];
         }
         $key = substr($result, 0, 32);
@@ -64,7 +65,8 @@ class Sessions extends \SessionHandler implements \SessionHandlerInterface, \Ses
         $options = [
             'cost' => 12,
         ];
-        return preg_replace("/[^A-Za-z0-9]/", '', password_hash($string, PASSWORD_BCRYPT, $options));
+
+        return preg_replace('/[^A-Za-z0-9]/', '', password_hash($string, PASSWORD_BCRYPT, $options));
     }
 
     public function write($id, $data)
@@ -85,7 +87,7 @@ class Sessions extends \SessionHandler implements \SessionHandlerInterface, \Ses
 
         // Salt the key(32) and iv(16) = 48
         while (strlen($salted) < 48) {
-            $dx = hash('sha256', $dx . $password . $salt, true);
+            $dx = hash('sha256', $dx.$password.$salt, true);
             $salted .= $dx;
         }
 
@@ -93,7 +95,7 @@ class Sessions extends \SessionHandler implements \SessionHandlerInterface, \Ses
         $iv = substr($salted, 32, 16);
 
         $encrypted_data = openssl_encrypt($data, self::$cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
-        return base64_encode($salt . $encrypted_data);
-    }
 
+        return base64_encode($salt.$encrypted_data);
+    }
 }
