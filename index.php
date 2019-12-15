@@ -112,6 +112,7 @@ try {
     $container->set('csrf', function () {
         $guard = new \Slim\Csrf\Guard();
         $guard->setPersistentTokenMode(true);
+
         return $guard;
     });
     $container->set('notFoundHandler', function ($container) {
