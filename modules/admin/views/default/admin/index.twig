@@ -579,11 +579,11 @@ $('.color').ColorPicker({
   	$.ajax({
 	url: '{{ host }}/admin/logout/',
 	type: 'post',
+	dataType: 'json',
 	data: { "{{ csrf.nameKey }}": "{{ csrf.name }}", "{{ csrf.valueKey }}": "{{ csrf.value }}" },
 	success: function(response) {
-		obj = JSON.parse(response);
-		if (obj.code == 0) {
-			setTimeout("window.location.replace('{{ host }}/admin/');",1000);
+		if (response.code == 0) {
+			setTimeout("window.location.replace('{{ host }}/admin/');",200);
 		}
 	}
 	});

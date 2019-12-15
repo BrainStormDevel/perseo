@@ -109,24 +109,32 @@
   	$.ajax({
 	url: '{{ host }}/{{ vars.ModuleName }}/{{ name }}/',
 	type: 'post',
+	dataType: 'json',
 	data: { "{{ csrf.nameKey }}": "{{ csrf.name }}", "{{ csrf.valueKey }}": "{{ csrf.value }}", "username": $('#username').val(), "password": $('#password').val(), "type": "{{ name }}s", "rememberme": $('#rememberme').is(':checked')?0:1 },
 	success: function(response) {
-		obj = JSON.parse(response);
-		if (obj.msg == "USR_PASS_ERR") { msg = "{{ lang.l_login_err }}"; }
-		else { msg = obj.msg; }
-		if (obj.code == 1) {
-			$('#msgbox').attr('class', 'isa_error');
-			var str = '<i class="fa fa-times-circle"></i>' + msg;
-			setTimeout("window.location.replace('{{ host }}/{{ vars.language }}/{{ vars.ModuleName }}/{{ name }}');",1000);
-		}
-		else {
+		if (response.message == "USR_PASS_ERR") { msg = "{{ lang.l_login_err }}"; }
+		else { msg = response.message; }
+		if (response.message == 'OK') {
 			$('#msgbox').attr('class', 'isa_success');
 			var str = '<i class="fa fa-check"></i>' + msg;
 			setTimeout("window.location.replace('{{ host }}/{{ name }}/');",1000);
 		}
+		else {
+			$('#msgbox').attr('class', 'isa_error');
+			var str = '<i class="fa fa-times-circle"></i>' + msg;
+			setTimeout("window.location.replace('{{ host }}/{{ vars.language }}/{{ vars.ModuleName }}/{{ name }}');",1000);			
+		}
 		$('#msg').html( str );
 		$('#msgbox').show();
-	}
+	},
+	error: function(response){
+		msg = response.responseJSON['message'];
+		$('#msgbox').attr('class', 'isa_error');
+		var str = '<i class="fa fa-times-circle"></i>' + msg;
+		setTimeout("window.location.replace('{{ host }}/{{ vars.language }}/{{ vars.ModuleName }}/{{ name }}');",1000);
+		$('#msg').html( str );
+		$('#msgbox').show();
+	}	
 	});
 	e.preventDefault();
   });

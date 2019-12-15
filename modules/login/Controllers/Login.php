@@ -55,10 +55,10 @@ class Login
     {
         try {
             if ($this->islogged()) {
-                throw new \Exception("OK", 0);
+                throw new \Exception("OK", 200);
             }
             if (!$user or !$pass) {
-                throw new \Exception("USR_PASS_EMPTY", 1);
+                throw new \Exception("USR_PASS_EMPTY", 200);
             }
             $result = $this->db->select($this->type, [
                 'id',
@@ -126,18 +126,15 @@ class Login
                 }
                 $result = array(
                     'code' => '0',
-                    'msg' => 'OK'
+                    'message' => 'OK'
                 );
             } else {
-                throw new \Exception("USR_PASS_ERR", 1);
+                throw new \Exception("USR_PASS_ERR", 200);
             }
-        } catch (\Exception $e) {
-            $result = array(
-                'code' => $e->getCode(),
-                'msg' => $e->getMessage()
-            );
+			return $result;
+        } catch (\Throwable $e) {
+			throw new \Exception($e->getMessage(), $e->getCode());
         }
-        echo json_encode($result);
     }
 
     public function islogged()
@@ -283,17 +280,14 @@ class Login
                     $this->cookie['cookie_http']);
                 $result = array(
                     'code' => '0',
-                    'msg' => 'OK'
+                    'message' => 'OK'
                 );
             } else {
-                throw new \Exception("NO_COOKIE", 1);
+                throw new \Exception("NO_COOKIE", 200);
             }
-        } catch (\Exception $e) {
-            $result = array(
-                'code' => $e->getCode(),
-                'msg' => $e->getMessage()
-            );
+			return $result;
+        } catch (\Throwable $e) {
+			throw new \Exception($e->getMessage(), $e->getCode());
         }
-        return json_encode($result);
     }
 }

@@ -107,16 +107,16 @@ var TableEditable = function () {
 					$.ajax({
 					url: '{{ host }}/admin/users/edit_admins/',
 					type: 'post',
+					dataType: 'json',
 					data: { "{{ csrf.nameKey }}": "{{ csrf.name }}", "{{ csrf.valueKey }}": "{{ csrf.value }}", "form_id": id, "form_user": jqInputs[1].value, "form_pass": jqInputs[2].value, "form_email": jqInputs[3].value, "form_type": jqSelect[0].value},
 					success: function(response) {
-						var result = JSON.parse(response);
-						if (result.err == 0) {
-							id = result.id;
+						if (response.message == 'OK') {
+							id = response.id;
 							objects[0] = '<input type="hidden" value="' + id + '">';
 							oTable.row(nRow).data(objects).draw;
 						}
 						else {
-							alert(result.msg);
+							alert(response.message);
 						}
 					}
 					});
@@ -157,13 +157,13 @@ var TableEditable = function () {
 				$.ajax({
 					url: '{{ host }}/admin/users/del_admin/',
 					type: 'post',
+					dataType: 'json',
 					data: { "{{ csrf.nameKey }}": "{{ csrf.name }}", "{{ csrf.valueKey }}": "{{ csrf.value }}", "form_id": id },
 					success: function(response) {
-						var result = JSON.parse(response);
-						if (result.err == 0) {
+						if (response.message == 'OK') {
 							DeleteRow(oTable, nRow);
 						}
-						alert(result.msg);
+						alert(response.message);
 					}
 				});
             });
@@ -190,15 +190,15 @@ var TableEditable = function () {
 				$.ajax({
 					url: 'index.php?nome=gestusers',
 					type: 'post',
+					dataType: 'json',
 					data: { "act": "show_admin_email", "int_id": id, "CSRFName": token[0], "CSRFToken": token[1]},
 					success: function(response) {
-						result = JSON.parse(response);
 						var objects = ['', '', '', '', '', '', ''];
-						var token_last = result.CSRFName + ':' + result.CSRFToken;
+						var token_last = response.CSRFName + ':' + response.CSRFToken;
 						objects[0] = '<input type="hidden" value="' + id + '"><input type="hidden" value="' + token_last + '">';
 						objects[1] = aData[1];
 						objects[2] = aData[2];
-						objects[3] = result.email;
+						objects[3] = response.email;
 						objects[4] = aData[4];
 						objects[5] = aData[5];
 						objects[6] = aData[6];

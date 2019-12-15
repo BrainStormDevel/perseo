@@ -21,7 +21,7 @@ class GestAdmin
             $type = $this->container->get('Sanitizer')->POST('form_type', 'int');
             if (!empty($user) && !empty($pass) && !empty($email) && !empty($type)) {
                 if (\login\Controllers\Login::priv() > $type) {
-                    throw new \Exception('Non hai i privilegi per poter aggiungere questo utente', 001);
+                    throw new \Exception('Non hai i privilegi per poter aggiungere questo utente', 200);
                 }
                 $db = $this->container->get('db');
                 $login = new \login\Controllers\Login($this->container, 'admins');
@@ -36,13 +36,13 @@ class GestAdmin
                     ]);
                     $lastid = $db->id();
                     if ($lastid <= 0) {
-                        throw new \Exception('Errore utente o email già presente', 001);
+                        throw new \Exception('Errore utente o email già presente', 200);
                     }
                     $result = Array(
                         "err" => 0,
                         "id" => $lastid,
                         "code" => '000',
-                        "msg" => 'OK'
+                        "message" => 'OK'
                     );
                 } else {
                     if (\login\Controllers\Login::id() == $id) {
@@ -66,26 +66,21 @@ class GestAdmin
                         ]);
                     }
                     if ($data->rowCount() <= 0) {
-                        throw new \Exception('Errore aggiornamento utente', 001);
+                        throw new \Exception('Errore aggiornamento utente', 200);
                     } else {
                         $result = Array(
                             "err" => 0,
                             "id" => $id,
                             "code" => '000',
-                            "msg" => 'OK'
+                            "message" => 'OK'
                         );
                     }
                 }
             }
-        } catch (\Exception $e) {
-            $result = Array(
-                "err" => 1,
-                "id" => 0,
-                "code" => $e->getCode(),
-                "msg" => $e->getMessage()
-            );
+			return $result;
+        } catch (\Throwable $e) {
+			throw new \Exception($e->getMessage(), $e->getCode());
         }
-        return $result;
     }
 
     public function Del()
@@ -94,10 +89,10 @@ class GestAdmin
             $id = $this->container->get('Sanitizer')->POST('form_id', 'int');
             if (!empty($id)) {
                 if (\login\Controllers\Login::id() == $id) {
-                    throw new \Exception('Non puoi eliminare il tuo utente', 001);
+                    throw new \Exception('Non puoi eliminare il tuo utente', 200);
                 }
                 if (\login\Controllers\Login::priv() > 1) {
-                    throw new \Exception('Non hai i permessi per eliminare questo utente', 001);
+                    throw new \Exception('Non hai i permessi per eliminare questo utente', 200);
                 }
                 $db = $this->container->get('db');
                 $data = $db->delete("admins", [
@@ -107,23 +102,18 @@ class GestAdmin
                     ]
                 ]);
                 if ($data->rowCount() <= 0) {
-                    throw new \Exception('Errore Eliminazione utente', 001);
+                    throw new \Exception('Errore Eliminazione utente', 200);
                 }
                 $result = Array(
                     "err" => 0,
                     "id" => $id,
                     "code" => '000',
-                    "msg" => 'OK'
+                    "message" => 'OK'
                 );
             }
-        } catch (\Exception $e) {
-            $result = Array(
-                "err" => 1,
-                "id" => 0,
-                "code" => $e->getCode(),
-                "msg" => $e->getMessage()
-            );
+			return $result;
+        } catch (\Throwable $e) {
+			throw new \Exception($e->getMessage(), $e->getCode());
         }
-        return $result;
     }
 }

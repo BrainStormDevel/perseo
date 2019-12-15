@@ -1,6 +1,5 @@
 <?php
 $app->get('/', function (\Slim\Http\Request $request, \Slim\Http\Response $response) use ($container) {
-    try {
         $container->set('view', function ($container) {
             $view = new \Slim\Views\Twig('modules/index/views/' . $container->get('settings.global')['template'], [
                 'cache' => false
@@ -23,7 +22,4 @@ $app->get('/', function (\Slim\Http\Request $request, \Slim\Http\Response $respo
             'host' => \PerSeo\Path::SiteName($request),
             'vars' => $container->get('Templater')->vars('index')
         ]);
-    } catch (Exception $e) {
-        die("PerSeo ERROR : " . $e->getMessage());
-    }
 });
