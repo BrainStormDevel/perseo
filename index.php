@@ -8,7 +8,7 @@
 
 *///###########################################
 
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+ini_set('display_errors', 0);
 
 try {
     @include_once __DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'version.php';
@@ -80,6 +80,8 @@ try {
             return $logger;
         });
     }
+	$file_settings = (file_exists(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'settings.php') ? realpath(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'settings.php') :  realpath(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'default.php'));
+	$shutdown = new \PerSeo\Shutdown(@include($file_settings));
     $sanitize = new \PerSeo\MiddleWare\Sanitizer($container);
     $redirector = new \PerSeo\MiddleWare\Redirector($container);
     $container->set('Templater', function ($container) {
