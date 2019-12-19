@@ -80,8 +80,8 @@ try {
             return $logger;
         });
     }
-	$file_settings = (file_exists(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'settings.php') ? realpath(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'settings.php') :  realpath(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'default.php'));
-	$shutdown = new \PerSeo\Shutdown(@include($file_settings));
+    $file_settings = (file_exists(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'settings.php') ? realpath(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'settings.php') : realpath(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'default.php'));
+    $shutdown = new \PerSeo\Shutdown(@include($file_settings));
     $sanitize = new \PerSeo\MiddleWare\Sanitizer($container);
     $redirector = new \PerSeo\MiddleWare\Redirector($container);
     $container->set('Templater', function ($container) {
