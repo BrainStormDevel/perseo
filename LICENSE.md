@@ -1,4 +1,4 @@
-Slim Copyright (c) 2011-2017 Josh Lockhart
+Slim Copyright (c) 2011-2017 Josh Lockhart  
 PerSeo Copyright (c) 2017-2020 Davide Bonsangue
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
