@@ -1,6 +1,6 @@
 {
     "name": "brainstorm/perseo",
-    "description": "PerSeo 0.9 beta based on Slim Framework 3, Password stored SHA512+salt, input sanitized, multi-language",
+    "description": "PerSeo 0.9 beta based on Slim Framework 3, Password stored BCRYPT+salt, input sanitized, modular, multi-language",
     "type": "project",
     "keywords": ["slim-framework", "php-di", "medoo", "secure", "cms"],
     "homepage": "https://github.com/BrainStormDevel/perseo",
@@ -13,10 +13,10 @@
         }
     ],
     "require": {
-	    "slim/slim": "3.*",
-		"ext-openssl": "*",
-		"catfan/medoo": "^1.4",
-		"jbbcode/jbbcode": "1.3.*",
+	"slim/slim": "3.*",
+	"ext-openssl": "*",
+	"catfan/medoo": "^1.4",
+	"jbbcode/jbbcode": "1.3.*",
         "composer/ca-bundle": "^1.1",
         "slim/twig-view": "^2.4",
         "slim/csrf": "^0.8.3",
