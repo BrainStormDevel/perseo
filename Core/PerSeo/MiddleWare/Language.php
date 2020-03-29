@@ -16,7 +16,7 @@ class Language
         \Slim\Http\Response $response,
         callable $next
     ) {
-        $myreq = $request->getUri()->getPath();
+        $myreq = (substr($request->getUri()->getPath(), 0) == '/' ? $request->getUri()->getPath() : "/". $request->getUri()->getPath());
         if ($this->container->has('db')) {
             $db = $this->container->get('db');
             $result = $db->select('routes', [
@@ -83,7 +83,7 @@ class Language
                 $request = $request->withUri($request->getUri()->withPath($dest));
                 $request = $request->withUri($request->getUri()->withbasePath($basepath));
             } else {
-                $uriBase = '//'.$_SERVER['HTTP_HOST'].$request->getUri()->getBasePath().'/';
+                $uriBase = '//'.$_SERVER['HTTP_HOST'].$request->getUri()->getBasePath();
                 $response = $response->withRedirect($uriBase.$dest, $redirect);
             }
         }

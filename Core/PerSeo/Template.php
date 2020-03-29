@@ -16,6 +16,7 @@ class Template
         $vars = [];
         $vars['ProdName'] = $this->container->get('settings.prodname');
         $vars['ProdVer'] = $this->container->get('settings.prodver');
+        $vars['SiteName'] = $this->container->has('settings.global') ? $this->container->get('settings.global')['sitename'] : '';
         $vars['encoding'] = $this->container->has('settings.global') ? $this->container->get('settings.global')['encoding'] : '';
         $vars['template'] = $this->container->has('settings.global') ? $this->container->get('settings.global')['template'] : '';
         $vars['language'] = $this->container->get('current.language');
