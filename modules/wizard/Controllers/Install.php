@@ -13,6 +13,7 @@ class Install
     private static $user = "";
     private static $pass = "";
     private static $encoding = "";
+	private static $collate = "";
     private static $port = "";
     private static $tbprefix = "";
     private static $salt = "";
@@ -21,6 +22,7 @@ class Install
     {
         $fileconf = \PerSeo\Path::CONF_PATH . \PerSeo\Path::DS . 'settings.php';
         try {
+			$colexplode = explode("_", $container->get('Sanitizer')->POST('dbencoding'));
             $myfile = fopen($fileconf, "w");
             $content = "<?php\n\n";
             $content .= "return [
@@ -62,7 +64,8 @@ class Install
             'username' => '" . $container->get('Sanitizer')->POST('dbuser', 'user') . "',
             'password' => '" . $container->get('Sanitizer')->POST('dbpass', 'pass') . "',
             'prefix' => '" . $container->get('Sanitizer')->POST('prefix', 'user') . "',
-            'charset' => '" . $container->get('Sanitizer')->POST('dbencoding', 'user') . "',
+            'charset' => '" . $colexplode[0] . "',
+			'collate' => '" . $container->get('Sanitizer')->POST('dbencoding') . "',
             'port' => 3306
         ]
     ],
@@ -96,7 +99,8 @@ class Install
             self::$name = $container->get('Sanitizer')->POST('dbname', 'pass');
             self::$user = $container->get('Sanitizer')->POST('dbuser', 'user');
             self::$pass = $container->get('Sanitizer')->POST('dbpass', 'pass');
-            self::$encoding = $container->get('Sanitizer')->POST('dbencoding');
+            self::$encoding = $colexplode[0];
+			self::$collate = $container->get('Sanitizer')->POST('dbencoding');
             self::$port = '3306';
             self::$tbprefix = $container->get('Sanitizer')->POST('prefix', 'user');
             self::$salt = $container->get('Sanitizer')->POST('salt', 'alpha');
@@ -130,11 +134,11 @@ class Install
                     return $db;
                 });
             }
-            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "admins (id int(100) NOT NULL auto_increment, user varchar(100) COLLATE utf8_unicode_ci NOT NULL, pass varchar(255) COLLATE utf8_unicode_ci NOT NULL, email varchar(255) COLLATE utf8_unicode_ci NOT NULL, superuser varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL, type int(2) UNSIGNED DEFAULT NULL, stato int(2) NOT NULL, PRIMARY KEY (id), UNIQUE KEY user (user), UNIQUE KEY email (email)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "cookies (id int(100) NOT NULL auto_increment, uid int(100) NOT NULL, uuid varchar(255) COLLATE utf8_unicode_ci NOT NULL, type varchar(10) COLLATE utf8_unicode_ci NOT NULL, auth_token varchar(255) COLLATE utf8_unicode_ci NOT NULL, lastseen TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (id), UNIQUE KEY uuid (uuid)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "admins_types (id int(100) NOT NULL auto_increment, pid int(100) NOT NULL, label varchar(100) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (id), UNIQUE KEY pid (pid)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "users (id int(100) NOT NULL auto_increment, user varchar(100) COLLATE utf8_unicode_ci NOT NULL, pass varchar(255) COLLATE utf8_unicode_ci NOT NULL, email varchar(255) COLLATE utf8_unicode_ci NOT NULL, superuser varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL, type int(2) UNSIGNED DEFAULT NULL, stato int(2) NOT NULL, PRIMARY KEY (id), UNIQUE KEY user (user), UNIQUE KEY email (email)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
-            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "routes (id int(100) NOT NULL auto_increment, request varchar(255) COLLATE utf8_unicode_ci NOT NULL, dest varchar(255) COLLATE utf8_unicode_ci NOT NULL, type int(2) NOT NULL DEFAULT 1, redirect int(3) NOT NULL DEFAULT 301, canonical int(2) NOT NULL DEFAULT 0, PRIMARY KEY (id)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "admins (id int(100) NOT NULL auto_increment, user varchar(100) COLLATE ". self::$collate ." NOT NULL, pass varchar(255) COLLATE ". self::$collate ." NOT NULL, email varchar(255) COLLATE ". self::$collate ." NOT NULL, superuser varchar(255) COLLATE ". self::$collate ." DEFAULT NULL, type int(2) UNSIGNED DEFAULT NULL, stato int(2) NOT NULL, PRIMARY KEY (id), UNIQUE KEY user (user), UNIQUE KEY email (email)) ENGINE=InnoDB DEFAULT CHARSET=". self::$encoding ." COLLATE=". self::$collate .";");
+            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "cookies (id int(100) NOT NULL auto_increment, uid int(100) NOT NULL, uuid varchar(255) COLLATE ". self::$collate ." NOT NULL, type varchar(10) COLLATE ". self::$collate ." NOT NULL, auth_token varchar(255) COLLATE ". self::$collate ." NOT NULL, lastseen TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (id), UNIQUE KEY uuid (uuid)) ENGINE=MyISAM DEFAULT CHARSET=". self::$encoding ." COLLATE=". self::$collate .";");
+            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "admins_types (id int(100) NOT NULL auto_increment, pid int(100) NOT NULL, label varchar(100) COLLATE ". self::$collate ." NOT NULL, PRIMARY KEY (id), UNIQUE KEY pid (pid)) ENGINE=InnoDB DEFAULT CHARSET=". self::$encoding ." COLLATE=". self::$collate .";");
+            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "users (id int(100) NOT NULL auto_increment, user varchar(100) COLLATE ". self::$collate ." NOT NULL, pass varchar(255) COLLATE ". self::$collate ." NOT NULL, email varchar(255) COLLATE ". self::$collate ." NOT NULL, superuser varchar(255) COLLATE ". self::$collate ." DEFAULT NULL, type int(2) UNSIGNED DEFAULT NULL, stato int(2) NOT NULL, PRIMARY KEY (id), UNIQUE KEY user (user), UNIQUE KEY email (email)) ENGINE=InnoDB DEFAULT CHARSET=". self::$encoding ." COLLATE=". self::$collate .";");
+            $db->query("CREATE TABLE IF NOT EXISTS " . self::$tbprefix . "routes (id int(100) NOT NULL auto_increment, request varchar(255) COLLATE ". self::$collate ." NOT NULL, dest varchar(255) COLLATE ". self::$collate ." NOT NULL, type int(2) NOT NULL DEFAULT 1, redirect int(3) NOT NULL DEFAULT 301, canonical int(2) NOT NULL DEFAULT 0, PRIMARY KEY (id)) ENGINE=MyISAM DEFAULT CHARSET=". self::$encoding ." COLLATE=". self::$collate .";");
             $login = new \login\Controllers\Login($container, 'admins');
             $db->insert("admins_types", [
                 [

@@ -79,18 +79,408 @@
 						  <p>
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_dbencoding }}</span>
 						  <select id="dbenc" class="selectpicker form-control" title="{{ lang.l_dbencoding_ph }}">
-							<option value="ucs2">ucs2</option>
-							<option value="big5">big5</option>
-							<option value="latin1">latin1</option>
-							<option value="latin2">latin2</option>
-							<option value="latin3">latin3</option>
-							<option value="latin4">latin4</option>
-							<option value="latin5">latin5</option>
-							<option value="latin6">latin6</option>
-							<option value="latin7">latin7</option>
-							<option value="binary">binary</option>
-							<option value="utf8" selected>utf8</option>
-							<option value="utf8mb4">utf8mb4</option>
+							<optgroup label="armscii8" title="ARMSCII-8 Armenian">
+									<option value="armscii8_bin" title="Armeno, binario">armscii8_bin</option>
+									<option value="armscii8_general_ci" title="Armeno, case-insensitive">armscii8_general_ci</option>
+									<option value="armscii8_general_nopad_ci" title="Armeno, no-pad, case-insensitive">armscii8_general_nopad_ci</option>
+									<option value="armscii8_nopad_bin" title="Armeno, no-pad, binario">armscii8_nopad_bin</option>
+								</optgroup>
+							<optgroup label="ascii" title="US ASCII">
+									<option value="ascii_bin" title="Europeo Occidentale, binario">ascii_bin</option>
+									<option value="ascii_general_ci" title="Europeo Occidentale, case-insensitive">ascii_general_ci</option>
+									<option value="ascii_general_nopad_ci" title="Europeo Occidentale, no-pad, case-insensitive">ascii_general_nopad_ci</option>
+									<option value="ascii_nopad_bin" title="Europeo Occidentale, no-pad, binario">ascii_nopad_bin</option>
+								</optgroup>
+							<optgroup label="big5" title="Big5 Traditional Chinese">
+									<option value="big5_bin" title="Cinese Tradizionale, binario">big5_bin</option>
+									<option value="big5_chinese_ci" title="Cinese Tradizionale, case-insensitive">big5_chinese_ci</option>
+									<option value="big5_chinese_nopad_ci" title="Cinese Tradizionale, no-pad, case-insensitive">big5_chinese_nopad_ci</option>
+									<option value="big5_nopad_bin" title="Cinese Tradizionale, no-pad, binario">big5_nopad_bin</option>
+								</optgroup>
+							<optgroup label="binary" title="Binary pseudo charset">
+									<option value="binary" title="Binario">binary</option>
+								</optgroup>
+							<optgroup label="cp1250" title="Windows Central European">
+									<option value="cp1250_bin" title="Europeo Centrale, binario">cp1250_bin</option>
+									<option value="cp1250_croatian_ci" title="Croato, case-insensitive">cp1250_croatian_ci</option>
+									<option value="cp1250_czech_cs" title="Ceco, case-sensitive">cp1250_czech_cs</option>
+									<option value="cp1250_general_ci" title="Europeo Centrale, case-insensitive">cp1250_general_ci</option>
+									<option value="cp1250_general_nopad_ci" title="Europeo Centrale, no-pad, case-insensitive">cp1250_general_nopad_ci</option>
+									<option value="cp1250_nopad_bin" title="Europeo Centrale, no-pad, binario">cp1250_nopad_bin</option>
+									<option value="cp1250_polish_ci" title="Polacco, case-insensitive">cp1250_polish_ci</option>
+								</optgroup>
+							<optgroup label="cp1251" title="Windows Cyrillic">
+									<option value="cp1251_bin" title="Cirillico, binario">cp1251_bin</option>
+									<option value="cp1251_bulgarian_ci" title="Bulgaro, case-insensitive">cp1251_bulgarian_ci</option>
+									<option value="cp1251_general_ci" title="Cirillico, case-insensitive">cp1251_general_ci</option>
+									<option value="cp1251_general_cs" title="Cirillico, case-sensitive">cp1251_general_cs</option>
+									<option value="cp1251_general_nopad_ci" title="Cirillico, no-pad, case-insensitive">cp1251_general_nopad_ci</option>
+									<option value="cp1251_nopad_bin" title="Cirillico, no-pad, binario">cp1251_nopad_bin</option>
+									<option value="cp1251_ukrainian_ci" title="Ucraino, case-insensitive">cp1251_ukrainian_ci</option>
+								</optgroup>
+							<optgroup label="cp1256" title="Windows Arabic">
+									<option value="cp1256_bin" title="Arabo, binario">cp1256_bin</option>
+									<option value="cp1256_general_ci" title="Arabo, case-insensitive">cp1256_general_ci</option>
+									<option value="cp1256_general_nopad_ci" title="Arabo, no-pad, case-insensitive">cp1256_general_nopad_ci</option>
+									<option value="cp1256_nopad_bin" title="Arabo, no-pad, binario">cp1256_nopad_bin</option>
+								</optgroup>
+							<optgroup label="cp1257" title="Windows Baltic">
+									<option value="cp1257_bin" title="Baltico, binario">cp1257_bin</option>
+									<option value="cp1257_general_ci" title="Baltico, case-insensitive">cp1257_general_ci</option>
+									<option value="cp1257_general_nopad_ci" title="Baltico, no-pad, case-insensitive">cp1257_general_nopad_ci</option>
+									<option value="cp1257_lithuanian_ci" title="Lituano, case-insensitive">cp1257_lithuanian_ci</option>
+									<option value="cp1257_nopad_bin" title="Baltico, no-pad, binario">cp1257_nopad_bin</option>
+								</optgroup>
+							<optgroup label="cp850" title="DOS West European">
+									<option value="cp850_bin" title="Europeo Occidentale, binario">cp850_bin</option>
+									<option value="cp850_general_ci" title="Europeo Occidentale, case-insensitive">cp850_general_ci</option>
+									<option value="cp850_general_nopad_ci" title="Europeo Occidentale, no-pad, case-insensitive">cp850_general_nopad_ci</option>
+									<option value="cp850_nopad_bin" title="Europeo Occidentale, no-pad, binario">cp850_nopad_bin</option>
+								</optgroup>
+							<optgroup label="cp852" title="DOS Central European">
+									<option value="cp852_bin" title="Europeo Centrale, binario">cp852_bin</option>
+									<option value="cp852_general_ci" title="Europeo Centrale, case-insensitive">cp852_general_ci</option>
+									<option value="cp852_general_nopad_ci" title="Europeo Centrale, no-pad, case-insensitive">cp852_general_nopad_ci</option>
+									<option value="cp852_nopad_bin" title="Europeo Centrale, no-pad, binario">cp852_nopad_bin</option>
+								</optgroup>
+							<optgroup label="cp866" title="DOS Russian">
+									<option value="cp866_bin" title="Russo, binario">cp866_bin</option>
+									<option value="cp866_general_ci" title="Russo, case-insensitive">cp866_general_ci</option>
+									<option value="cp866_general_nopad_ci" title="Russo, no-pad, case-insensitive">cp866_general_nopad_ci</option>
+									<option value="cp866_nopad_bin" title="Russo, no-pad, binario">cp866_nopad_bin</option>
+								</optgroup>
+							<optgroup label="cp932" title="SJIS for Windows Japanese">
+									<option value="cp932_bin" title="Giapponese, binario">cp932_bin</option>
+									<option value="cp932_japanese_ci" title="Giapponese, case-insensitive">cp932_japanese_ci</option>
+									<option value="cp932_japanese_nopad_ci" title="Giapponese, no-pad, case-insensitive">cp932_japanese_nopad_ci</option>
+									<option value="cp932_nopad_bin" title="Giapponese, no-pad, binario">cp932_nopad_bin</option>
+								</optgroup>
+							<optgroup label="dec8" title="DEC West European">
+									<option value="dec8_bin" title="Europeo Occidentale, binario">dec8_bin</option>
+									<option value="dec8_nopad_bin" title="Europeo Occidentale, no-pad, binario">dec8_nopad_bin</option>
+									<option value="dec8_swedish_ci" title="Svedese, case-insensitive">dec8_swedish_ci</option>
+									<option value="dec8_swedish_nopad_ci" title="Svedese, no-pad, case-insensitive">dec8_swedish_nopad_ci</option>
+								</optgroup>
+							<optgroup label="eucjpms" title="UJIS for Windows Japanese">
+									<option value="eucjpms_bin" title="Giapponese, binario">eucjpms_bin</option>
+									<option value="eucjpms_japanese_ci" title="Giapponese, case-insensitive">eucjpms_japanese_ci</option>
+									<option value="eucjpms_japanese_nopad_ci" title="Giapponese, no-pad, case-insensitive">eucjpms_japanese_nopad_ci</option>
+									<option value="eucjpms_nopad_bin" title="Giapponese, no-pad, binario">eucjpms_nopad_bin</option>
+								</optgroup>
+							<optgroup label="euckr" title="EUC-KR Korean">
+									<option value="euckr_bin" title="Coreano, binario">euckr_bin</option>
+									<option value="euckr_korean_ci" title="Coreano, case-insensitive">euckr_korean_ci</option>
+									<option value="euckr_korean_nopad_ci" title="Coreano, no-pad, case-insensitive">euckr_korean_nopad_ci</option>
+									<option value="euckr_nopad_bin" title="Coreano, no-pad, binario">euckr_nopad_bin</option>
+								</optgroup>
+							<optgroup label="gb2312" title="GB2312 Simplified Chinese">
+									<option value="gb2312_bin" title="Cinese Semplificato, binario">gb2312_bin</option>
+									<option value="gb2312_chinese_ci" title="Cinese Semplificato, case-insensitive">gb2312_chinese_ci</option>
+									<option value="gb2312_chinese_nopad_ci" title="Cinese Semplificato, no-pad, case-insensitive">gb2312_chinese_nopad_ci</option>
+									<option value="gb2312_nopad_bin" title="Cinese Semplificato, no-pad, binario">gb2312_nopad_bin</option>
+								</optgroup>
+							<optgroup label="gbk" title="GBK Simplified Chinese">
+									<option value="gbk_bin" title="Cinese Semplificato, binario">gbk_bin</option>
+									<option value="gbk_chinese_ci" title="Cinese Semplificato, case-insensitive">gbk_chinese_ci</option>
+									<option value="gbk_chinese_nopad_ci" title="Cinese Semplificato, no-pad, case-insensitive">gbk_chinese_nopad_ci</option>
+									<option value="gbk_nopad_bin" title="Cinese Semplificato, no-pad, binario">gbk_nopad_bin</option>
+								</optgroup>
+							<optgroup label="geostd8" title="GEOSTD8 Georgian">
+									<option value="geostd8_bin" title="Georgiano, binario">geostd8_bin</option>
+									<option value="geostd8_general_ci" title="Georgiano, case-insensitive">geostd8_general_ci</option>
+									<option value="geostd8_general_nopad_ci" title="Georgiano, no-pad, case-insensitive">geostd8_general_nopad_ci</option>
+									<option value="geostd8_nopad_bin" title="Georgiano, no-pad, binario">geostd8_nopad_bin</option>
+								</optgroup>
+							<optgroup label="greek" title="ISO 8859-7 Greek">
+									<option value="greek_bin" title="Greco, binario">greek_bin</option>
+									<option value="greek_general_ci" title="Greco, case-insensitive">greek_general_ci</option>
+									<option value="greek_general_nopad_ci" title="Greco, no-pad, case-insensitive">greek_general_nopad_ci</option>
+									<option value="greek_nopad_bin" title="Greco, no-pad, binario">greek_nopad_bin</option>
+								</optgroup>
+							<optgroup label="hebrew" title="ISO 8859-8 Hebrew">
+									<option value="hebrew_bin" title="Ebreo, binario">hebrew_bin</option>
+									<option value="hebrew_general_ci" title="Ebreo, case-insensitive">hebrew_general_ci</option>
+									<option value="hebrew_general_nopad_ci" title="Ebreo, no-pad, case-insensitive">hebrew_general_nopad_ci</option>
+									<option value="hebrew_nopad_bin" title="Ebreo, no-pad, binario">hebrew_nopad_bin</option>
+								</optgroup>
+							<optgroup label="hp8" title="HP West European">
+									<option value="hp8_bin" title="Europeo Occidentale, binario">hp8_bin</option>
+									<option value="hp8_english_ci" title="Inglese, case-insensitive">hp8_english_ci</option>
+									<option value="hp8_english_nopad_ci" title="Inglese, no-pad, case-insensitive">hp8_english_nopad_ci</option>
+									<option value="hp8_nopad_bin" title="Europeo Occidentale, no-pad, binario">hp8_nopad_bin</option>
+								</optgroup>
+							<optgroup label="keybcs2" title="DOS Kamenicky Czech-Slovak">
+									<option value="keybcs2_bin" title="Ceco-Slovacco, binario">keybcs2_bin</option>
+									<option value="keybcs2_general_ci" title="Ceco-Slovacco, case-insensitive">keybcs2_general_ci</option>
+									<option value="keybcs2_general_nopad_ci" title="Ceco-Slovacco, no-pad, case-insensitive">keybcs2_general_nopad_ci</option>
+									<option value="keybcs2_nopad_bin" title="Ceco-Slovacco, no-pad, binario">keybcs2_nopad_bin</option>
+								</optgroup>
+							<optgroup label="koi8r" title="KOI8-R Relcom Russian">
+									<option value="koi8r_bin" title="Russo, binario">koi8r_bin</option>
+									<option value="koi8r_general_ci" title="Russo, case-insensitive">koi8r_general_ci</option>
+									<option value="koi8r_general_nopad_ci" title="Russo, no-pad, case-insensitive">koi8r_general_nopad_ci</option>
+									<option value="koi8r_nopad_bin" title="Russo, no-pad, binario">koi8r_nopad_bin</option>
+								</optgroup>
+							<optgroup label="koi8u" title="KOI8-U Ukrainian">
+									<option value="koi8u_bin" title="Ucraino, binario">koi8u_bin</option>
+									<option value="koi8u_general_ci" title="Ucraino, case-insensitive">koi8u_general_ci</option>
+									<option value="koi8u_general_nopad_ci" title="Ucraino, no-pad, case-insensitive">koi8u_general_nopad_ci</option>
+									<option value="koi8u_nopad_bin" title="Ucraino, no-pad, binario">koi8u_nopad_bin</option>
+								</optgroup>
+							<optgroup label="latin1" title="cp1252 West European">
+									<option value="latin1_bin" title="Europeo Occidentale, binario">latin1_bin</option>
+									<option value="latin1_danish_ci" title="Danese, case-insensitive">latin1_danish_ci</option>
+									<option value="latin1_general_ci" title="Europeo Occidentale, case-insensitive">latin1_general_ci</option>
+									<option value="latin1_general_cs" title="Europeo Occidentale, case-sensitive">latin1_general_cs</option>
+									<option value="latin1_german1_ci" title="Tedesco (ordine dizionario), case-insensitive">latin1_german1_ci</option>
+									<option value="latin1_german2_ci" title="Tedesco (ordine rubrica telefonica), case-insensitive">latin1_german2_ci</option>
+									<option value="latin1_nopad_bin" title="Europeo Occidentale, no-pad, binario">latin1_nopad_bin</option>
+									<option value="latin1_spanish_ci" title="Spagnolo (moderno), case-insensitive">latin1_spanish_ci</option>
+									<option value="latin1_swedish_ci" title="Svedese, case-insensitive">latin1_swedish_ci</option>
+									<option value="latin1_swedish_nopad_ci" title="Svedese, no-pad, case-insensitive">latin1_swedish_nopad_ci</option>
+								</optgroup>
+							<optgroup label="latin2" title="ISO 8859-2 Central European">
+									<option value="latin2_bin" title="Europeo Centrale, binario">latin2_bin</option>
+									<option value="latin2_croatian_ci" title="Croato, case-insensitive">latin2_croatian_ci</option>
+									<option value="latin2_czech_cs" title="Ceco, case-sensitive">latin2_czech_cs</option>
+									<option value="latin2_general_ci" title="Europeo Centrale, case-insensitive">latin2_general_ci</option>
+									<option value="latin2_general_nopad_ci" title="Europeo Centrale, no-pad, case-insensitive">latin2_general_nopad_ci</option>
+									<option value="latin2_hungarian_ci" title="Ungherese, case-insensitive">latin2_hungarian_ci</option>
+									<option value="latin2_nopad_bin" title="Europeo Centrale, no-pad, binario">latin2_nopad_bin</option>
+								</optgroup>
+							<optgroup label="latin5" title="ISO 8859-9 Turkish">
+									<option value="latin5_bin" title="Turco, binario">latin5_bin</option>
+									<option value="latin5_nopad_bin" title="Turco, no-pad, binario">latin5_nopad_bin</option>
+									<option value="latin5_turkish_ci" title="Turco, case-insensitive">latin5_turkish_ci</option>
+									<option value="latin5_turkish_nopad_ci" title="Turco, no-pad, case-insensitive">latin5_turkish_nopad_ci</option>
+								</optgroup>
+							<optgroup label="latin7" title="ISO 8859-13 Baltic">
+									<option value="latin7_bin" title="Baltico, binario">latin7_bin</option>
+									<option value="latin7_estonian_cs" title="Estone, case-sensitive">latin7_estonian_cs</option>
+									<option value="latin7_general_ci" title="Baltico, case-insensitive">latin7_general_ci</option>
+									<option value="latin7_general_cs" title="Baltico, case-sensitive">latin7_general_cs</option>
+									<option value="latin7_general_nopad_ci" title="Baltico, no-pad, case-insensitive">latin7_general_nopad_ci</option>
+									<option value="latin7_nopad_bin" title="Baltico, no-pad, binario">latin7_nopad_bin</option>
+								</optgroup>
+							<optgroup label="macce" title="Mac Central European">
+									<option value="macce_bin" title="Europeo Centrale, binario">macce_bin</option>
+									<option value="macce_general_ci" title="Europeo Centrale, case-insensitive">macce_general_ci</option>
+									<option value="macce_general_nopad_ci" title="Europeo Centrale, no-pad, case-insensitive">macce_general_nopad_ci</option>
+									<option value="macce_nopad_bin" title="Europeo Centrale, no-pad, binario">macce_nopad_bin</option>
+								</optgroup>
+							<optgroup label="macroman" title="Mac West European">
+									<option value="macroman_bin" title="Europeo Occidentale, binario">macroman_bin</option>
+									<option value="macroman_general_ci" title="Europeo Occidentale, case-insensitive">macroman_general_ci</option>
+									<option value="macroman_general_nopad_ci" title="Europeo Occidentale, no-pad, case-insensitive">macroman_general_nopad_ci</option>
+									<option value="macroman_nopad_bin" title="Europeo Occidentale, no-pad, binario">macroman_nopad_bin</option>
+								</optgroup>
+							<optgroup label="sjis" title="Shift-JIS Japanese">
+									<option value="sjis_bin" title="Giapponese, binario">sjis_bin</option>
+									<option value="sjis_japanese_ci" title="Giapponese, case-insensitive">sjis_japanese_ci</option>
+									<option value="sjis_japanese_nopad_ci" title="Giapponese, no-pad, case-insensitive">sjis_japanese_nopad_ci</option>
+									<option value="sjis_nopad_bin" title="Giapponese, no-pad, binario">sjis_nopad_bin</option>
+								</optgroup>
+							<optgroup label="swe7" title="7bit Swedish">
+									<option value="swe7_bin" title="Svedese, binario">swe7_bin</option>
+									<option value="swe7_nopad_bin" title="Svedese, no-pad, binario">swe7_nopad_bin</option>
+									<option value="swe7_swedish_ci" title="Svedese, case-insensitive">swe7_swedish_ci</option>
+									<option value="swe7_swedish_nopad_ci" title="Svedese, no-pad, case-insensitive">swe7_swedish_nopad_ci</option>
+								</optgroup>
+							<optgroup label="tis620" title="TIS620 Thai">
+									<option value="tis620_bin" title="Thai, binario">tis620_bin</option>
+									<option value="tis620_nopad_bin" title="Thai, no-pad, binario">tis620_nopad_bin</option>
+									<option value="tis620_thai_ci" title="Thai, case-insensitive">tis620_thai_ci</option>
+									<option value="tis620_thai_nopad_ci" title="Thai, no-pad, case-insensitive">tis620_thai_nopad_ci</option>
+								</optgroup>
+							<optgroup label="ucs2" title="UCS-2 Unicode">
+									<option value="ucs2_bin" title="Unicode, binario">ucs2_bin</option>
+									<option value="ucs2_croatian_ci" title="Croato, case-insensitive">ucs2_croatian_ci</option>
+									<option value="ucs2_croatian_mysql561_ci" title="Croato (MySQL 5.6.1), case-insensitive">ucs2_croatian_mysql561_ci</option>
+									<option value="ucs2_czech_ci" title="Ceco, case-insensitive">ucs2_czech_ci</option>
+									<option value="ucs2_danish_ci" title="Danese, case-insensitive">ucs2_danish_ci</option>
+									<option value="ucs2_esperanto_ci" title="Esperanto, case-insensitive">ucs2_esperanto_ci</option>
+									<option value="ucs2_estonian_ci" title="Estone, case-insensitive">ucs2_estonian_ci</option>
+									<option value="ucs2_general_ci" title="Unicode, case-insensitive">ucs2_general_ci</option>
+									<option value="ucs2_general_mysql500_ci" title="Unicode (MySQL 5.0.0), case-insensitive">ucs2_general_mysql500_ci</option>
+									<option value="ucs2_general_nopad_ci" title="Unicode, no-pad, case-insensitive">ucs2_general_nopad_ci</option>
+									<option value="ucs2_german2_ci" title="Tedesco (ordine rubrica telefonica), case-insensitive">ucs2_german2_ci</option>
+									<option value="ucs2_hungarian_ci" title="Ungherese, case-insensitive">ucs2_hungarian_ci</option>
+									<option value="ucs2_icelandic_ci" title="Islandese, case-insensitive">ucs2_icelandic_ci</option>
+									<option value="ucs2_latvian_ci" title="Lettone, case-insensitive">ucs2_latvian_ci</option>
+									<option value="ucs2_lithuanian_ci" title="Lituano, case-insensitive">ucs2_lithuanian_ci</option>
+									<option value="ucs2_myanmar_ci" title="Burmese, case-insensitive">ucs2_myanmar_ci</option>
+									<option value="ucs2_nopad_bin" title="Unicode, no-pad, binario">ucs2_nopad_bin</option>
+									<option value="ucs2_persian_ci" title="Persiano, case-insensitive">ucs2_persian_ci</option>
+									<option value="ucs2_polish_ci" title="Polacco, case-insensitive">ucs2_polish_ci</option>
+									<option value="ucs2_roman_ci" title="Europeo Occidentale, case-insensitive">ucs2_roman_ci</option>
+									<option value="ucs2_romanian_ci" title="Romeno, case-insensitive">ucs2_romanian_ci</option>
+									<option value="ucs2_sinhala_ci" title="Cingalese, case-insensitive">ucs2_sinhala_ci</option>
+									<option value="ucs2_slovak_ci" title="Slovacco, case-insensitive">ucs2_slovak_ci</option>
+									<option value="ucs2_slovenian_ci" title="Sloveno, case-insensitive">ucs2_slovenian_ci</option>
+									<option value="ucs2_spanish2_ci" title="Spagnolo (tradizionale), case-insensitive">ucs2_spanish2_ci</option>
+									<option value="ucs2_spanish_ci" title="Spagnolo (moderno), case-insensitive">ucs2_spanish_ci</option>
+									<option value="ucs2_swedish_ci" title="Svedese, case-insensitive">ucs2_swedish_ci</option>
+									<option value="ucs2_thai_520_w2" title="Thai (UCA 5.2.0), multilivello">ucs2_thai_520_w2</option>
+									<option value="ucs2_turkish_ci" title="Turco, case-insensitive">ucs2_turkish_ci</option>
+									<option value="ucs2_unicode_520_ci" title="Unicode (UCA 5.2.0), case-insensitive">ucs2_unicode_520_ci</option>
+									<option value="ucs2_unicode_520_nopad_ci" title="Unicode (UCA 5.2.0), no-pad, case-insensitive">ucs2_unicode_520_nopad_ci</option>
+									<option value="ucs2_unicode_ci" title="Unicode, case-insensitive">ucs2_unicode_ci</option>
+									<option value="ucs2_unicode_nopad_ci" title="Unicode, no-pad, case-insensitive">ucs2_unicode_nopad_ci</option>
+									<option value="ucs2_vietnamese_ci" title="Vietnamese, case-insensitive">ucs2_vietnamese_ci</option>
+								</optgroup>
+							<optgroup label="ujis" title="EUC-JP Japanese">
+									<option value="ujis_bin" title="Giapponese, binario">ujis_bin</option>
+									<option value="ujis_japanese_ci" title="Giapponese, case-insensitive">ujis_japanese_ci</option>
+									<option value="ujis_japanese_nopad_ci" title="Giapponese, no-pad, case-insensitive">ujis_japanese_nopad_ci</option>
+									<option value="ujis_nopad_bin" title="Giapponese, no-pad, binario">ujis_nopad_bin</option>
+								</optgroup>
+							<optgroup label="utf16" title="UTF-16 Unicode">
+									<option value="utf16_bin" title="Unicode, binario">utf16_bin</option>
+									<option value="utf16_croatian_ci" title="Croato, case-insensitive">utf16_croatian_ci</option>
+									<option value="utf16_croatian_mysql561_ci" title="Croato (MySQL 5.6.1), case-insensitive">utf16_croatian_mysql561_ci</option>
+									<option value="utf16_czech_ci" title="Ceco, case-insensitive">utf16_czech_ci</option>
+									<option value="utf16_danish_ci" title="Danese, case-insensitive">utf16_danish_ci</option>
+									<option value="utf16_esperanto_ci" title="Esperanto, case-insensitive">utf16_esperanto_ci</option>
+									<option value="utf16_estonian_ci" title="Estone, case-insensitive">utf16_estonian_ci</option>
+									<option value="utf16_general_ci" title="Unicode, case-insensitive">utf16_general_ci</option>
+									<option value="utf16_general_nopad_ci" title="Unicode, no-pad, case-insensitive">utf16_general_nopad_ci</option>
+									<option value="utf16_german2_ci" title="Tedesco (ordine rubrica telefonica), case-insensitive">utf16_german2_ci</option>
+									<option value="utf16_hungarian_ci" title="Ungherese, case-insensitive">utf16_hungarian_ci</option>
+									<option value="utf16_icelandic_ci" title="Islandese, case-insensitive">utf16_icelandic_ci</option>
+									<option value="utf16_latvian_ci" title="Lettone, case-insensitive">utf16_latvian_ci</option>
+									<option value="utf16_lithuanian_ci" title="Lituano, case-insensitive">utf16_lithuanian_ci</option>
+									<option value="utf16_myanmar_ci" title="Burmese, case-insensitive">utf16_myanmar_ci</option>
+									<option value="utf16_nopad_bin" title="Unicode, no-pad, binario">utf16_nopad_bin</option>
+									<option value="utf16_persian_ci" title="Persiano, case-insensitive">utf16_persian_ci</option>
+									<option value="utf16_polish_ci" title="Polacco, case-insensitive">utf16_polish_ci</option>
+									<option value="utf16_roman_ci" title="Europeo Occidentale, case-insensitive">utf16_roman_ci</option>
+									<option value="utf16_romanian_ci" title="Romeno, case-insensitive">utf16_romanian_ci</option>
+									<option value="utf16_sinhala_ci" title="Cingalese, case-insensitive">utf16_sinhala_ci</option>
+									<option value="utf16_slovak_ci" title="Slovacco, case-insensitive">utf16_slovak_ci</option>
+									<option value="utf16_slovenian_ci" title="Sloveno, case-insensitive">utf16_slovenian_ci</option>
+									<option value="utf16_spanish2_ci" title="Spagnolo (tradizionale), case-insensitive">utf16_spanish2_ci</option>
+									<option value="utf16_spanish_ci" title="Spagnolo (moderno), case-insensitive">utf16_spanish_ci</option>
+									<option value="utf16_swedish_ci" title="Svedese, case-insensitive">utf16_swedish_ci</option>
+									<option value="utf16_thai_520_w2" title="Thai (UCA 5.2.0), multilivello">utf16_thai_520_w2</option>
+									<option value="utf16_turkish_ci" title="Turco, case-insensitive">utf16_turkish_ci</option>
+									<option value="utf16_unicode_520_ci" title="Unicode (UCA 5.2.0), case-insensitive">utf16_unicode_520_ci</option>
+									<option value="utf16_unicode_520_nopad_ci" title="Unicode (UCA 5.2.0), no-pad, case-insensitive">utf16_unicode_520_nopad_ci</option>
+									<option value="utf16_unicode_ci" title="Unicode, case-insensitive">utf16_unicode_ci</option>
+									<option value="utf16_unicode_nopad_ci" title="Unicode, no-pad, case-insensitive">utf16_unicode_nopad_ci</option>
+									<option value="utf16_vietnamese_ci" title="Vietnamese, case-insensitive">utf16_vietnamese_ci</option>
+							</optgroup>
+							<optgroup label="utf16le" title="UTF-16LE Unicode">
+									<option value="utf16le_bin" title="Unicode, binario">utf16le_bin</option>
+									<option value="utf16le_general_ci" title="Unicode, case-insensitive">utf16le_general_ci</option>
+									<option value="utf16le_general_nopad_ci" title="Unicode, no-pad, case-insensitive">utf16le_general_nopad_ci</option>
+									<option value="utf16le_nopad_bin" title="Unicode, no-pad, binario">utf16le_nopad_bin</option>
+							</optgroup>
+							<optgroup label="utf32" title="UTF-32 Unicode">
+								<option value="utf32_bin" title="Unicode, binario">utf32_bin</option>
+								<option value="utf32_croatian_ci" title="Croato, case-insensitive">utf32_croatian_ci</option>
+								<option value="utf32_croatian_mysql561_ci" title="Croato (MySQL 5.6.1), case-insensitive">utf32_croatian_mysql561_ci</option>
+								<option value="utf32_czech_ci" title="Ceco, case-insensitive">utf32_czech_ci</option>
+								<option value="utf32_danish_ci" title="Danese, case-insensitive">utf32_danish_ci</option>
+								<option value="utf32_esperanto_ci" title="Esperanto, case-insensitive">utf32_esperanto_ci</option>
+								<option value="utf32_estonian_ci" title="Estone, case-insensitive">utf32_estonian_ci</option>
+								<option value="utf32_general_ci" title="Unicode, case-insensitive">utf32_general_ci</option>
+								<option value="utf32_general_nopad_ci" title="Unicode, no-pad, case-insensitive">utf32_general_nopad_ci</option>
+								<option value="utf32_german2_ci" title="Tedesco (ordine rubrica telefonica), case-insensitive">utf32_german2_ci</option>
+								<option value="utf32_hungarian_ci" title="Ungherese, case-insensitive">utf32_hungarian_ci</option>
+								<option value="utf32_icelandic_ci" title="Islandese, case-insensitive">utf32_icelandic_ci</option>
+								<option value="utf32_latvian_ci" title="Lettone, case-insensitive">utf32_latvian_ci</option>
+								<option value="utf32_lithuanian_ci" title="Lituano, case-insensitive">utf32_lithuanian_ci</option>
+								<option value="utf32_myanmar_ci" title="Burmese, case-insensitive">utf32_myanmar_ci</option>
+								<option value="utf32_nopad_bin" title="Unicode, no-pad, binario">utf32_nopad_bin</option>
+								<option value="utf32_persian_ci" title="Persiano, case-insensitive">utf32_persian_ci</option>
+								<option value="utf32_polish_ci" title="Polacco, case-insensitive">utf32_polish_ci</option>
+								<option value="utf32_roman_ci" title="Europeo Occidentale, case-insensitive">utf32_roman_ci</option>
+								<option value="utf32_romanian_ci" title="Romeno, case-insensitive">utf32_romanian_ci</option>
+								<option value="utf32_sinhala_ci" title="Cingalese, case-insensitive">utf32_sinhala_ci</option>
+								<option value="utf32_slovak_ci" title="Slovacco, case-insensitive">utf32_slovak_ci</option>
+								<option value="utf32_slovenian_ci" title="Sloveno, case-insensitive">utf32_slovenian_ci</option>
+								<option value="utf32_spanish2_ci" title="Spagnolo (tradizionale), case-insensitive">utf32_spanish2_ci</option>
+								<option value="utf32_spanish_ci" title="Spagnolo (moderno), case-insensitive">utf32_spanish_ci</option>
+								<option value="utf32_swedish_ci" title="Svedese, case-insensitive">utf32_swedish_ci</option>
+								<option value="utf32_thai_520_w2" title="Thai (UCA 5.2.0), multilivello">utf32_thai_520_w2</option>
+								<option value="utf32_turkish_ci" title="Turco, case-insensitive">utf32_turkish_ci</option>
+								<option value="utf32_unicode_520_ci" title="Unicode (UCA 5.2.0), case-insensitive">utf32_unicode_520_ci</option>
+								<option value="utf32_unicode_520_nopad_ci" title="Unicode (UCA 5.2.0), no-pad, case-insensitive">utf32_unicode_520_nopad_ci</option>
+								<option value="utf32_unicode_ci" title="Unicode, case-insensitive">utf32_unicode_ci</option>
+								<option value="utf32_unicode_nopad_ci" title="Unicode, no-pad, case-insensitive">utf32_unicode_nopad_ci</option>
+								<option value="utf32_vietnamese_ci" title="Vietnamese, case-insensitive">utf32_vietnamese_ci</option>
+							</optgroup>
+							<optgroup label="utf8" title="UTF-8 Unicode">
+								<option value="utf8_bin" title="Unicode, binario">utf8_bin</option>
+								<option value="utf8_croatian_ci" title="Croato, case-insensitive">utf8_croatian_ci</option>
+								<option value="utf8_croatian_mysql561_ci" title="Croato (MySQL 5.6.1), case-insensitive">utf8_croatian_mysql561_ci</option>
+								<option value="utf8_czech_ci" title="Ceco, case-insensitive">utf8_czech_ci</option>
+								<option value="utf8_danish_ci" title="Danese, case-insensitive">utf8_danish_ci</option>
+								<option value="utf8_esperanto_ci" title="Esperanto, case-insensitive">utf8_esperanto_ci</option>
+								<option value="utf8_estonian_ci" title="Estone, case-insensitive">utf8_estonian_ci</option>
+								<option value="utf8_general_ci" title="Unicode, case-insensitive" selected="">utf8_general_ci</option>
+								<option value="utf8_general_mysql500_ci" title="Unicode (MySQL 5.0.0), case-insensitive">utf8_general_mysql500_ci</option>
+								<option value="utf8_general_nopad_ci" title="Unicode, no-pad, case-insensitive">utf8_general_nopad_ci</option>
+								<option value="utf8_german2_ci" title="Tedesco (ordine rubrica telefonica), case-insensitive">utf8_german2_ci</option>
+								<option value="utf8_hungarian_ci" title="Ungherese, case-insensitive">utf8_hungarian_ci</option>
+								<option value="utf8_icelandic_ci" title="Islandese, case-insensitive">utf8_icelandic_ci</option>
+								<option value="utf8_latvian_ci" title="Lettone, case-insensitive">utf8_latvian_ci</option>
+								<option value="utf8_lithuanian_ci" title="Lituano, case-insensitive">utf8_lithuanian_ci</option>
+								<option value="utf8_myanmar_ci" title="Burmese, case-insensitive">utf8_myanmar_ci</option>
+								<option value="utf8_nopad_bin" title="Unicode, no-pad, binario">utf8_nopad_bin</option>
+								<option value="utf8_persian_ci" title="Persiano, case-insensitive">utf8_persian_ci</option>
+								<option value="utf8_polish_ci" title="Polacco, case-insensitive">utf8_polish_ci</option>
+								<option value="utf8_roman_ci" title="Europeo Occidentale, case-insensitive">utf8_roman_ci</option>
+								<option value="utf8_romanian_ci" title="Romeno, case-insensitive">utf8_romanian_ci</option>
+								<option value="utf8_sinhala_ci" title="Cingalese, case-insensitive">utf8_sinhala_ci</option>
+								<option value="utf8_slovak_ci" title="Slovacco, case-insensitive">utf8_slovak_ci</option>
+								<option value="utf8_slovenian_ci" title="Sloveno, case-insensitive">utf8_slovenian_ci</option>
+								<option value="utf8_spanish2_ci" title="Spagnolo (tradizionale), case-insensitive">utf8_spanish2_ci</option>
+								<option value="utf8_spanish_ci" title="Spagnolo (moderno), case-insensitive">utf8_spanish_ci</option>
+								<option value="utf8_swedish_ci" title="Svedese, case-insensitive">utf8_swedish_ci</option>
+								<option value="utf8_thai_520_w2" title="Thai (UCA 5.2.0), multilivello">utf8_thai_520_w2</option>
+								<option value="utf8_turkish_ci" title="Turco, case-insensitive">utf8_turkish_ci</option>
+								<option value="utf8_unicode_520_ci" title="Unicode (UCA 5.2.0), case-insensitive">utf8_unicode_520_ci</option>
+								<option value="utf8_unicode_520_nopad_ci" title="Unicode (UCA 5.2.0), no-pad, case-insensitive">utf8_unicode_520_nopad_ci</option>
+								<option value="utf8_unicode_ci" title="Unicode, case-insensitive">utf8_unicode_ci</option>
+								<option value="utf8_unicode_nopad_ci" title="Unicode, no-pad, case-insensitive">utf8_unicode_nopad_ci</option>
+								<option value="utf8_vietnamese_ci" title="Vietnamese, case-insensitive">utf8_vietnamese_ci</option>
+							</optgroup>
+							<optgroup label="utf8mb4" title="UTF-8 Unicode">
+								<option value="utf8mb4_croatian_ci" title="Croato (UCA 4.0.0), case-insensitive">utf8mb4_croatian_ci</option>
+								<option value="utf8mb4_croatian_mysql561_ci" title="Croato (MySQL 5.6.1), case-insensitive">utf8mb4_croatian_mysql561_ci</option>
+								<option value="utf8mb4_bin" title="Unicode (UCA 4.0.0), binario">utf8mb4_bin</option>
+								<option value="utf8mb4_czech_ci" title="Ceco (UCA 4.0.0), case-insensitive">utf8mb4_czech_ci</option>
+								<option value="utf8mb4_danish_ci" title="Danese (UCA 4.0.0), case-insensitive">utf8mb4_danish_ci</option>
+								<option value="utf8mb4_esperanto_ci" title="Esperanto (UCA 4.0.0), case-insensitive">utf8mb4_esperanto_ci</option>
+								<option value="utf8mb4_estonian_ci" title="Estone (UCA 4.0.0), case-insensitive">utf8mb4_estonian_ci</option>
+								<option value="utf8mb4_general_ci" title="Unicode (UCA 4.0.0), case-insensitive">utf8mb4_general_ci</option>
+								<option value="utf8mb4_general_nopad_ci" title="Unicode (UCA 4.0.0), no-pad, case-insensitive">utf8mb4_general_nopad_ci</option>
+								<option value="utf8mb4_german2_ci" title="Tedesco (ordine rubrica telefonica) (UCA 4.0.0), case-insensitive">utf8mb4_german2_ci</option>
+								<option value="utf8mb4_hungarian_ci" title="Ungherese (UCA 4.0.0), case-insensitive">utf8mb4_hungarian_ci</option>
+								<option value="utf8mb4_icelandic_ci" title="Islandese (UCA 4.0.0), case-insensitive">utf8mb4_icelandic_ci</option>
+								<option value="utf8mb4_latvian_ci" title="Lettone (UCA 4.0.0), case-insensitive">utf8mb4_latvian_ci</option>
+								<option value="utf8mb4_lithuanian_ci" title="Lituano (UCA 4.0.0), case-insensitive">utf8mb4_lithuanian_ci</option>
+								<option value="utf8mb4_myanmar_ci" title="Burmese (UCA 4.0.0), case-insensitive">utf8mb4_myanmar_ci</option>
+								<option value="utf8mb4_nopad_bin" title="Unicode (UCA 4.0.0), no-pad, binario">utf8mb4_nopad_bin</option>
+								<option value="utf8mb4_persian_ci" title="Persiano (UCA 4.0.0), case-insensitive">utf8mb4_persian_ci</option>
+								<option value="utf8mb4_polish_ci" title="Polacco (UCA 4.0.0), case-insensitive">utf8mb4_polish_ci</option>
+								<option value="utf8mb4_roman_ci" title="Europeo Occidentale (UCA 4.0.0), case-insensitive">utf8mb4_roman_ci</option>
+								<option value="utf8mb4_romanian_ci" title="Romeno (UCA 4.0.0), case-insensitive">utf8mb4_romanian_ci</option>
+								<option value="utf8mb4_sinhala_ci" title="Cingalese (UCA 4.0.0), case-insensitive">utf8mb4_sinhala_ci</option>
+								<option value="utf8mb4_slovak_ci" title="Slovacco (UCA 4.0.0), case-insensitive">utf8mb4_slovak_ci</option>
+								<option value="utf8mb4_slovenian_ci" title="Sloveno (UCA 4.0.0), case-insensitive">utf8mb4_slovenian_ci</option>
+								<option value="utf8mb4_spanish2_ci" title="Spagnolo (tradizionale) (UCA 4.0.0), case-insensitive">utf8mb4_spanish2_ci</option>
+								<option value="utf8mb4_spanish_ci" title="Spagnolo (moderno) (UCA 4.0.0), case-insensitive">utf8mb4_spanish_ci</option>
+								<option value="utf8mb4_swedish_ci" title="Svedese (UCA 4.0.0), case-insensitive">utf8mb4_swedish_ci</option>
+								<option value="utf8mb4_thai_520_w2" title="Thai (UCA 5.2.0), multilivello">utf8mb4_thai_520_w2</option>
+								<option value="utf8mb4_turkish_ci" title="Turco (UCA 4.0.0), case-insensitive">utf8mb4_turkish_ci</option>
+								<option value="utf8mb4_unicode_520_ci" title="Unicode (UCA 5.2.0), case-insensitive">utf8mb4_unicode_520_ci</option>
+								<option value="utf8mb4_unicode_520_nopad_ci" title="Unicode (UCA 5.2.0), no-pad, case-insensitive">utf8mb4_unicode_520_nopad_ci</option>
+								<option value="utf8mb4_unicode_ci" title="Unicode (UCA 4.0.0), case-insensitive" selected>utf8mb4_unicode_ci</option>
+								<option value="utf8mb4_unicode_nopad_ci" title="Unicode (UCA 4.0.0), no-pad, case-insensitive">utf8mb4_unicode_nopad_ci</option>
+								<option value="utf8mb4_vietnamese_ci" title="Vietnamese (UCA 4.0.0), case-insensitive">utf8mb4_vietnamese_ci</option>
+							</optgroup>
 						  </select>
 						  </div>
 						  </p>
