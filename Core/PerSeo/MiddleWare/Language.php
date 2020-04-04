@@ -16,7 +16,7 @@ class Language
         \Slim\Http\Response $response,
         callable $next
     ) {
-        $myreq = (substr($request->getUri()->getPath(), 0) == '/' ? $request->getUri()->getPath() : "/". $request->getUri()->getPath());
+        $myreq = (substr($request->getUri()->getPath(), 0) == '/' ? $request->getUri()->getPath() : '/'.$request->getUri()->getPath());
         if ($this->container->has('db')) {
             $db = $this->container->get('db');
             $result = $db->select('routes', [
@@ -38,8 +38,11 @@ class Language
                     $currlang = $this->container->get('settings.global')['language'];
                 }
             }
-            $req = ((strlen($request->getUri()->getPath()) > 1) && (substr($request->getUri()->getPath(), 0,
-                    1) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
+            $req = ((strlen($request->getUri()->getPath()) > 1) && (substr(
+                $request->getUri()->getPath(),
+                0,
+                1
+            ) == '/') ? substr($request->getUri()->getPath(), 1) : $request->getUri()->getPath());
             $basepath = $request->getUri()->getbasePath();
             $langurl = explode('/', $req);
             if (empty($result[0]['dest']) && ($request->isGet()) && ($req != '/') && ($langurl[0] != 'admin')) {
