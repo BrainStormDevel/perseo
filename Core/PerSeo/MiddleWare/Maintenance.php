@@ -7,7 +7,6 @@ use Psr\Container\ContainerInterface;
 use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
-use PerSeo\DB;
 
 class Maintenance
 {
