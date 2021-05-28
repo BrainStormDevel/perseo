@@ -22,24 +22,24 @@ class Maintenance
 
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
-		$cookies = $request->getCookieParams();
-		if ($this->container->has('settings.global')) {
-			$settings = $this->container->get('settings.global');
-			if ($settings['maintenance']) {
-				if (!isset($cookies['maintenance']) || ($cookies['maintenance'] != $settings['maintenancekey'])) {
-					$fulluri = (string) $request->getUri()->getPath();
-					$basepath = (string) $this->app->getBasePath();
-					$uri = (string) substr($fulluri, strlen($basepath));
-					$language = $request->getAttribute('language');
-					$locale = ($settings['locale'] ? '/'. $language : '');
-					$mydest = (string) $basepath . $locale .'/maintenance';
-					if ($uri != $locale .'/maintenance') {
-						$response = $this->app->getResponseFactory()->createResponse();
-						return $response->withHeader('Location', $mydest)->withStatus(301);
-					}
-				}
-			}
-		}
+        $cookies = $request->getCookieParams();
+        if ($this->container->has('settings.global')) {
+            $settings = $this->container->get('settings.global');
+            if ($settings['maintenance']) {
+                if (!isset($cookies['maintenance']) || ($cookies['maintenance'] != $settings['maintenancekey'])) {
+                    $fulluri = (string) $request->getUri()->getPath();
+                    $basepath = (string) $this->app->getBasePath();
+                    $uri = (string) substr($fulluri, strlen($basepath));
+                    $language = $request->getAttribute('language');
+                    $locale = ($settings['locale'] ? '/'. $language : '');
+                    $mydest = (string) $basepath . $locale .'/maintenance';
+                    if ($uri != $locale .'/maintenance') {
+                        $response = $this->app->getResponseFactory()->createResponse();
+                        return $response->withHeader('Location', $mydest)->withStatus(301);
+                    }
+                }
+            }
+        }
         $response = $handler->handle($request);
         return $response;
     }

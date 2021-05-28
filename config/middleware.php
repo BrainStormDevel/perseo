@@ -29,13 +29,13 @@ return function (App $app) {
     $app->add(new Locale($app, $settings['locale'], $settings['languages']));
     
     $app->add(new Alias($app, $app->getContainer()));
-	
-	$app->add(new Maintenance($app, $app->getContainer()));
+    
+    $app->add(new Maintenance($app, $app->getContainer()));
     
     $app->add(new Wizard($app, $app->getContainer()));
-	
-	// Set language from browser
-	$app->add(new Language($app->getContainer()));
+    
+    // Set language from browser
+    $app->add(new Language($app->getContainer()));
 
     // Session
     $app->add(SessionMiddleware::class);
