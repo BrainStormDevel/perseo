@@ -13,5 +13,5 @@ class DB extends Medoo
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
-    }	
+    }
 }

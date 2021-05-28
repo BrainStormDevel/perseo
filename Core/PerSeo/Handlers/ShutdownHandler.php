@@ -33,7 +33,8 @@ class ShutdownHandler
      * @param HttpErrorHandler  $errorHandler
      * @param bool              $displayErrorDetails
      */
-    public function __construct(Request $request, ErrorHandler $errorHandler, bool $displayErrorDetails) {
+    public function __construct(Request $request, ErrorHandler $errorHandler, bool $displayErrorDetails)
+    {
         $this->request = $request;
         $this->errorHandler = $errorHandler;
         $this->displayErrorDetails = $displayErrorDetails;
@@ -75,7 +76,7 @@ class ShutdownHandler
             $response = $this->errorHandler->__invoke($this->request, $exception, $this->displayErrorDetails, false, false);
             
             if (ob_get_length()) {
-              ob_clean();
+                ob_clean();
             }
 
             $responseEmitter = new ResponseEmitter();

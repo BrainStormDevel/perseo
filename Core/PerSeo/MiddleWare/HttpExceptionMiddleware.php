@@ -16,15 +16,15 @@ final class HttpExceptionMiddleware implements MiddlewareInterface
     /**
      * @var ResponseFactoryInterface
      */
-	protected $app;
+    protected $app;
     private $responseFactory;
-	protected $twig;
+    protected $twig;
 
     public function __construct(App $app, ResponseFactoryInterface $responseFactory, Twig $twig)
     {
-		$this->app = $app;
+        $this->app = $app;
         $this->responseFactory = $responseFactory;
-		$this->twig = $twig;
+        $this->twig = $twig;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -36,10 +36,10 @@ final class HttpExceptionMiddleware implements MiddlewareInterface
             $statusCode = $httpException->getCode();
             $response = $this->responseFactory->createResponse()->withStatus($statusCode);
             $errorMessage = sprintf('%s %s', $statusCode, $response->getReasonPhrase());
-			$viewData = [
-				'basepath' => (string) $this->app->getBasePath()
-			];
-			return $this->twig->render($response, '404.twig', $viewData);
+            $viewData = [
+                'basepath' => (string) $this->app->getBasePath()
+            ];
+            return $this->twig->render($response, '404.twig', $viewData);
             // Log the error message
             // $this->logger->error($errorMessage);
 

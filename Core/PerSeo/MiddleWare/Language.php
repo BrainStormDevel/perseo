@@ -17,20 +17,20 @@ class Language
 
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
-		$cookie = $request->getCookieParams();
-		$settings = ($this->container->has('settings.global') ? $this->container->get('settings.global') : array());
-		$languages = $settings['languages'];
-		if (isset($cookie['lang']) && in_array(strtolower($cookie['lang']), $languages)) {
-			$currlang = strtolower($cookie['lang']);
-		} else {
-			if (in_array(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)), $languages)) {
-				$currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-			} else {
-				$currlang = $settings['language'];
-			}
-		}
-		$request = $request->withAttribute('language', $currlang);
-        $response = $handler->handle($request);    
+        $cookie = $request->getCookieParams();
+        $settings = ($this->container->has('settings.global') ? $this->container->get('settings.global') : array());
+        $languages = $settings['languages'];
+        if (isset($cookie['lang']) && in_array(strtolower($cookie['lang']), $languages)) {
+            $currlang = strtolower($cookie['lang']);
+        } else {
+            if (in_array(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)), $languages)) {
+                $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+            } else {
+                $currlang = $settings['language'];
+            }
+        }
+        $request = $request->withAttribute('language', $currlang);
+        $response = $handler->handle($request);
         return $response;
     }
 }

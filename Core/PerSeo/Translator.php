@@ -4,7 +4,6 @@ namespace PerSeo;
 
 class Translator
 {
-
     protected $language;
     protected $path;
     protected $result;

@@ -6,8 +6,8 @@ use Slim\App;
 use Modules\login\MiddleWare\CheckLogin;
 
 return function (App $app) {
-	$thiscontainer = $app->getContainer();
-	$directory = $thiscontainer->get('settings.modules');
+    $thiscontainer = $app->getContainer();
+    $directory = $thiscontainer->get('settings.modules');
     $dirobj = new \DirectoryIterator($directory);
     $modules = array();
     $curmod = 0;

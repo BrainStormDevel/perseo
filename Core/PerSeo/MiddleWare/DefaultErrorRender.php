@@ -11,26 +11,26 @@ use Slim\Views\Twig;
 
 class DefaultErrorRender extends AbstractErrorRenderer
 {
-	protected $app;
-	protected $twig;
-	
-	public function __construct(App $app, Twig $twig)
+    protected $app;
+    protected $twig;
+    
+    public function __construct(App $app, Twig $twig)
     {
-		$this->app = $app;
-		$this->twig = $twig;
+        $this->app = $app;
+        $this->twig = $twig;
     }
-	
+    
     public function __invoke(Throwable $exception, bool $displayErrorDetails): string
     {
-		$viewData = [
-			'debug' => $displayErrorDetails,
-			'code' => $exception->getCode(),
-			'message' => $exception->getMessage(),
-			'file' => $exception->getFile(),
-			'line' => $exception->getLine(),
-			'trace' => $exception->getTraceAsString(),
-			'basepath' => (string) $this->app->getBasePath()
-		];
-		return (string) $this->twig->fetch('500.twig', $viewData);
+        $viewData = [
+            'debug' => $displayErrorDetails,
+            'code' => $exception->getCode(),
+            'message' => $exception->getMessage(),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => $exception->getTraceAsString(),
+            'basepath' => (string) $this->app->getBasePath()
+        ];
+        return (string) $this->twig->fetch('500.twig', $viewData);
     }
 }

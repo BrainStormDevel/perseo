@@ -7,8 +7,8 @@ use PerSeo\Handlers\HttpErrorHandler;
 use PerSeo\Handlers\ShutdownHandler;
 
 if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
-	echo "Error vendor not found: You must use Composer to install dependencies";
-	exit;
+    echo "Error vendor not found: You must use Composer to install dependencies";
+    exit;
 }
 
 @require_once __DIR__ . '/../vendor/autoload.php';
@@ -26,7 +26,7 @@ $container = $containerBuilder->build();
 $app = $container->get(App::class);
 
 $serverRequestCreator = ServerRequestCreatorFactory::create();
-$request = $serverRequestCreator->createServerRequestFromGlobals();	
+$request = $serverRequestCreator->createServerRequestFromGlobals();
 $errorHandler = new HttpErrorHandler($app->getCallableResolver(), $app->getResponseFactory());
 $shutdownHandler = new ShutdownHandler($request, $errorHandler, true);
 register_shutdown_function($shutdownHandler);

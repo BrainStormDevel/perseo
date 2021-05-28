@@ -72,7 +72,7 @@ final class LoggerFactory
         $filename = sprintf('%s/%s', $this->path, $filename);
 
         $rotatingFileHandler = new RotatingFileHandler(
-            $filename, 
+            $filename,
             0,
             $level ?? $this->level,
             true,

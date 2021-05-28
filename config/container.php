@@ -27,7 +27,7 @@ return [
         return AppFactory::create();
     },
 
-	LoggerFactory::class => function (ContainerInterface $container) {
+    LoggerFactory::class => function (ContainerInterface $container) {
         return new LoggerFactory($container->get('settings.logger'));
     },
 
@@ -41,20 +41,20 @@ return [
             (bool)$settings['log_errors'],
             (bool)$settings['log_error_details']
         );
-		$errorHandler = $errorMiddleware->getDefaultErrorHandler();
-		$errorHandler->registerErrorRenderer('text/html', DefaultErrorRender::class);
-		return $errorMiddleware;
+        $errorHandler = $errorMiddleware->getDefaultErrorHandler();
+        $errorHandler->registerErrorRenderer('text/html', DefaultErrorRender::class);
+        return $errorMiddleware;
     },
-	
-	ResponseFactoryInterface::class => function (ContainerInterface $container) {
+    
+    ResponseFactoryInterface::class => function (ContainerInterface $container) {
         return $container->get(App::class)->getResponseFactory();
     },
-	
-	BasePathMiddleware::class => function (ContainerInterface $container) {
+    
+    BasePathMiddleware::class => function (ContainerInterface $container) {
         return new BasePathMiddleware($container->get(App::class));
     },
 
-	SessionInterface::class => function (ContainerInterface $container) {
+    SessionInterface::class => function (ContainerInterface $container) {
         $settings = $container->get('settings.session');
         $session = new PhpSession();
         $session->setOptions((array)$settings);
@@ -65,25 +65,24 @@ return [
     SessionMiddleware::class => function (ContainerInterface $container) {
         return new SessionMiddleware($container->get(SessionInterface::class));
     },
-	
+    
     'db' => function (ContainerInterface $container) {
-		if ($container->has('settings.db')) {
-			$settings = $container->get('settings.db');			
-			return new DB([
-					'database_type' => $settings['default']['driver'],
-					'database_name' => $settings['default']['database'],
-					'server' => $settings['default']['host'],
-					'username' => $settings['default']['username'],
-					'password' => $settings['default']['password'],
-					'prefix' => $settings['default']['prefix'],
-					'charset' => $settings['default']['charset']
-			]);
-		}
-		else {
-			return null;
-		}
+        if ($container->has('settings.db')) {
+            $settings = $container->get('settings.db');
+            return new DB([
+                    'database_type' => $settings['default']['driver'],
+                    'database_name' => $settings['default']['database'],
+                    'server' => $settings['default']['host'],
+                    'username' => $settings['default']['username'],
+                    'password' => $settings['default']['password'],
+                    'prefix' => $settings['default']['prefix'],
+                    'charset' => $settings['default']['charset']
+            ]);
+        } else {
+            return null;
+        }
     },
-	
+    
     Twig::class => function (ContainerInterface $container) {
         $twigSettings = $container->get('settings.twig');
 
@@ -92,11 +91,11 @@ return [
 
         $twig = Twig::create($twigSettings['paths'], $options);
 
-		$environment = $twig->getEnvironment();
-		
-		// Add extension here
-		$twig->addExtension(new DebugExtension());
-		$twig->addExtension(new TwigAssetsExtension($environment, (array)$twigSettings));
+        $environment = $twig->getEnvironment();
+        
+        // Add extension here
+        $twig->addExtension(new DebugExtension());
+        $twig->addExtension(new TwigAssetsExtension($environment, (array)$twigSettings));
  
         return $twig;
     },

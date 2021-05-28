@@ -10,6 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use PerSeo\Handlers\ShutdownHandler;
 use Slim\Middleware\ErrorMiddleware;
+
 //use Slim\Handlers\ErrorHandler;
 
 /**
@@ -21,7 +22,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      * @var LoggerInterface
      */
     private $logger;
-	protected $errorHandler;
+    protected $errorHandler;
 
     /**
      * The constructor.
@@ -30,7 +31,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     public function __construct(LoggerFactory $loggerFactory, ErrorMiddleware $errorHandler)
     {
-		$this->errorHandler = $errorHandler;
+        $this->errorHandler = $errorHandler;
         $this->logger = $loggerFactory
             ->addFileHandler('errors.log')
             ->createInstance('error_handler_middleware');
@@ -45,16 +46,15 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      * @return ResponseInterface The response
      */
     public function process(
-        ServerRequestInterface $request, 
+        ServerRequestInterface $request,
         RequestHandlerInterface $handler
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $errorTypes = E_ALL;
 
         // Set custom php error handler
-		//$shutdownHandler = new ShutdownHandler($request, $this->errorHandler, true);
-		//register_shutdown_function($shutdownHandler);
-		//$this->errorHandler->setDefaultErrorHandler($errorHandler);
+        //$shutdownHandler = new ShutdownHandler($request, $this->errorHandler, true);
+        //register_shutdown_function($shutdownHandler);
+        //$this->errorHandler->setDefaultErrorHandler($errorHandler);
         set_error_handler(
             function ($errno, $errstr, $errfile, $errline) {
                 switch ($errno) {
@@ -79,7 +79,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 return true;
             },
             $errorTypes
-        );		
+        );
 
         return $handler->handle($request);
     }

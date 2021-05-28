@@ -19,7 +19,6 @@ use Throwable;
 
 class HttpErrorHandler extends SlimErrorHandler
 {
-	
     public const BAD_REQUEST = 'BAD_REQUEST';
     public const INSUFFICIENT_PRIVILEGES = 'INSUFFICIENT_PRIVILEGES';
     public const NOT_ALLOWED = 'NOT_ALLOWED';
@@ -42,9 +41,9 @@ class HttpErrorHandler extends SlimErrorHandler
             $description = $exception->getMessage();
 
             if ($exception instanceof HttpNotFoundException) {
-				$type = self::RESOURCE_NOT_FOUND;
+                $type = self::RESOURCE_NOT_FOUND;
             } elseif ($exception instanceof HttpMethodNotAllowedException) {
-				$type = self::NOT_ALLOWED;
+                $type = self::NOT_ALLOWED;
             } elseif ($exception instanceof HttpUnauthorizedException) {
                 $type = self::UNAUTHENTICATED;
             } elseif ($exception instanceof HttpForbiddenException) {
@@ -61,10 +60,10 @@ class HttpErrorHandler extends SlimErrorHandler
             && $exception instanceof Throwable
             && $this->displayErrorDetails
         ) {
-			$description = $exception->getMessage();
+            $description = $exception->getMessage();
         }
 
-		$error = [
+        $error = [
             'statusCode' => $statusCode,
             'error' => [
                 'type' => $type,
