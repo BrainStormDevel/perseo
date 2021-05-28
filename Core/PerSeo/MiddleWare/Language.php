@@ -26,7 +26,12 @@ class Language
             if (in_array(strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)), $languages)) {
                 $currlang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
             } else {
-                $currlang = $settings['language'];
+				if (isset($settings['language'])) {
+					$currlang = $settings['language'];
+				}
+				else {
+					$currlang = 'en';
+				}
             }
         }
         $request = $request->withAttribute('language', $currlang);

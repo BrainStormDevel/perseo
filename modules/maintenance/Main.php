@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\index;
+namespace Modules\maintenance;
 
 use Slim\App;
 use Psr\Container\ContainerInterface;
@@ -25,6 +25,6 @@ final class Main
         $viewData = [
 			'basepath' => (string) $this->app->getBasePath(),
         ];
-        return $this->twig->render($response, 'index.twig', $viewData);
+        return $this->twig->render($response, 'maintenance.twig', $viewData);
     }
 }

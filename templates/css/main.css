@@ -192,8 +192,6 @@ Intro
     position:relative;
 }
 
-
-
 .intro-text {
 	position:relative;
 	width:100%;
@@ -549,7 +547,7 @@ more media queries
 	#intro{
 		background-image: url(../img/bg-mac.png);
 		background-size:100%;
-	}
+	}	
 	.box-team, .box-team img {
 		text-align: center;
 	}
