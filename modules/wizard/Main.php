@@ -25,10 +25,10 @@ final class Main
     }
 
     public function __invoke(Request $request, Response $response): Response {
-		$config = $this->container->get('settings.root') .'/config';
-		$module = $this->container->get('settings.modules') .'/wizard';
-		$lang = new Translator($request->getAttribute('language'), $module);
-		$langs = $lang->get();
+	$config = $this->container->get('settings.root') .'/config';
+	$module = $this->container->get('settings.modules') .'/wizard';
+	$lang = new Translator($request->getAttribute('language'), $module);
+	$langs = $lang->get();
         $viewData = [
 			'basepath' => (string) $this->app->getBasePath(),
 			'cookiepath' => (string) (!empty($this->app->getBasePath()) ? $this->app->getBasePath() : '') .'/',
