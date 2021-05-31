@@ -19,8 +19,8 @@ final class Main
 
     public function __construct(App $app, ContainerInterface $container, Twig $twig)
     {
-		$this->app = $app;
-		$this->container = $container;
+	$this->app = $app;
+	$this->container = $container;
         $this->twig = $twig;
     }
 
