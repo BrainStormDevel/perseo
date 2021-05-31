@@ -51,10 +51,6 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         $errorTypes = E_ALL;
 
-        // Set custom php error handler
-        //$shutdownHandler = new ShutdownHandler($request, $this->errorHandler, true);
-        //register_shutdown_function($shutdownHandler);
-        //$this->errorHandler->setDefaultErrorHandler($errorHandler);
         set_error_handler(
             function ($errno, $errstr, $errfile, $errline) {
                 switch ($errno) {
@@ -74,7 +70,6 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                         );
                         break;
                 }
-
                 // Don't execute PHP internal error handler
                 return true;
             },

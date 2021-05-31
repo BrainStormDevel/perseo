@@ -32,7 +32,6 @@ final class HttpExceptionMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (HttpException $httpException) {
-            // Handle the http exception here
             $statusCode = $httpException->getCode();
             $response = $this->responseFactory->createResponse()->withStatus($statusCode);
             $errorMessage = sprintf('%s %s', $statusCode, $response->getReasonPhrase());
@@ -40,13 +39,6 @@ final class HttpExceptionMiddleware implements MiddlewareInterface
                 'basepath' => (string) $this->app->getBasePath()
             ];
             return $this->twig->render($response, '404.twig', $viewData);
-            // Log the error message
-            // $this->logger->error($errorMessage);
-
-            // Render twig template or just add the content to the body
-            //$response->getBody()->write($errorMessage);
-
-            //return $response;
         }
     }
 }
