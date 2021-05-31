@@ -30,12 +30,12 @@ class Alias
             $filteredreq = preg_replace('/[^a-zA-Z0-9-_\-\/]/', '#', $uri);
             $regmatch = (((substr($filteredreq, -1) == '/') && (strlen($filteredreq) > 1)) ? substr_replace($filteredreq, '', -1)  : $filteredreq) . '([/]?)$';
             $result = $this->db->select('routes', [
-            'request',
-            'dest',
-            'type',
-            'redirect',
-            'canonical',
-            'priority' => DB::RAW('IF(REGEXP_REPLACE(request, \''. $regmatch .'\', 1) = 1, 1, 2)')
+            'request', //URI Requested
+            'dest', //Destination for redirect or alias
+            'type', //If is Alias or is a Redirect
+            'redirect', //HTTP Redirect Code (301, 302)
+            'canonical', //If route is canonical (For SEO)
+            'priority' => DB::RAW('IF(REGEXP_REPLACE(request, \''. $regmatch .'\', 1) = 1, 1, 2)') //Request match has always priority to the destination, to avoid mismatches.
         ], [
             "OR" => [
                 "AND #alias" => [
