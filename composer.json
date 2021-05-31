@@ -20,7 +20,7 @@
         "php-di/php-di": "^6.3",
         "brainstormdevel/basepath": "^2.0",
         "slim/twig-view": "^3.0",
-        "catfan/medoo": "^1.7",
+        "catfan/medoo": "^2.0",
         "composer/ca-bundle": "^1.2",
         "odan/twig-assets": "^3.2",
         "odan/session": "^5.1",

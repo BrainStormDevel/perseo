@@ -31,6 +31,7 @@ final class Main
 		$langs = $lang->get();
         $viewData = [
 			'basepath' => (string) $this->app->getBasePath(),
+			'cookiepath' => (string) (!empty($this->app->getBasePath()) ? $this->app->getBasePath() : '') .'/',
             'writeperm' => (is_writable($config) ? "ok" : "no"),
 			'language' => $request->getAttribute('language'),
             'openssl' => (extension_loaded('openssl') ? "ok" : "no"),
