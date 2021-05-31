@@ -78,8 +78,6 @@ return [
                     'prefix' => $settings['default']['prefix'],
                     'charset' => $settings['default']['charset']
             ]);
-        } else {
-            return null;
         }
     },
     

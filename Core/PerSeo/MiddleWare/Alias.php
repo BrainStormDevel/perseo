@@ -23,7 +23,7 @@ class Alias
 
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
-        if (!empty($this->db)) {
+        if (!empty($this->db) && is_object($this->db)) {
             $fulluri = (string) $request->getUri()->getPath();
             $basepath = (string) $this->app->getBasePath();
             $uri = (string) substr($fulluri, strlen($basepath));
