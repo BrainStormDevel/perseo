@@ -38,8 +38,7 @@ class Maintenance implements Middleware
                         return $response->withHeader('Location', $mydest)->withStatus(301);
                     }
                 }
-            }
-            else {
+            } else {
                 if ($uri == $locale .'/maintenance') {
                     $mydest = (string) $basepath .'/';
                     $response = $this->app->getResponseFactory()->createResponse();
