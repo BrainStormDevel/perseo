@@ -11,10 +11,10 @@ use PerSeo\Translator;
 
 final class Main
 {
-	protected $app;
-	protected $db;
-	protected $container;
-	protected $session;
+    protected $app;
+    protected $db;
+    protected $container;
+    protected $session;
     private $twig;
 
     public function __construct(App $app, ContainerInterface $container, Twig $twig)
