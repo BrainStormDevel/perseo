@@ -4,15 +4,17 @@ namespace PerSeo\MiddleWare;
 
 use Slim\App;
 use Psr\Container\ContainerInterface;
-use Slim\Psr7\Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
 use PerSeo\DB;
 
-class Alias
+class Alias implements Middleware
 {
     protected $app;
     protected $container;
+    protected $db;
 
     public function __construct(App $app, ContainerInterface $container)
     {
@@ -21,7 +23,7 @@ class Alias
         $this->db = ($container->has('db') ? $container->get('db') : null);
     }
 
-    public function __invoke(Request $request, RequestHandler $handler): Response
+    public function process(Request $request, RequestHandler $handler): Response
     {
         if (!empty($this->db) && is_object($this->db)) {
             $fulluri = (string) $request->getUri()->getPath();

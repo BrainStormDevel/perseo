@@ -2,11 +2,12 @@
 
 namespace PerSeo\MiddleWare;
 
-use Slim\Psr7\Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
 
-class Language
+class Language implements Middleware
 {
     protected $container;
 
@@ -15,7 +16,7 @@ class Language
         $this->container = $container;
     }
 
-    public function __invoke(Request $request, RequestHandler $handler): Response
+    public function process(Request $request, RequestHandler $handler): Response
     {
         $cookie = $request->getCookieParams();
         $settings = ($this->container->has('settings.global') ? $this->container->get('settings.global') : array());

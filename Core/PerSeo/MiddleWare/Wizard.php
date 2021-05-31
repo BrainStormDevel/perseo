@@ -4,12 +4,13 @@ namespace PerSeo\MiddleWare;
 
 use Slim\App;
 use Psr\Container\ContainerInterface;
-use Slim\Psr7\Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
 use PerSeo\DB;
 
-class Wizard
+class Wizard implements Middleware
 {
     protected $app;
     protected $container;
@@ -20,7 +21,7 @@ class Wizard
         $this->container = $container;
     }
 
-    public function __invoke(Request $request, RequestHandler $handler): Response
+    public function process(Request $request, RequestHandler $handler): Response
     {
         $fulluri = (string) $request->getUri()->getPath();
         $basepath = (string) $this->app->getBasePath();
