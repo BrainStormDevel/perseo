@@ -28,14 +28,14 @@ return function (App $app) {
     // Add locale in url Middleware
     $app->add(new Locale($app, $settings['locale'], $settings['languages']));
     
-	$app->add(Alias::class);
+    $app->add(Alias::class);
     
     $app->add(Maintenance::class);
     
     $app->add(Wizard::class);
     
     // Set language from browser
-	$app->add(Language::class);
+    $app->add(Language::class);
 
     // Session
     $app->add(SessionMiddleware::class);
