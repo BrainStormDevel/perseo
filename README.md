@@ -1,6 +1,6 @@
-# PerSeo aplha v2 0.1
+# PerSeo beta v2 0.1
 
-This is a alpha v2 of PerSeo CMS based on Slim Framework v4
+This is a beta v2 of PerSeo CMS based on Slim Framework v4
 
 ![PerSeo](https://github.com/BrainStormDevel/resources/blob/main/perseo.jpg?raw=true)
 
