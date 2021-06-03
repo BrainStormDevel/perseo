@@ -21,6 +21,20 @@ final class Test
                 'password' => (string) $post['dbpass'],
                 'charset' => (string) $post['charset']
             ]);
+            $info = $db->info();
+			$version = (string) $info['version'];
+			if(strpos($version, 'MariaDB') !== false){
+				$explode = explode("-", $version);
+				$version = $explode[0];
+				if ($version < '10.0.5') {
+                    throw new \Exception('Minimum requirements: Mariadb 10.0.5',0001);
+                }
+			}
+            else {
+                if ($version < '8.0.0') {
+                    throw new \Exception('Minimum requirements: Mysql 8.0.0',0001);
+                }
+            }
             $result = Array(
                 "err" => 0,
                 "code" => 0,
