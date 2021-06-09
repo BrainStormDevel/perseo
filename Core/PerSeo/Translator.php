@@ -15,12 +15,12 @@ class Translator
         $this->result = array();
         if (file_exists($this->path . $this->language . '.lng')) {
             $content = file_get_contents($this->path . $this->language . '.lng');
-            $this->result = $content;
+            $this->result = json_decode($content, true);
         }
     }
 
     public function get()
     {
-        return json_decode($this->result, true);
+        return $this->result;
     }
 }
