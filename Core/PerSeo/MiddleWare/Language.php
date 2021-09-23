@@ -22,7 +22,7 @@ class Language implements Middleware
         $cookie = $request->getCookieParams();
         $server = $request->getServerParams();
         $settings = ($this->container->has('settings.global') ? $this->container->get('settings.global') : array());
-        $languages = $settings['languages'];
+        $languages = (!empty($settings['languages']) ? $settings['languages'] : array());
         if (isset($cookie['lang']) && in_array(strtolower($cookie['lang']), $languages)) {
             $currlang = strtolower($cookie['lang']);
         } else {
