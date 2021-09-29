@@ -18,6 +18,10 @@ use Odan\Session\Middleware\SessionMiddleware;
 use PerSeo\DB;
 use PerSeo\LoggerFactory;
 use PerSeo\MiddleWare\DefaultErrorRender;
+use Psr\Log\LoggerInterface;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\UidProcessor;
 
 return [
 
@@ -30,6 +34,20 @@ return [
     LoggerFactory::class => function (ContainerInterface $container) {
         return new LoggerFactory($container->get('settings.logger'));
     },
+	
+	LoggerInterface::class => function (ContainerInterface $container): Logger {
+		$loggerSettings = $container->get('settings.logger');
+		
+		$logger = new Logger($loggerSettings['name']);
+		
+		$processor = new UidProcessor();
+		$logger->pushProcessor($processor);
+		
+		$handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
+		$logger->pushHandler($handler);
+		
+		return $logger;
+	},
 
     ErrorMiddleware::class => function (ContainerInterface $container) {
         $app = $container->get(App::class);
