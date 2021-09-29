@@ -43,7 +43,7 @@ return [
 		$processor = new UidProcessor();
 		$logger->pushProcessor($processor);
 		
-		$handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
+		$handler = new StreamHandler($loggerSettings['path'] .'/'. $loggerSettings['filename'], $loggerSettings['level']);
 		$logger->pushHandler($handler);
 		
 		return $logger;
