@@ -29,12 +29,10 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      *
      * @param LoggerFactory $loggerFactory The logger
      */
-    public function __construct(LoggerFactory $loggerFactory, ErrorMiddleware $errorHandler)
+    public function __construct(LoggerInterface $logger, ErrorMiddleware $errorHandler)
     {
         $this->errorHandler = $errorHandler;
-        $this->logger = $loggerFactory
-            ->addFileHandler('errors.log')
-            ->createInstance('error_handler_middleware');
+        $this->logger = $logger;
     }
 
     /**

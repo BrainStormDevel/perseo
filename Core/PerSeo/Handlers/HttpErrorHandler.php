@@ -29,6 +29,7 @@ class HttpErrorHandler extends SlimErrorHandler
     /**
      * @inheritdoc
      */
+	 	 
     protected function respond(): Response
     {
         $exception = $this->exception;
@@ -41,16 +42,22 @@ class HttpErrorHandler extends SlimErrorHandler
             $description = $exception->getMessage();
 
             if ($exception instanceof HttpNotFoundException) {
+				$statusCode = 404;
                 $type = self::RESOURCE_NOT_FOUND;
             } elseif ($exception instanceof HttpMethodNotAllowedException) {
+				$statusCode = 405;
                 $type = self::NOT_ALLOWED;
             } elseif ($exception instanceof HttpUnauthorizedException) {
+				$statusCode = 401;
                 $type = self::UNAUTHENTICATED;
             } elseif ($exception instanceof HttpForbiddenException) {
+				$statusCode = 403;
                 $type = self::UNAUTHENTICATED;
             } elseif ($exception instanceof HttpBadRequestException) {
+				$statusCode = 400;
                 $type = self::BAD_REQUEST;
             } elseif ($exception instanceof HttpNotImplementedException) {
+				$statusCode = 501;
                 $type = self::NOT_IMPLEMENTED;
             }
         }

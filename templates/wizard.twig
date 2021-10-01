@@ -149,6 +149,12 @@
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_cookie_path }}</span><input type="text" name="cookie_path" id="cookie_path" class="form-control" placeholder="{{ lang.l_cookie_path_ph }}" value="{{ cookiepath }}"></div>
 						</p>
 						<p>
+						  <div class="input-group"><span class="input-group-addon">{{ lang.l_app_name }}</span><input type="text" name="app_name" id="app_name" class="form-control" placeholder="{{ lang.l_app_name_ph }}" value="PerSeo"></div>
+						</p>
+						<p>
+						  <div class="input-group"><span class="input-group-addon">{{ lang.l_prefix_fname }}</span><input type="text" name="log_fname" id="log_fname" class="form-control" placeholder="{{ lang.l_prefix_fname_ph }}" value=""></div>
+						</p>						
+						<p>
 						  <div class="input-group"><span class="input-group-addon">{{ lang.l_facebook_app }}</span><input type="text" name="facebook_app" id="facebook_app" class="form-control" placeholder="{{ lang.l_facebook_app_ph }}" value=""></div>
 						</p>						
 						<p>
@@ -210,8 +216,10 @@
 			salt = makerand("abcdef0123456789", 64);
 			mainpass = makerand("abcdefghijklmnopqrstuvwxyz0123456789", 12);
 			tbl = makerand("abcdefghijklmnopqrstuvwxyz", 5) + "_";
+			fnamepx = makerand("abcdefghijklmnopqrstuvwxyz", 8) + "_";
 			$('#salt').val(salt);
 			$('#prefix').val(tbl);
+			$('#log_fname').val(fnamepx);
 			$('#maintenancekey').val(mainpass);
 			$("#saltbtn").click(function() {
 				salt = makerand("abcdef0123456789", 64);

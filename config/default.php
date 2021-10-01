@@ -41,9 +41,9 @@ return [
         'minify' => 0,
     ],
     'settings.logger' => [
-        'name' => 'app',
+        'name' => 'perseo',
         'path' => realpath(__DIR__ .'/../logs'),
-        'filename' => 'app.log',
+        'filename' => 'perseo.log',
         'level' => \Monolog\Logger::DEBUG,
         'file_permission' => 0775,
     ]
