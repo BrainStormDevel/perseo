@@ -50,6 +50,6 @@ return function (App $app) {
     
     // Catch exceptions and errors
     $app->add(ErrorMiddleware::class);
-	
-	$app->add(GZIP::class);
+    
+    $app->add(GZIP::class);
 };

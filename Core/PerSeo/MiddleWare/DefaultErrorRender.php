@@ -14,18 +14,18 @@ class DefaultErrorRender extends AbstractErrorRenderer
 {
     protected $app;
     protected $twig;
-	protected $logger;
+    protected $logger;
     
     public function __construct(App $app, LoggerInterface $logger, Twig $twig)
     {
         $this->app = $app;
-		$this->logger = $logger;
+        $this->logger = $logger;
         $this->twig = $twig;
     }
     
     public function __invoke(Throwable $exception, bool $displayErrorDetails): string
     {
-		$this->logger->error($exception);
+        $this->logger->error($exception);
         $viewData = [
             'debug' => $displayErrorDetails,
             'code' => $exception->getCode(),
