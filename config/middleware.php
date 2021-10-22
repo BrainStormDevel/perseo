@@ -13,6 +13,7 @@ use Slim\Views\TwigMiddleware;
 use PerSeo\MiddleWare\Wizard;
 use PerSeo\MiddleWare\HttpExceptionMiddleware;
 use PerSeo\MiddleWare\ErrorHandlerMiddleware;
+use PerSeo\MiddleWare\GZIP;
 use Odan\Session\Middleware\SessionMiddleware;
 
 return function (App $app) {
@@ -49,4 +50,6 @@ return function (App $app) {
     
     // Catch exceptions and errors
     $app->add(ErrorMiddleware::class);
+	
+	$app->add(GZIP::class);
 };
