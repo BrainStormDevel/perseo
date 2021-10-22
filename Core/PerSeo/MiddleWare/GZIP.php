@@ -23,27 +23,27 @@ class GZIP implements Middleware
 
     public function process(Request $request, RequestHandler $handler): Response
     {
-	if ($request->hasHeader('Accept-Encoding') && stristr($request->getHeaderLine('Accept-Encoding'), 'gzip') === false) {
-        // Browser doesn't accept gzip compression
-        return $handler->handle($request);
-    }
+        if ($request->hasHeader('Accept-Encoding') && stristr($request->getHeaderLine('Accept-Encoding'), 'gzip') === false) {
+            // Browser doesn't accept gzip compression
+            return $handler->handle($request);
+        }
 
-    /** @var Response $response */
-    $response = $handler->handle($request);
+        /** @var Response $response */
+        $response = $handler->handle($request);
 
-    if ($response->hasHeader('Content-Encoding')) {
-        return $handler->handle($request);
-    }
+        if ($response->hasHeader('Content-Encoding')) {
+            return $handler->handle($request);
+        }
 
-    // Compress response data
-    $deflateContext = deflate_init(ZLIB_ENCODING_GZIP);
-    $compressed = deflate_add($deflateContext, (string)$response->getBody(), \ZLIB_FINISH);
+        // Compress response data
+        $deflateContext = deflate_init(ZLIB_ENCODING_GZIP);
+        $compressed = deflate_add($deflateContext, (string)$response->getBody(), \ZLIB_FINISH);
 
-    $stream = fopen('php://memory', 'r+');
-    fwrite($stream, $compressed);
-    rewind($stream);
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, $compressed);
+        rewind($stream);
 
-    return $response
+        return $response
         ->withHeader('Content-Encoding', 'gzip')
         ->withHeader('Content-Length', strlen($compressed))
         ->withBody(new Stream($stream));

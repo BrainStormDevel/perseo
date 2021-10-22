@@ -25,8 +25,8 @@ class ShutdownHandler
      * @var bool
      */
     private $displayErrorDetails;
-	
-	protected $logger;
+    
+    protected $logger;
 
     /**
      * ShutdownHandler constructor.

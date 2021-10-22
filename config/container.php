@@ -35,19 +35,19 @@ return [
         return new LoggerFactory($container->get('settings.logger'));
     },
 
- 	LoggerInterface::class => function (ContainerInterface $container): Logger {
-		$loggerSettings = $container->get('settings.logger');
-		
-		$logger = new Logger($loggerSettings['name']);
-		
-		$processor = new UidProcessor();
-		$logger->pushProcessor($processor);
-		
-		$handler = new StreamHandler($loggerSettings['path'] .'/'. $loggerSettings['filename'] . md5(date("mdy")) .'.log', $loggerSettings['level']);
-		$logger->pushHandler($handler);
-		
-		return $logger;
-	},
+    LoggerInterface::class => function (ContainerInterface $container): Logger {
+        $loggerSettings = $container->get('settings.logger');
+        
+        $logger = new Logger($loggerSettings['name']);
+        
+        $processor = new UidProcessor();
+        $logger->pushProcessor($processor);
+        
+        $handler = new StreamHandler($loggerSettings['path'] .'/'. $loggerSettings['filename'] . md5(date("mdy")) .'.log', $loggerSettings['level']);
+        $logger->pushHandler($handler);
+        
+        return $logger;
+    },
 
     ErrorMiddleware::class => function (ContainerInterface $container) {
         $app = $container->get(App::class);
@@ -63,7 +63,7 @@ return [
         $errorHandler->registerErrorRenderer('text/html', DefaultErrorRender::class);
         return $errorMiddleware;
     },
-	
+    
     ResponseFactoryInterface::class => function (ContainerInterface $container) {
         return $container->get(App::class)->getResponseFactory();
     },
