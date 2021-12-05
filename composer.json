@@ -23,7 +23,7 @@
         "odan/twig-assets": "^3.2",
         "odan/session": "^5.1",
         "monolog/monolog": "^2.3",
-        "ext-openssl": "^8.0",
+        "ext-openssl": ">=7.2",
         "brainstorm/slim4locale": "^1.0"
     },
 	"autoload": {
