@@ -32,6 +32,8 @@ return function (App $app) {
     $app->add(Alias::class);
     
     $app->add(Maintenance::class);
+	
+	$app->add(Admin::class);
     
     $app->add(Wizard::class);
     
