@@ -25,8 +25,7 @@ class Admin implements Middleware
 
     public function process(Request $request, RequestHandler $handler): Response
     {
-		if (!empty($this->settings['adminpath'])) {
-					
+		if (!empty($this->settings['adminpath'])) {	
 			$adminpath = '/'. $this->settings['adminpath'];
 			$adminpath2 = $adminpath .'/';
 			$fulluri = (string) $request->getUri()->getPath();
