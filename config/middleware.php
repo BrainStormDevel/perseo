@@ -7,6 +7,7 @@ use Slim\Middleware\ErrorMiddleware;
 use PerSeo\MiddleWare\Language;
 use BrainStorm\Slim4Locale\Locale;
 use PerSeo\MiddleWare\Alias;
+use PerSeo\MiddleWare\Admin;
 use PerSeo\MiddleWare\Maintenance;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
