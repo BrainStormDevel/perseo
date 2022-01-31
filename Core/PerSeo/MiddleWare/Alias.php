@@ -29,7 +29,7 @@ class Alias implements Middleware
             $fulluri = (string) $request->getUri()->getPath();
             $basepath = (string) $this->app->getBasePath();
             $uri = (string) substr($fulluri, strlen($basepath));
-            $filteredreq = preg_replace('/[^a-zA-Z0-9-_\-\/]/', '#', $uri);
+            $filteredreq = preg_replace('/[^a-zA-Z0-9-_.\-\/]/', '#', $uri);
             $regmatch = (((substr($filteredreq, -1) == '/') && (strlen($filteredreq) > 1)) ? substr_replace($filteredreq, '', -1)  : $filteredreq) . '([/]?)$';
             $result = $this->db->select('routes', [
             'request', //URI Requested
