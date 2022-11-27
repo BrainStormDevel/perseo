@@ -15,7 +15,7 @@
         "nyholm/psr7": "^1.4",
         "nyholm/psr7-server": "^1.0",
         "laminas/laminas-diactoros": "^2.5",
-        "php-di/php-di": "^6.3",
+        "php-di/php-di": "^6.4",
         "brainstormdevel/basepath": "^2.0",
         "slim/twig-view": "^3.0",
         "catfan/medoo": "^2.1",
@@ -24,7 +24,8 @@
         "odan/session": "^5.1",
         "monolog/monolog": "^2.3",
         "ext-openssl": ">=7.2",
-        "brainstorm/slim4locale": "^1.0"
+        "brainstorm/slim4locale": "^1.0",
+        "robmorgan/phinx": "^0.13"
     },
 	"autoload": {
         "psr-4": {
