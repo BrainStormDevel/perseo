@@ -15,10 +15,10 @@ class Alias implements Middleware
     protected $app;
     protected $db;
 
-    public function __construct(App $app, DBDefault $db)
+    public function __construct(App $app, ContainerInterface $container)
     {
         $this->app = $app;
-        $this->db = $db;
+        $this->db = ($container->has('db') ? $container->get('db') : null);
     }
 
     public function process(Request $request, RequestHandler $handler): Response
@@ -37,7 +37,9 @@ class Alias implements Middleware
             'type', //If is Alias or is a Redirect
             'redirect', //HTTP Redirect Code (301, 302)
             'canonical', //If route is canonical (For SEO)
-            'priority' => DB::RAW('IF(REGEXP_REPLACE(request, \''. $regmatch .'\', 1) = 1, 1, 2)') //Request match has always priority to the destination, to avoid mismatches.
+            'priority' => DB::RAW('IF(REGEXP_REPLACE(request, :regmatch, 1) = 1, 1, 2)', [
+                    ":regmatch" => $regmatch
+			]) //Request match has always priority to the destination, to avoid mismatches.
         ], [
             "OR" => [
                 "AND #alias" => [
