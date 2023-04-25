@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
-use PerSeo\DB\DBDefault;
+use PerSeo\DB;
 
 class Alias implements Middleware
 {
@@ -37,7 +37,7 @@ class Alias implements Middleware
             'type', //If is Alias or is a Redirect
             'redirect', //HTTP Redirect Code (301, 302)
             'canonical', //If route is canonical (For SEO)
-            'priority' => DBDefault::RAW('IF(REGEXP_REPLACE(request, \''. $regmatch .'\', 1) = 1, 1, 2)') //Request match has always priority to the destination, to avoid mismatches.
+            'priority' => DB::RAW('IF(REGEXP_REPLACE(request, \''. $regmatch .'\', 1) = 1, 1, 2)') //Request match has always priority to the destination, to avoid mismatches.
         ], [
             "OR" => [
                 "AND #alias" => [
