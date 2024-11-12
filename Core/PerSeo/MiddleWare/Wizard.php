@@ -27,7 +27,7 @@ class Wizard implements Middleware
         $basepath = (string) $this->app->getBasePath();
         $uri = (string) substr($fulluri, strlen($basepath));
         preg_match("/(^\/(wizard\/)|\/(wizard\b))/i", $uri, $matches);
-        if (!$this->container->has('settings.db')) {
+        if (!$this->container->has('settings_db')) {
             if (empty($matches[0])) {
                 if ($request->getMethod() == 'GET') {
                     $mydest = $basepath .'/wizard/';

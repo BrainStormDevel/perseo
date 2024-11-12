@@ -21,7 +21,8 @@ class Language implements Middleware
     {
         $cookie = $request->getCookieParams();
         $server = $request->getServerParams();
-        $settings = ($this->container->has('settings.global') ? $this->container->get('settings.global') : array());
+        $settings = ($this->container->has('settings_global') ? $this->container->get('settings_global') : array());
+        $server['HTTP_ACCEPT_LANGUAGE'] = array_key_exists('HTTP_ACCEPT_LANGUAGE', $server) ? strtolower(substr($server['HTTP_ACCEPT_LANGUAGE'], 0, 2)) : (isset($settings['language']) ? $settings['language'] : 'en');
         $languages = (!empty($settings['languages']) ? $settings['languages'] : array());
         if (isset($cookie['lang']) && in_array(strtolower($cookie['lang']), $languages)) {
             $currlang = strtolower($cookie['lang']);

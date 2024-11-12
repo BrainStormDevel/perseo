@@ -8,6 +8,8 @@ use Slim\Handlers\ErrorHandler;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpInternalServerErrorException;
 use Slim\ResponseEmitter;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class ShutdownHandler
 {
@@ -27,6 +29,12 @@ class ShutdownHandler
     private $displayErrorDetails;
     
     protected $logger;
+    
+    protected $container;
+    
+    protected $settings;
+    
+    protected $reporting;
 
     /**
      * ShutdownHandler constructor.
@@ -35,11 +43,14 @@ class ShutdownHandler
      * @param HttpErrorHandler  $errorHandler
      * @param bool              $displayErrorDetails
      */
-    public function __construct(Request $request, ErrorHandler $errorHandler, bool $displayErrorDetails)
+    public function __construct(Request $request, ErrorHandler $errorHandler, LoggerInterface $logger, ContainerInterface $container, bool $displayErrorDetails)
     {
         $this->request = $request;
         $this->errorHandler = $errorHandler;
         $this->displayErrorDetails = $displayErrorDetails;
+        $this->logger = $logger;
+        $this->settings = ($container->has('settings_error') ? $container->get('settings_error') : ['reporting' => ['E_ALL'], 'display_error_details' => false, 'log_errors' => false, 'log_error_details' => false]);
+        $this->reporting = (isset($this->settings['reporting']) ? $this->settings['reporting'] : ['E_ALL']);
     }
 
     public function __invoke()
@@ -55,21 +66,33 @@ class ShutdownHandler
             if ($this->displayErrorDetails) {
                 switch ($errorType) {
                     case E_USER_ERROR:
-                        $message = "FATAL ERROR: {$errorMessage}. ";
-                        $message .= " on line {$errorLine} in file {$errorFile}.";
+                        if (!in_array('~E_ERROR', $this->reporting) && (in_array('E_ALL', $this->reporting) || in_array('E_ERROR', $this->reporting))) {
+                            $message = "FATAL ERROR: {$errorMessage}. ";
+                            $message .= " on line {$errorLine} in file {$errorFile}.";
+                            $this->logger->error($message);
+                        }
                         break;
 
                     case E_USER_WARNING:
-                        $message = "WARNING: {$errorMessage}";
+                        if (!in_array('~E_WARNING', $this->reporting) && (in_array('E_ALL', $this->reporting) || in_array('E_WARNING', $this->reporting))) {
+                            $message = "WARNING: {$errorMessage}";
+                            $this->logger->warning($message);
+                        }
                         break;
 
                     case E_USER_NOTICE:
-                        $message = "NOTICE: {$errorMessage}";
+                        if (!in_array('~E_NOTICE', $this->reporting) && (in_array('E_ALL', $this->reporting) || in_array('E_NOTICE', $this->reporting))) {
+                            $message = "NOTICE: {$errorMessage}";
+                            $this->logger->notice($message);
+                        }
                         break;
 
                     default:
-                        $message = "ERROR: {$errorMessage}";
-                        $message .= " on line {$errorLine} in file {$errorFile}.";
+                        if (in_array('E_ALL', $this->reporting)) {
+                            $message = "ERROR: {$errorMessage}";
+                            $message .= " on line {$errorLine} in file {$errorFile}.";
+                            $this->logger->error($message);
+                        }
                         break;
                 }
             }

@@ -20,7 +20,7 @@ class Admin implements Middleware
     {
         $this->app = $app;
         $this->container = $container;
-        $this->settings = $container->get('settings.global');
+        $this->settings = $container->get('settings_global');
     }
 
     public function process(Request $request, RequestHandler $handler): Response

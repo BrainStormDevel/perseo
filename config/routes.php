@@ -6,7 +6,7 @@ use Slim\App;
 
 return function (App $app) {
     $thiscontainer = $app->getContainer();
-    $directory = $thiscontainer->get('settings.modules');
+    $directory = $thiscontainer->get('settings_modules');
     $dirobj = new \DirectoryIterator($directory);
     $modules = array();
     $curmod = 0;

@@ -15,10 +15,10 @@ use PerSeo\MiddleWare\Wizard;
 use PerSeo\MiddleWare\HttpExceptionMiddleware;
 use PerSeo\MiddleWare\ErrorHandlerMiddleware;
 use PerSeo\MiddleWare\GZIP;
-use Odan\Session\Middleware\SessionMiddleware;
+use Odan\Session\Middleware\SessionStartMiddleware;
 
 return function (App $app) {
-    $settings = $app->getContainer()->get('settings.global');
+    $settings = $app->getContainer()->get('settings_global');
     // Parse json, form data and xml
     $app->addBodyParsingMiddleware();
     
@@ -42,7 +42,7 @@ return function (App $app) {
     $app->add(Language::class);
 
     // Session
-    $app->add(SessionMiddleware::class);
+    $app->add(SessionStartMiddleware::class);
     
     //Add Basepath Middleware
     $app->add(BasePathMiddleware::class);

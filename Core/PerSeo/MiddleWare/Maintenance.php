@@ -23,8 +23,8 @@ class Maintenance implements Middleware
     public function process(Request $request, RequestHandler $handler): Response
     {
         $cookies = $request->getCookieParams();
-        if ($this->container->has('settings.global')) {
-            $settings = $this->container->get('settings.global');
+        if ($this->container->has('settings_global')) {
+            $settings = $this->container->get('settings_global');
             $fulluri = (string) $request->getUri()->getPath();
             $basepath = (string) $this->app->getBasePath();
             $uri = (string) substr($fulluri, strlen($basepath));

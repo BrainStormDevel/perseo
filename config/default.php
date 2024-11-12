@@ -8,24 +8,25 @@ ini_set('display_errors', '0');
 date_default_timezone_set('Europe/Berlin');
 
 return [
-    'settings.global' => [
+    'settings_global' => [
         'locale' => false,
         'language' => 'en',
         'languages' => ['it', 'en']
     ],
-    'settings.root'     => realpath(__DIR__ .'/..'),
-    'settings.temp' => realpath(__DIR__ .'/../tmp'),
-    'settings.modules' => realpath(__DIR__ .'/../modules'),
-    'settings.error' => [
+    'settings_root'     => realpath(__DIR__ .'/..'),
+    'settings_temp' => realpath(__DIR__ .'/../tmp'),
+    'settings_modules' => realpath(__DIR__ .'/../modules'),
+    'settings_error' => [
+        'reporting' => ['E_ALL', '~E_NOTICE'],
         'display_error_details' => true,
         'log_errors' => true,
         'log_error_details' => true
     ],
-    'settings.session' =>[
+    'settings_session' =>[
         'name' => 'client',
         'cache_expire' => 0,
     ],
-    'settings.twig' => [
+    'settings_twig' => [
         // Template paths
         'paths' => [
             realpath(__DIR__ .'/../templates'),
@@ -40,7 +41,7 @@ return [
         //  Should be set to 1 (enabled) in production
         'minify' => 0,
     ],
-    'settings.logger' => [
+    'settings_logger' => [
         'name' => 'perseo',
         'path' => realpath(__DIR__ .'/../logs'),
         'filename' => 'perseo.log',

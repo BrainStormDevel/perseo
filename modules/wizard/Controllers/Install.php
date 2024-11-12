@@ -32,13 +32,13 @@ class Install
     public function __invoke(Request $request, Response $response): Response
 	{
 		$post = $request->getParsedBody();
-		$config = $this->container->get('settings.root') .'/config';
+		$config = $this->container->get('settings_root') .'/config';
         $fileconf = $config . DIRECTORY_SEPARATOR .'settings.php';
         try {
             $myfile = fopen($fileconf, "w");
             $content = "<?php\n\n";
             $content .= "return [
-    'settings.global' => [
+    'settings_global' => [
         'sitename' => '" . (string) $post['title'] . "',
         'encoding' => '" . (string) $post['encoding'] . "',
 		'template' => '" . (string) $post['template'] . "',
@@ -48,19 +48,20 @@ class Install
         'language' => '" . (string) $post['defaultlang'] . "',
 		'languages' => ['it', 'en']
     ],
-    'settings.root' => realpath(__DIR__ .'/..'),
-    'settings.temp' => realpath(__DIR__ .'/../tmp'),
-	'settings.modules' =>  realpath(__DIR__ .'/../modules'),
-    'settings.error' => [
+    'settings_root' => realpath(__DIR__ .'/..'),
+    'settings_temp' => realpath(__DIR__ .'/../tmp'),
+	'settings_modules' =>  realpath(__DIR__ .'/../modules'),
+    'settings_error' => [
+		'reporting' => ['E_ALL', '~E_NOTICE'],
         'display_error_details' => false,
 		'log_errors' => true,
         'log_error_details' => true
     ],
-	'settings.session' =>[
-        'name' => 'client',
+	'settings_session' =>[
+        'name' => '". substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10) ."',
         'cache_expire' => 0,
 	],
-	'settings.twig' => [
+	'settings_twig' => [
 		// Template paths
 		'paths' => [
 			realpath(__DIR__ .'/../templates'),
@@ -75,17 +76,17 @@ class Install
 		//  Should be set to 1 (enabled) in production
 		'minify' => 0,
 	],	
-	'settings.logger' => [
+	'settings_logger' => [
 		'name' => 'app',
 		'path' => realpath(__DIR__ .'/../logs'),
 		'filename' => 'app.log',
 		'level' => \Monolog\Logger::DEBUG,
 		'file_permission' => 0775,
 	],
-    'settings.secure' => [
+    'settings_secure' => [
         'crypt_salt' => '" . (string) $post['salt'] . "'
     ],
-    'settings.cookie' => [
+    'settings_cookie' => [
 		'admin' => '" . (string) $post['cookadm'] . "',
 		'user' => '" . (string) $post['cookusr'] . "',
         'cookie_exp' => '" . (string) $post['cookexp'] . "',
@@ -94,7 +95,7 @@ class Install
         'cookie_secure' => false,
         'cookie_http' => true
     ],
-    'settings.db' => [
+    'settings_db' => [
         'default' => [
             'driver' => '" . (string) $post['driver'] . "',
             'host' => '" . (string) $post['dbhost'] . "',

@@ -14,7 +14,7 @@ use Twig\Extension\DebugExtension;
 use Odan\Twig\TwigAssetsExtension;
 use Odan\Session\PhpSession;
 use Odan\Session\SessionInterface;
-use Odan\Session\Middleware\SessionMiddleware;
+use Odan\Session\Middleware\SessionStartMiddleware;
 use PerSeo\DB;
 use PerSeo\LoggerFactory;
 use PerSeo\MiddleWare\DefaultErrorRender;
@@ -32,11 +32,11 @@ return [
     },
 
     LoggerFactory::class => function (ContainerInterface $container) {
-        return new LoggerFactory($container->get('settings.logger'));
+        return new LoggerFactory($container->get('settings_logger'));
     },
 
     LoggerInterface::class => function (ContainerInterface $container): Logger {
-        $loggerSettings = $container->get('settings.logger');
+        $loggerSettings = $container->get('settings_logger');
         
         $logger = new Logger($loggerSettings['name']);
         
@@ -51,7 +51,7 @@ return [
 
     ErrorMiddleware::class => function (ContainerInterface $container) {
         $app = $container->get(App::class);
-        $settings = $container->get('settings.error');
+        $settings = $container->get('settings_error');
         $errorMiddleware = new ErrorMiddleware(
             $app->getCallableResolver(),
             $app->getResponseFactory(),
@@ -73,20 +73,18 @@ return [
     },
 
     SessionInterface::class => function (ContainerInterface $container) {
-        $settings = $container->get('settings.session');
-        $session = new PhpSession();
-        $session->setOptions((array)$settings);
-
+        $settings = $container->get('settings_session');
+        $session = new PhpSession((array) $settings);
         return $session;
-    },
+    }, 
 
-    SessionMiddleware::class => function (ContainerInterface $container) {
-        return new SessionMiddleware($container->get(SessionInterface::class));
+    SessionStartMiddleware::class => function (ContainerInterface $container) {
+        return new SessionStartMiddleware($container->get(SessionInterface::class));
     },
     
     'db' => function (ContainerInterface $container) {
-        if ($container->has('settings.db')) {
-            $settings = $container->get('settings.db');
+        if ($container->has('settings_db')) {
+            $settings = $container->get('settings_db');
             return new DB([
                     'database_type' => $settings['default']['driver'],
                     'database_name' => $settings['default']['database'],
@@ -100,7 +98,7 @@ return [
     },
     
     Twig::class => function (ContainerInterface $container) {
-        $twigSettings = $container->get('settings.twig');
+        $twigSettings = $container->get('settings_twig');
 
         $options['debug'] = $twigSettings['debug'];
         $options['cache'] = $twigSettings['cache_enabled'] ? $twigSettings['cache_path'] : false;
