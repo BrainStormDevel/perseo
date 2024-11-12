@@ -28,6 +28,13 @@
         "brainstorm/slim4locale": ">=1.0",
         "robmorgan/phinx": ">=0.13"
     },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": ">=3",
+        "phpstan/phpstan": ">=1.0",
+        "phpunit/phpunit": ">=10.5",
+        "selective/test-traits": ">=4",
+        "squizlabs/php_codesniffer": ">=3"
+    },
 	"autoload": {
         "psr-4": {
 		"PerSeo\\": "Core/PerSeo",
