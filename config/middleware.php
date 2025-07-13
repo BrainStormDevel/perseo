@@ -4,8 +4,8 @@ use BrainStorm\BasePath\BasePathMiddleware;
 use Slim\App;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Middleware\ErrorMiddleware;
-use PerSeo\MiddleWare\Language;
-use BrainStorm\Slim4Locale\Locale;
+use PerSeo\Middleware\Language\Language;
+use PerSeo\Middleware\Locale\Locale;
 use PerSeo\MiddleWare\Alias;
 use PerSeo\MiddleWare\Admin;
 use PerSeo\MiddleWare\Maintenance;
@@ -14,11 +14,10 @@ use Slim\Views\TwigMiddleware;
 use PerSeo\MiddleWare\Wizard;
 use PerSeo\MiddleWare\HttpExceptionMiddleware;
 use PerSeo\MiddleWare\ErrorHandlerMiddleware;
-use PerSeo\MiddleWare\GZIP;
+use PerSeo\Middleware\GZIP\GZIP;
 use Odan\Session\Middleware\SessionStartMiddleware;
 
 return function (App $app) {
-    $settings = $app->getContainer()->get('settings_global');
     // Parse json, form data and xml
     $app->addBodyParsingMiddleware();
     
@@ -28,7 +27,7 @@ return function (App $app) {
     $app->addRoutingMiddleware();
     
     // Add locale in url Middleware
-    $app->add(new Locale($app, $settings['locale'], $settings['languages']));
+    $app->add(Locale::class);
     
     $app->add(Alias::class);
     
