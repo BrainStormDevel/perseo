@@ -25,7 +25,9 @@
         "odan/session": ">=5.1",
         "monolog/monolog": ">=2.3",
         "ext-openssl": ">=7.2",
-        "brainstorm/slim4locale": ">=1.0",
+        "per-seo/gzip": ">=1",
+	"per-seo/language": ">=1",
+	"per-seo/locale": ">=1",
         "robmorgan/phinx": ">=0.13"
     },
     "require-dev": {
