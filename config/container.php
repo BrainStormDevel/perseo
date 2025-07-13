@@ -22,13 +22,14 @@ use Psr\Log\LoggerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
+use PerSeo\Handlers\CookieFactory;
 
 return [
 
     App::class => function (ContainerInterface $container) {
         AppFactory::setContainer($container);
 
-        return AppFactory::create();
+        return AppFactory::create(new CookieFactory());
     },
 
     LoggerFactory::class => function (ContainerInterface $container) {
