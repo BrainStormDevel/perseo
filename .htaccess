@@ -1,0 +1,50 @@
+Options -Indexes
+DirectoryIndex index.php
+
+<Files "test.db">
+	Require all denied
+</Files>
+<IfModule mod_rewrite.c | rewrite_module>
+RewriteEngine On
+RewriteCond $1 .(gif|jpe?g|png|css|js|json|ico)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?(.*)$ index.php?language=$1&url=$2 [L,QSA]
+</IfModule>
+<IfModule mod_mime.c>
+ AddType application/x-javascript .js
+ AddType text/css .css
+</IfModule>
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 10 days"
+	ExpiresByType image/gif "access plus 1 year"
+	ExpiresByType image/png "access plus 1 year"
+	ExpiresByType image/jpg "access plus 1 year"
+	ExpiresByType image/jpeg "access plus 1 year"	
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType text/plain "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-icon "access plus 1 year"
+</IfModule>
+<IfModule mod_deflate.c>
+ SetOutputFilter DEFLATE
+ <IfModule mod_setenvif.c>
+  SetEnvIfNoCase Request_URI \.(?:rar|zip)$ no-gzip dont-vary
+  SetEnvIfNoCase Request_URI \.(?:gif|jpg|png)$ no-gzip dont-vary
+  SetEnvIfNoCase Request_URI \.(?:avi|mov|mp4)$ no-gzip dont-vary
+  SetEnvIfNoCase Request_URI \.mp3$ no-gzip dont-vary
+ </IfModule>
+ <IfModule mod_setenvif.c>
+  BrowserMatch ^Mozilla/4 gzip-only-text/html
+  BrowserMatch ^Mozilla/4\.0[678] no-gzip
+  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+ </IfModule>
+ <IfModule mod_headers.c>
+  Header append Vary User-Agent env=!dont-vary
+  <FilesMatch "\.(js|css|xml|gz)$">
+    Header append Vary: Accept-Encoding
+  </FilesMatch>
+ </IfModule>
+</IfModule>
