@@ -55,6 +55,23 @@ class Alias implements Middleware
 						"ORDER" => 'priority'
 					]);
 				}
+				elseif($this->settings['type'] == 'pgsql') {
+					$tableName = $this->settings['prefix'] .'routes';
+					$sql = "SELECT 
+							request,
+							dest,
+							type,
+							redirect,
+							canonical,
+							CASE WHEN request ~ :regmatch THEN 1 ELSE 2 END AS priority
+						FROM \"$tableName\"
+						WHERE request ~ :regmatch OR dest ~ :regmatch
+						ORDER BY priority";
+					$stmt = $this->db->pdo->prepare($sql);
+					$stmt->execute([':regmatch' => $regmatch]);
+					
+					$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+				}
 				else if($this->settings['type'] == 'sqlite') {
 					$result = $this->db->select('routes', [
 						'request', //URI Requested

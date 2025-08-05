@@ -22,7 +22,7 @@ class InstallSQLDB
 			],
 				'settings_db' => [
 					'default' => [
-					'driver' => '$driver',
+					'type' => '$driver',
 					'host' => '$dbhost',
 					'database' => '$dbname',
 					'username' => '$dbuser',

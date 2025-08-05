@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Modules\wizard\Classes\Config;
 use Modules\wizard\Classes\InstallSQLDB;
 use Modules\wizard\Classes\InstallSQLiteDB;
+use Modules\wizard\Classes\InstallPGSQLDB;
 
 class Install
 {
@@ -45,7 +46,14 @@ class Install
 			}
 			if ($post['driver'] == 'mysql') {
 				$installsqldb = new InstallSQLDB($fileconf);
-				$resultdb = json_decode($installsqldb->createDB($post['driver'], $post['dbhost'], $post['dbname'], $post['dbuser'], $post['dbpass'], $post['prefix'], $post['dbencoding']));
+				$resultdb = json_decode($installsqldb->createDB($post['driver'], $post['dbhost'], $post['dbname'], $post['dbuser'], $post['dbpass'], $post['prefix'], $post['dbencoding'], (int) (!empty($post['dbport'])? $post['dbport'] : 3306)));
+				if ((int) $resultdb->code != 0) {
+					throw new Exception($resultdb->msg, (int) $resultdb->code);
+				}
+			}
+			if ($post['driver'] == 'pgsql') {
+				$installpgsqldb = new InstallPGSQLDB($fileconf);
+				$resultdb = json_decode($installpgsqldb->createDB($post['driver'], $post['dbhost'], $post['dbname'], $post['dbuser'], $post['dbpass'], $post['prefix'], $post['dbencoding'], (int) (!empty($post['dbport'])? $post['dbport'] : 5432)));
 				if ((int) $resultdb->code != 0) {
 					throw new Exception($resultdb->msg, (int) $resultdb->code);
 				}

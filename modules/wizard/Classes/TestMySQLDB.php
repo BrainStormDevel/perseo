@@ -12,12 +12,14 @@ class TestMySQLDB
         try {
 			if (!extension_loaded('pdo')) { throw new Exception('PDO extension not present',0002); }
             $db = new DB([
-                'database_type' => (string) $params['driver'],
-                'database_name' => (string) $params['dbname'],
-                'server' => (string) $params['dbhost'],
+                'type' => (string) $params['driver'],
+				'host' => (string) $params['dbhost'],
+                'database' => (string) $params['dbname'],
                 'username' => (string) $params['dbuser'],
                 'password' => (string) $params['dbpass'],
-                'charset' => (string) $params['charset']
+                'charset' => (string) $params['charset'],
+				'collation' => (string) $params['collation'],
+				'port' => (int) ((isset($params['dbport']) && !empty($params['dbport'])) ? $params['dbport'] : 3306)
             ]);
             $info = $db->info();
 			$version = (string) $info['version'];

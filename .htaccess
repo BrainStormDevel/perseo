@@ -1,9 +1,6 @@
 Options -Indexes
 DirectoryIndex index.php
 
-<Files "test.db">
-	Require all denied
-</Files>
 <IfModule mod_rewrite.c | rewrite_module>
 RewriteEngine On
 RewriteCond $1 .(gif|jpe?g|png|css|js|json|ico)$ [NC,OR]

@@ -100,15 +100,29 @@ return [
 				});
 				return $db;
 			}
-			else if ($current['type'] == 'mysql') {
+			elseif ($current['type'] == 'mysql') {
 				return new DB([
-						'database_type' => $current['driver'],
-						'database_name' => $current['database'],
-						'server' => $current['host'],
+						'type' => $current['type'],
+						'host' => $current['host'],
+						'database' => $current['database'],
 						'username' => $current['username'],
 						'password' => $current['password'],
 						'prefix' => $current['prefix'],
-						'charset' => $current['charset']
+						'charset' => $current['charset'],
+						'port' => $current['port']
+				]);
+			}
+			elseif ($current['type'] == 'pgsql') {
+				
+				return new DB([
+						'type' => $current['type'],
+						'host' => $current['host'],
+						'database' => $current['database'],
+						'username' => $current['username'],
+						'password' => $current['password'],
+						'prefix' => $current['prefix'],
+						'charset' => $current['charset'],
+						'port' => $current['port']
 				]);
 			}
 			else return null;

@@ -56,7 +56,7 @@
 						  <select id="dbtype" class="selectpicker form-control" title="{$l_dbtype_ph}">
 							<option value="nodb" selected>No DB</option>
 							<option value="mysql">mysql</option>
-							<option value="mssql">mssql</option>
+							<option value="pgsql">postgresql</option>
 							<option value="sqlite">sqlite</option>
 						  </select>
 						  </div>
@@ -67,6 +67,10 @@
 						  </p>
 						  <p>
 						  <div class="input-group dbparam" style="display: none !important;"><span class="input-group-addon">{{ lang.l_dbhost }}</span><input type='text' name='dbhost' id='dbhost' class='form-control' placeholder='{{ lang.l_dbhost_ph }}'>
+						  </div>
+						  </p>
+						  <p>
+						  <div class="input-group dbparam" style="display: none !important;"><span class="input-group-addon">{{ lang.l_dbport }}</span><input type='text' name='dbport' id='dbport' class='form-control' placeholder='{{ lang.l_dbport_ph }}'>
 						  </div>
 						  </p>
 						  <p>
@@ -84,18 +88,12 @@
 						  <p>
 						  <div class="input-group dbparam" style="display: none !important;"><span class="input-group-addon">{{ lang.l_dbencoding }}</span>
 						  <select id="dbenc" class="selectpicker form-control" title="{{ lang.l_dbencoding_ph }}">
-							<option value="ucs2">ucs2</option>
-							<option value="big5">big5</option>
-							<option value="latin1">latin1</option>
-							<option value="latin2">latin2</option>
-							<option value="latin3">latin3</option>
-							<option value="latin4">latin4</option>
-							<option value="latin5">latin5</option>
-							<option value="latin6">latin6</option>
-							<option value="latin7">latin7</option>
-							<option value="binary">binary</option>
-							<option value="utf8">utf8</option>
-							<option value="utf8mb4" selected>utf8mb4</option>
+						  </select>
+						  </div>
+						  </p>
+						  <p>
+						  <div class="input-group dbmysql" style="display: none !important;"><span class="input-group-addon">{{ lang.l_dbcollation }}</span>
+						  <select id="dbcoll" class="selectpicker form-control" title="{{ lang.l_dbcollation_ph }}">
 						  </select>
 						  </div>
 						  </p>
@@ -213,17 +211,80 @@
 	$(document).ready(function() {	
 			$("#dbtype").on('change', function(e) {
 				if ($('#dbtype option:selected').val() == 'nodb') {
+					$('.dbmysql').hide();
 					$('.dbparam').hide();
 					$('.sqlite').hide();
 				}
 				else if ($('#dbtype option:selected').val() == 'sqlite') {
+					$('.dbmysql').hide();
 					$('.dbparam').hide();
 					$('.sqlite').show();
 				}
-				else {
+				else if ($('#dbtype option:selected').val() == 'mysql') {
 					$('.dbparam').show();
+					$('.dbmysql').show();
 					$('.sqlite').hide();
 				}
+				else if ($('#dbtype option:selected').val() == 'pgsql') {
+					$('.dbparam').show();
+					$('.dbmysql').hide();
+					$('.sqlite').hide();
+				}
+				const selectedDbType = $(this).val();
+				const $dbOptionsSelect = $('#dbenc');
+				const $dbOptionsColl = $('#dbcoll');
+				$dbOptionsSelect.empty();
+				$dbOptionsColl.empty();
+				$.getJSON('{{ basepath }}/templates/{{ template }}/wizard_charset.json', function(data) {
+					const options = data[selectedDbType];
+				
+					if (options && options.length > 0) {
+						$.each(options, function(index, option) {
+							// Crea l'elemento <option> e imposta "selected" se necessario
+							const $option = $('<option>', {
+								value: option.value,
+								text: option.label
+							});
+				
+							if (option.selected) {
+								$option.attr('selected', 'selected');
+							}
+				
+							$dbOptionsSelect.append($option);
+						});
+					} else {
+						$dbOptionsSelect.append('<option value="">No option</option>');
+					}
+				
+					$dbOptionsSelect.selectpicker('refresh');
+				}).fail(function() {
+					$dbOptionsSelect.append('<option value="">Error</option>');
+				});
+				$.getJSON('{{ basepath }}/templates/{{ template }}/wizard_collation.json', function(data2) {
+					const options2 = data2[selectedDbType];
+				
+					if (options2 && options2.length > 0) {
+						$.each(options2, function(index2, options2) {
+							// Crea l'elemento <option> e imposta "selected" se necessario
+							const $options2 = $('<option>', {
+								value: options2.value,
+								text: options2.label
+							});
+				
+							if (options2.selected) {
+								$options2.attr('selected', 'selected');
+							}
+				
+							$dbOptionsColl.append($options2);
+						});
+					} else {
+						$dbOptionsColl.append('<option value="">No option</option>');
+					}
+				
+					$dbOptionsColl.selectpicker('refresh');
+				}).fail(function() {
+					$dbOptionsColl.append('<option value="">Error</option>');
+				});
 			});
             $("#pass").complexify({}, function (valid, complexity) {
                 document.getElementById("PassValue").value = complexity;
@@ -264,7 +325,7 @@
 					}, onNext: function(tab, navigation, index) {
 					if(index==2) {
 						dbtype = $('#dbtype option:selected').val();
-						if ((dbtype == 'mysql') || (dbtype == 'mssql')) {
+						if ((dbtype == 'mysql') || (dbtype == 'mssql') || (dbtype == 'pgsql')) {
 							if(!$('#dbhost').val()) {
 								alert('{{ lang.l_dbhost_ph }}');
 								$('#dbhost').focus();
@@ -286,10 +347,12 @@
 								return false;
 							}
 							dbhost = $('#dbhost').val();
+							dbport = $('#dbport').val();
 							dbname = $('#dbname').val();
 							dbuser = $('#dbuser').val();
 							dbpass = $('#dbpass').val();
 							dbenc = $('#dbenc option:selected').text();
+							dbcoll = $('#dbcoll option:selected').text();
 						}
 						else if (dbtype == 'sqlite') {
 							if(!$('#dbfile').val()) {
@@ -335,14 +398,14 @@
 						return false;
 					}, onTabShow: function(tab, navigation, index) {
 						if (index==2) {
-							if ((dbtype == 'mysql') || (dbtype == 'mssql')) {
+							if ((dbtype == 'mysql') || (dbtype == 'mssql') || (dbtype == 'pgsql')) {
 								$('#result').empty();
 								$('#loader').show();
 								setTimeout(function(){
 								$.ajax({
 									url: '{{ basepath }}/wizard/test/',
 									type: 'post',
-									data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "charset": dbenc},
+									data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "driver": dbtype, "dbhost": dbhost, "dbport": dbport, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "charset": dbenc, "collation": dbcoll},
 									success: function(response) {
 										result = JSON.parse(response);
 										if (result.err == 0) {
@@ -422,11 +485,11 @@
 							}
 						});
 					}
-					else if (dbtype == 'mysql') {
+					else if ((dbtype == 'mysql') || (dbtype == 'pgsql')) {
 						$.ajax({
 							url: '{{ basepath }}/wizard/install/',
 							type: 'post',
-							data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "locale": locale, "template": template, "driver": dbtype, "dbhost": dbhost, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "maintenancekey": $("#maintenancekey").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
+							data: { "{{ csrf.nameKey }}": $( "input[name='{{ csrf.nameKey }}']" ).val(), "{{ csrf.valueKey }}": $( "input[name='{{ csrf.valueKey }}']" ).val(), "lang": language, "defaultlang": defaultlang, "locale": locale, "template": template, "driver": dbtype, "dbhost": dbhost, "dbport": dbport, "dbname": dbname, "dbuser": dbuser, "dbpass": dbpass, "dbencoding": dbenc, "title": $("#title").val(), "prefix": $("#prefix").val(), "salt": $("#salt").val(), "maintenancekey": $("#maintenancekey").val(), "encoding": $("#encoding").val(), "cookadm": $("#adm_cookname").val(), "cookusr": $("#usr_cookname").val(), "cookexp": $("#cookie_expire").val(), "cookmaxexp": $("#cookie_max_expire").val(), "cookpath": $("#cookie_path").val(), "admin": $("#username").val(), "email": $("#email").val(), "password": $("#pass").val(), "facebook_app": $("#facebook_app").val(), "facebook_secret": $("#facebook_secret").val(), "google_key": $("#google_key").val(), "google_secret": $("#google_secret").val()},
 							success: function(response) {
 								var result = JSON.parse(response);
 								if (result.code == 0) {

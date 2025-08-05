@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Modules\wizard\Classes\TestMySQLDB;
 use Modules\wizard\Classes\TestSQLiteDB;
+use Modules\wizard\Classes\TestPostgreDB;
 
 final class Test
 {
@@ -23,6 +24,11 @@ final class Test
 			$post = $request->getParsedBody();
 			if ($post['driver'] == 'mysql') {
 				$test = new TestMySQLDB();
+				$result = json_decode($test($post));
+				if ($result->err > 0) { throw new Exception($result->msg, (int) $result->code); }
+			}
+			elseif ($post['driver'] == 'pgsql') {
+				$test = new TestPostgreDB();
 				$result = json_decode($test($post));
 				if ($result->err > 0) { throw new Exception($result->msg, (int) $result->code); }
 			}
